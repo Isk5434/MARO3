@@ -59,15 +59,33 @@
 
 .flowBanner {
   position: absolute;
-  top: calc(var(--header-height) + 1.4rem);
-  left: 0;
-  right: 0;
+  inset: 0;
   z-index: 1;
-  height: 6rem;
   overflow: hidden;
   pointer-events: none;
-  opacity: 0.72;
-  mix-blend-mode: screen;
+}
+
+.diagonalRibbon {
+  position: absolute;
+  width: 88rem;
+  height: 10rem;
+  overflow: hidden;
+  border-radius: 3px;
+  opacity: 1;
+  box-shadow: 0 22px 52px rgba(0, 0, 0, 0.44);
+  transform: rotate(-22deg);
+  transform-origin: center;
+  mix-blend-mode: normal;
+}
+
+.diagonalRibbon.top {
+  top: -2rem;
+  left: -10rem;
+}
+
+.diagonalRibbon.bottom {
+  right: -12rem;
+  bottom: -2.1rem;
 }
 
 .flowTrack {
@@ -75,20 +93,21 @@
   width: max-content;
   height: 100%;
   align-items: center;
-  gap: 1.2rem;
-  animation: flowBanner 24s linear infinite;
+  gap: 0;
+  animation: flowBanner 26s linear infinite;
   will-change: transform;
 }
 
+.bottom .flowTrack {
+  animation-direction: reverse;
+}
+
 .flowImage {
-  width: 5.2rem;
-  height: 11rem;
+  width: 22rem;
+  height: 10rem;
   flex: 0 0 auto;
   object-fit: cover;
-  border-radius: 4px;
-  transform: rotate(90deg);
-  transform-origin: center;
-  filter: saturate(0.9) contrast(0.96);
+  filter: saturate(1.08) contrast(1.08);
 }
 
 @keyframes flowBanner {
@@ -97,7 +116,7 @@
   }
 
   to {
-    transform: translateX(-50%);
+    transform: translateX(-22rem);
   }
 }
 

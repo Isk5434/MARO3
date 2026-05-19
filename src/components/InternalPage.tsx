@@ -1,5 +1,6 @@
 import gsap from 'gsap'
 import { useEffect, useRef } from 'react'
+import { LINK_RIBBON_IMAGE } from '../config/assets'
 import { INTERNAL_PAGES, getAppPath, type InternalPageId } from '../config/internal-pages'
 import styles from '../styles/InternalPage.module.css'
 
@@ -7,9 +8,7 @@ interface Props {
   pageId: InternalPageId
 }
 
-const LINK_BANNER_IMAGE = `${import.meta.env.BASE_URL}${encodeURIComponent(
-  'ChatGPT Image 2026年5月19日 16_59_27.png',
-)}`
+const RIBBON_REPEAT = Array.from({ length: 10 }, (_, index) => index)
 
 function setRevealMask(elements: NodeListOf<HTMLElement>, transparent: number, black: number) {
   elements.forEach((el, index) => {
@@ -74,11 +73,15 @@ export function InternalPage({ pageId }: Props) {
       >
         {pageId === 'link' && (
           <div className={styles.flowBanner} aria-hidden="true">
-            <div className={styles.flowTrack}>
-              {[0, 1, 2, 3, 4, 5].map((item) => (
-                <img key={item} src={LINK_BANNER_IMAGE} alt="" className={styles.flowImage} />
-              ))}
-            </div>
+            {['top', 'bottom'].map((position) => (
+              <div key={position} className={`${styles.diagonalRibbon} ${styles[position]}`}>
+                <div className={styles.flowTrack}>
+                  {RIBBON_REPEAT.map((item) => (
+                    <img key={item} src={LINK_RIBBON_IMAGE} alt="" className={styles.flowImage} />
+                  ))}
+                </div>
+              </div>
+            ))}
           </div>
         )}
 

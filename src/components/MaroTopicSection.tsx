@@ -1,5 +1,11 @@
 import gsap from 'gsap'
 import { useEffect, useRef } from 'react'
+import {
+  CONTACT_ROUNDEL_IMAGE,
+  CONTACT_SASH_IMAGE,
+  LINK_RIBBON_IMAGE,
+  LOOP_RING_IMAGE,
+} from '../config/assets'
 import { getAppPath, type InternalPageId } from '../config/internal-pages'
 import styles from '../styles/MaroTopicSection.module.css'
 
@@ -12,6 +18,9 @@ interface Props {
   action: string
   variant: 'activity' | 'contact' | 'link'
 }
+
+const RIBBON_REPEAT = Array.from({ length: 10 }, (_, index) => index)
+const CONTACT_SASH_REPEAT = Array.from({ length: 8 }, (_, index) => index)
 
 function setRevealMask(elements: NodeListOf<HTMLElement>, transparent: number, black: number) {
   elements.forEach((el, index) => {
@@ -63,9 +72,7 @@ export function MaroTopicSection({
               onUpdate: () => setRevealMask(revealTargets, mask.transparent, mask.black),
               onComplete: () => {
                 revealTargets.forEach((el) => {
-                  el.style.removeProperty('--topic-reveal-mask')
-                  el.style.webkitMaskImage = 'none'
-                  el.style.maskImage = 'none'
+                  el.style.setProperty('--topic-reveal-mask', 'linear-gradient(-15deg, black 0%, black 100%)')
                 })
               },
             },
@@ -91,6 +98,41 @@ export function MaroTopicSection({
         <span className={`${styles.tile} ${styles.tileTwo}`} />
         <span className={`${styles.tile} ${styles.tileThree}`} />
       </div>
+
+      {variant === 'activity' && (
+        <div className={styles.loopRing} aria-hidden="true">
+          <img src={LOOP_RING_IMAGE} alt="" />
+        </div>
+      )}
+
+      {variant === 'contact' && (
+        <>
+          <div className={styles.contactSash} aria-hidden="true">
+            <div className={styles.contactSashTrack}>
+              {CONTACT_SASH_REPEAT.map((item) => (
+                <img key={item} src={CONTACT_SASH_IMAGE} alt="" className={styles.contactSashImage} />
+              ))}
+            </div>
+          </div>
+          <div className={styles.contactRoundel} aria-hidden="true">
+            <img src={CONTACT_ROUNDEL_IMAGE} alt="" />
+          </div>
+        </>
+      )}
+
+      {variant === 'link' && (
+        <div className={styles.flowBanner} aria-hidden="true">
+          {['top', 'bottom'].map((position) => (
+            <div key={position} className={`${styles.diagonalRibbon} ${styles[position]}`}>
+              <div className={styles.flowTrack}>
+                {RIBBON_REPEAT.map((item) => (
+                  <img key={item} src={LINK_RIBBON_IMAGE} alt="" className={styles.flowImage} />
+                ))}
+              </div>
+            </div>
+          ))}
+        </div>
+      )}
 
       <div className={styles.content}>
         <p className={styles.eyebrow} data-topic-reveal>{eyebrow}</p>

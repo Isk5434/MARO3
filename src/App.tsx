@@ -7,6 +7,7 @@ import { HeroSection } from './components/HeroSection'
 import { InternalPage } from './components/InternalPage'
 import { LoadingScreen } from './components/LoadingScreen'
 import { MaroTopicSection } from './components/MaroTopicSection'
+import { PeekFooter } from './components/PeekFooter'
 import { SvgFilters } from './components/SvgFilters'
 import { getCurrentInternalPage } from './config/internal-pages'
 import { useMouseTracker } from './hooks/useMouseTracker'
@@ -117,6 +118,7 @@ export default function App() {
                   variant="link"
                 />
               </div>
+              <PeekFooter />
             </main>
             <Footer />
             <AboutModal isOpen={showAbout} onClose={() => setShowAbout(false)} />

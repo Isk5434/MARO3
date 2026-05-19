@@ -3,7 +3,7 @@ export const SITE_CONTENT = {
   hero: {
     heading: 'maro',
     subtitle: '名古屋市博物館サポーターMARO',
-    cta: 'View Works',
+    cta: 'View Info',
   },
   about: {
     heading: 'About',

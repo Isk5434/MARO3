@@ -1,0 +1,19 @@
+.wrapper {
+  position: relative;
+  width: 100%;
+  height: clamp(6rem, 18vw, 12rem);
+  overflow: hidden;
+  background: #0f0d0a;
+  padding-bottom: var(--footer-height);
+}
+
+.image {
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 100%;
+  max-width: 72rem;
+  display: block;
+  will-change: transform;
+}

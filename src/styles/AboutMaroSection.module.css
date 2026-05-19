@@ -6,7 +6,7 @@
   place-items: center;
   padding: calc(var(--header-height) + 4rem) clamp(1.3rem, 6vw, 5rem)
     calc(var(--footer-height) + 4rem);
-  overflow: hidden;
+  overflow-x: hidden;
   background:
     linear-gradient(90deg, rgba(178, 184, 164, 0.92), rgba(194, 190, 174, 0.84)),
     #b8bba8;
