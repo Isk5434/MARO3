@@ -5,36 +5,40 @@ import styles from '../styles/PeekFooter.module.css'
 
 export function PeekFooter() {
   const wrapperRef = useRef<HTMLDivElement>(null)
-  const imgRef = useRef<HTMLImageElement>(null)
+  const imageWrapRef = useRef<HTMLDivElement>(null)
   const hasAnimatedRef = useRef(false)
 
   useEffect(() => {
     const wrapper = wrapperRef.current
-    const img = imgRef.current
-    if (!wrapper || !img) return
+    const imageWrap = imageWrapRef.current
+    if (!wrapper || !imageWrap) return
 
-    gsap.set(img, { y: '100%' })
-
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        if (!entry.isIntersecting || hasAnimatedRef.current) return
+    const checkBottom = () => {
+      if (hasAnimatedRef.current) return
+      const scrollBottom = window.scrollY + window.innerHeight
+      const pageHeight = document.documentElement.scrollHeight
+      if (scrollBottom >= pageHeight - 32) {
         hasAnimatedRef.current = true
-        gsap.to(img, {
-          y: '0%',
-          duration: 1.4,
-          ease: 'elastic.out(1, 0.55)',
+        gsap.set(wrapper, { pointerEvents: 'none' })
+        gsap.to(imageWrap, {
+          y: 0,
+          opacity: 1,
+          duration: 0.95,
+          ease: 'power3.out',
         })
-      },
-      { threshold: 0.05 },
-    )
+      }
+    }
 
-    observer.observe(wrapper)
-    return () => observer.disconnect()
+    window.addEventListener('scroll', checkBottom, { passive: true })
+    checkBottom()
+    return () => window.removeEventListener('scroll', checkBottom)
   }, [])
 
   return (
     <div ref={wrapperRef} className={styles.wrapper} aria-hidden="true">
-      <img ref={imgRef} src={PEEK_FOOTER_IMAGE} alt="" className={styles.image} />
+      <div ref={imageWrapRef} className={styles.imageWrap}>
+        <img src={PEEK_FOOTER_IMAGE} alt="" className={styles.image} />
+      </div>
     </div>
   )
 }

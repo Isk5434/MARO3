@@ -1,6 +1,7 @@
 import gsap from 'gsap'
 import { useProgress } from '@react-three/drei'
 import { useCallback, useEffect, useRef, useState } from 'react'
+import { LOADING_MARK_IMAGE } from '../config/assets'
 import styles from '../styles/LoadingScreen.module.css'
 
 const MIN_LOADING_MS = 3800
@@ -235,7 +236,7 @@ export function LoadingScreen({ onLoaded }: Props) {
       <div ref={contentRef} className={styles.content}>
         <img
           className={styles.mark}
-          src="/maro-hp3/ChatGPT_Image_2026年5月19日_16_25_30-removebg-preview.png"
+          src={LOADING_MARK_IMAGE}
           alt=""
           aria-hidden="true"
         />

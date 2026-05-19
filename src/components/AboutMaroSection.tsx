@@ -44,6 +44,7 @@ export const AboutMaroSection = forwardRef<HTMLElement>(function AboutMaroSectio
         const revealTargets = section.querySelectorAll<HTMLElement>('[data-about-reveal]')
         const mask = { transparent: 100, black: 150 }
 
+        gsap.set(introRef.current, { opacity: 1 })
         gsap.set('[data-about-button]', { y: 18, opacity: 0 })
         setRevealMask(revealTargets, mask.transparent, mask.black)
 
@@ -53,16 +54,16 @@ export const AboutMaroSection = forwardRef<HTMLElement>(function AboutMaroSectio
             mask,
             { transparent: 100, black: 150 },
             {
-              duration: 2.4,
+              duration: 1.35,
               transparent: -35,
               black: 0,
               ease: 'sine.out',
               onUpdate: () => setRevealMask(revealTargets, mask.transparent, mask.black),
             },
           )
-          .to('[data-about-button]', { y: 0, opacity: 1, duration: 0.65 }, '<55%')
+          .to('[data-about-button]', { y: 0, opacity: 1, duration: 0.42 }, '<45%')
       },
-      { threshold: 0.78 },
+      { threshold: 0.58 },
     )
 
     observer.observe(section)
@@ -78,11 +79,11 @@ export const AboutMaroSection = forwardRef<HTMLElement>(function AboutMaroSectio
 
     gsap.fromTo(
       detailRef.current,
-      { y: 36, opacity: 0 },
-      { y: 0, opacity: 1, duration: 0.8, ease: 'power3.out' },
+      { y: 24, opacity: 0 },
+      { y: 0, opacity: 1, duration: 0.45, ease: 'power3.out' },
     )
     gsap.to(mask, {
-      duration: 2.1,
+      duration: 1.05,
       transparent: -35,
       black: 0,
       ease: 'sine.out',
@@ -92,10 +93,10 @@ export const AboutMaroSection = forwardRef<HTMLElement>(function AboutMaroSectio
 
   const handleOpen = () => {
     gsap.to(introRef.current, {
-      y: -28,
+      y: -18,
       opacity: 0,
       scale: 1,
-      duration: 0.38,
+      duration: 0.22,
       ease: 'power2.in',
       onComplete: () => setIsOpen(true),
     })
@@ -117,8 +118,14 @@ export const AboutMaroSection = forwardRef<HTMLElement>(function AboutMaroSectio
             <p className={styles.question} data-about-reveal>
               What is MARO？
             </p>
-            <button className={styles.primaryButton} onClick={handleOpen} data-about-button>
-              MAROとは？
+            <button
+              className={styles.primaryButton}
+              onClick={handleOpen}
+              data-about-button
+              aria-label="MAROとは？を開く"
+            >
+              <span className={styles.buttonLabel}>MAROとは？</span>
+              <span className={styles.buttonArrow} aria-hidden="true">→</span>
             </button>
           </div>
         ) : (

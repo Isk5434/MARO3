@@ -31,6 +31,9 @@ export interface FloatingObjectConfig {
   floatAmplitude?: number
   floatSpeed?: number
   rotateAxis?: [number, number, number]  // rotation added per frame on each axis
+  // mobile overrides
+  mobilePosition?: [number, number, number]
+  mobileScale?: number
 }
 
 export const FLOATING_OBJECTS: FloatingObjectConfig[] = [
@@ -153,6 +156,8 @@ export const FLOATING_OBJECTS: FloatingObjectConfig[] = [
     roughness: 0.4, metalness: 0.0,
     floatOffset: 0.5, floatAmplitude: 0.18, floatSpeed: 0.6,
     rotateAxis: [0.0, 0.006, 0.0],
+    mobilePosition: [-0.9, 2.0, 0],
+    mobileScale: 1.0,
   },
   {
     id: 'glb-maro-banzai',
@@ -166,6 +171,8 @@ export const FLOATING_OBJECTS: FloatingObjectConfig[] = [
     roughness: 0.4, metalness: 0.0,
     floatOffset: 2.0, floatAmplitude: 0.20, floatSpeed: 0.75,
     rotateAxis: [0.0, 0.005, 0.0],
+    mobilePosition: [1.0, 0.2, -0.3],
+    mobileScale: 1.0,
   },
   {
     id: 'glb-maro-hand',
@@ -179,5 +186,7 @@ export const FLOATING_OBJECTS: FloatingObjectConfig[] = [
     roughness: 0.4, metalness: 0.0,
     floatOffset: 4.0, floatAmplitude: 0.14, floatSpeed: 0.85,
     rotateAxis: [0.001, 0.004, 0.001],
+    mobilePosition: [-0.2, -2.0, 0],
+    mobileScale: 1.0,
   },
 ]

@@ -116,24 +116,31 @@ class GlbErrorBoundary extends Component<{ children: ReactNode }, { failed: bool
 // targetPos に下から (-5y) 飛び込んできて、π 回転 + スケール 0→1 で登場。
 // 着地後はサインカーブで持続フロート + 緩やかに自転。
 
-export function FloatingObjects() {
+export function FloatingObjects({ isMobile }: { isMobile: boolean }) {
   const glbItems = FLOATING_OBJECTS.filter((cfg) => cfg.shape === 'glb')
   const primitiveItems = FLOATING_OBJECTS.filter((cfg) => cfg.shape !== 'glb')
 
   return (
     <>
-      {/* 1st layer: 既存のフロート群 */}
-      {primitiveItems.map((cfg) => (
+      {!isMobile && primitiveItems.map((cfg) => (
         <FloatingItem key={cfg.id} cfg={cfg} />
       ))}
-      {glbItems.map((cfg) => (
-        <GlbErrorBoundary key={cfg.id}>
-          <Suspense fallback={null}>
-            <FloatingGlb cfg={cfg} />
-          </Suspense>
-        </GlbErrorBoundary>
-      ))}
-
+      {glbItems.map((cfg) => {
+        const resolved = isMobile
+          ? {
+              ...cfg,
+              position: cfg.mobilePosition ?? cfg.position,
+              scale: cfg.mobileScale ?? cfg.scale,
+            }
+          : cfg
+        return (
+          <GlbErrorBoundary key={cfg.id}>
+            <Suspense fallback={null}>
+              <FloatingGlb cfg={resolved} />
+            </Suspense>
+          </GlbErrorBoundary>
+        )
+      })}
     </>
   )
 }

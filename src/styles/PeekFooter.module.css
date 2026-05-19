@@ -1,19 +1,25 @@
 .wrapper {
   position: relative;
+  z-index: 3;
   width: 100%;
-  height: clamp(6rem, 18vw, 12rem);
-  overflow: hidden;
-  background: #0f0d0a;
-  padding-bottom: var(--footer-height);
+  height: 0;
+  overflow: visible;
+  pointer-events: none;
+}
+
+.imageWrap {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  transform: translateY(110%);
+  opacity: 0;
+  will-change: transform;
 }
 
 .image {
-  position: absolute;
-  bottom: 0;
-  left: 50%;
-  transform: translateX(-50%);
+  display: block;
   width: 100%;
   max-width: 72rem;
-  display: block;
-  will-change: transform;
+  margin: 0 auto;
 }

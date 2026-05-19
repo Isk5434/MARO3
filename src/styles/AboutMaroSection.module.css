@@ -121,6 +121,8 @@
   align-items: flex-start;
   gap: 2rem;
   text-align: left;
+  opacity: 0;
+  will-change: opacity, transform;
 }
 
 .question {
@@ -141,31 +143,118 @@
 }
 
 .primaryButton {
+  position: relative;
   min-width: 9.8rem;
   min-height: 2.9rem;
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  padding: 0.78rem 1.75rem;
+  gap: 0.8rem;
+  padding: 0.78rem 1.3rem 0.78rem 1.75rem;
   border: 1px solid rgba(184, 187, 168, 0.68);
   border-radius: 999px;
-  background: rgba(184, 187, 168, 0.22);
+  background:
+    linear-gradient(110deg, transparent 0%, rgba(255, 255, 255, 0.22) 42%, transparent 62%),
+    rgba(184, 187, 168, 0.22);
+  background-position: -8rem 0, 0 0;
+  background-size: 8rem 100%, 100% 100%;
   color: rgba(255, 255, 255, 0.92);
   font-family: var(--font-jp);
   font-size: 0.9rem;
   letter-spacing: 0.12em;
   backdrop-filter: blur(8px);
   -webkit-backdrop-filter: blur(8px);
+  box-shadow: 0 0 0 0 rgba(255, 255, 255, 0.22);
   transition:
+    background-position 0.75s ease,
     background var(--transition-fast),
     border-color var(--transition-fast),
+    box-shadow var(--transition-fast),
     transform var(--transition-fast);
+  animation: buttonPulse 2.4s ease-in-out infinite;
+}
+
+.primaryButton::before {
+  content: '';
+  position: absolute;
+  inset: -0.42rem;
+  border: 1px solid rgba(255, 255, 255, 0.34);
+  border-radius: inherit;
+  opacity: 0;
+  transform: scale(0.94);
+  pointer-events: none;
+  animation: buttonRing 2.4s ease-in-out infinite;
 }
 
 .primaryButton:hover {
   background: rgba(184, 187, 168, 0.38);
+  background-position: 8rem 0, 0 0;
   border-color: rgba(184, 187, 168, 0.95);
-  transform: translateY(-2px);
+  box-shadow: 0 0.7rem 1.8rem rgba(72, 78, 63, 0.16);
+  transform: translateY(-3px);
+  animation-play-state: paused;
+}
+
+.primaryButton:focus-visible {
+  outline: 2px solid rgba(255, 255, 255, 0.72);
+  outline-offset: 4px;
+}
+
+.buttonLabel {
+  position: relative;
+  z-index: 1;
+}
+
+.buttonArrow {
+  position: relative;
+  z-index: 1;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 1.45rem;
+  height: 1.45rem;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.2);
+  font-family: var(--font-serif);
+  font-size: 0.9rem;
+  line-height: 1;
+  transform: translateX(0);
+  transition:
+    background var(--transition-fast),
+    transform var(--transition-fast);
+}
+
+.primaryButton:hover .buttonArrow {
+  background: rgba(255, 255, 255, 0.3);
+  transform: translateX(0.18rem);
+}
+
+@keyframes buttonPulse {
+  0%, 100% {
+    box-shadow: 0 0 0 0 rgba(255, 255, 255, 0);
+    transform: translateY(0);
+  }
+
+  52% {
+    box-shadow: 0 0.5rem 1.4rem rgba(72, 78, 63, 0.12);
+    transform: translateY(-1px);
+  }
+}
+
+@keyframes buttonRing {
+  0% {
+    opacity: 0;
+    transform: scale(0.94);
+  }
+
+  42% {
+    opacity: 0.8;
+  }
+
+  100% {
+    opacity: 0;
+    transform: scale(1.12);
+  }
 }
 
 .detail {

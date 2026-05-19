@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useRef, useState } from 'react'
+import { useCallback, useEffect, useLayoutEffect, useRef, useState } from 'react'
 import { AboutModal } from './components/AboutModal'
 import { AboutMaroSection } from './components/AboutMaroSection'
 import { Footer } from './components/Footer'
@@ -29,12 +29,12 @@ export default function App() {
   })
 
   const handleBgToggle = useCallback(() => {
-    setIsDark((current) => {
-      const next = !current
-      document.body.classList.toggle('dark-bg', next)
-      return next
-    })
+    setIsDark((current) => !current)
   }, [])
+
+  useLayoutEffect(() => {
+    document.body.classList.toggle('dark-bg', isDark)
+  }, [isDark])
 
   const handleHeroCta = useCallback(() => {
     firstContentRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' })
@@ -117,8 +117,8 @@ export default function App() {
                   action="リンクを見る"
                   variant="link"
                 />
+                <PeekFooter />
               </div>
-              <PeekFooter />
             </main>
             <Footer />
             <AboutModal isOpen={showAbout} onClose={() => setShowAbout(false)} />
