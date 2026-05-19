@@ -6,15 +6,16 @@ import type { MutableRefObject } from 'react'
 interface Props {
   mouseRef: MutableRefObject<{ nx: number; ny: number }>
   onCtaClick?: () => void
+  active?: boolean
 }
 
-export function HeroSection({ mouseRef, onCtaClick }: Props) {
+export function HeroSection({ mouseRef, onCtaClick, active = true }: Props) {
   const { hero } = SITE_CONTENT
 
   return (
     <section className={styles.hero}>
       <div data-hero-visual style={{ position: 'absolute', inset: 0 }}>
-        <HeroCanvas mouseRef={mouseRef} />
+        <HeroCanvas mouseRef={mouseRef} active={active} />
       </div>
 
       <div className={styles.content}>

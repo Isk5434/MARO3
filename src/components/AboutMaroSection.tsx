@@ -94,6 +94,7 @@ export const AboutMaroSection = forwardRef<HTMLElement>(function AboutMaroSectio
     gsap.to(introRef.current, {
       y: -28,
       opacity: 0,
+      scale: 1,
       duration: 0.38,
       ease: 'power2.in',
       onComplete: () => setIsOpen(true),
@@ -101,7 +102,7 @@ export const AboutMaroSection = forwardRef<HTMLElement>(function AboutMaroSectio
   }
 
   return (
-    <section ref={setRefs} className={styles.section} aria-label="What is MARO">
+    <section id="about" ref={setRefs} className={styles.section} aria-label="What is MARO">
       <div className={styles.visualTiles} aria-hidden="true">
         <span className={`${styles.tile} ${styles.tileOne}`} />
         <span className={`${styles.tile} ${styles.tileTwo}`} />
@@ -110,27 +111,29 @@ export const AboutMaroSection = forwardRef<HTMLElement>(function AboutMaroSectio
         <span className={`${styles.tile} ${styles.tileFive}`} />
       </div>
 
-      {!isOpen ? (
-        <div ref={introRef} className={styles.intro}>
-          <p className={styles.question} data-about-reveal>
-            What is MARO？
-          </p>
-          <button className={styles.primaryButton} onClick={handleOpen} data-about-button>
-            MAROとは？
-          </button>
-        </div>
-      ) : (
-        <article ref={detailRef} className={styles.detail}>
-          <div className={styles.detailInner}>
-            <h2 data-detail-reveal>MAROとは？</h2>
-            {MARO_BODY.map((paragraph) => (
-              <p key={paragraph} data-detail-reveal>
-                {paragraph}
-              </p>
-            ))}
+      <div className={styles.stage}>
+        {!isOpen ? (
+          <div ref={introRef} className={styles.intro}>
+            <p className={styles.question} data-about-reveal>
+              What is MARO？
+            </p>
+            <button className={styles.primaryButton} onClick={handleOpen} data-about-button>
+              MAROとは？
+            </button>
           </div>
-        </article>
-      )}
+        ) : (
+          <article ref={detailRef} className={styles.detail}>
+            <div className={styles.detailInner}>
+              <h2 data-detail-reveal>MAROとは？</h2>
+              {MARO_BODY.map((paragraph) => (
+                <p key={paragraph} data-detail-reveal>
+                  {paragraph}
+                </p>
+              ))}
+            </div>
+          </article>
+        )}
+      </div>
     </section>
   )
 })

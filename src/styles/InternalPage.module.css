@@ -5,6 +5,12 @@
     #b7bca8;
 }
 
+.linkPage {
+  background:
+    radial-gradient(circle at 84% 46%, rgba(108, 45, 44, 0.42), transparent 30rem),
+    linear-gradient(90deg, #0c0907 0%, #14100d 53%, #21150f 100%);
+}
+
 .backLink {
   position: fixed;
   top: calc(var(--header-height) + 1.5rem);
@@ -26,6 +32,11 @@
     calc(var(--footer-height) + 4rem);
   overflow: hidden;
   isolation: isolate;
+  contain: layout paint;
+}
+
+.linkSection {
+  padding-top: calc(var(--header-height) + 8rem);
 }
 
 .section::before {
@@ -46,6 +57,50 @@
   pointer-events: none;
 }
 
+.flowBanner {
+  position: absolute;
+  top: calc(var(--header-height) + 1.4rem);
+  left: 0;
+  right: 0;
+  z-index: 1;
+  height: 6rem;
+  overflow: hidden;
+  pointer-events: none;
+  opacity: 0.72;
+  mix-blend-mode: screen;
+}
+
+.flowTrack {
+  display: flex;
+  width: max-content;
+  height: 100%;
+  align-items: center;
+  gap: 1.2rem;
+  animation: flowBanner 24s linear infinite;
+  will-change: transform;
+}
+
+.flowImage {
+  width: 5.2rem;
+  height: 11rem;
+  flex: 0 0 auto;
+  object-fit: cover;
+  border-radius: 4px;
+  transform: rotate(90deg);
+  transform-origin: center;
+  filter: saturate(0.9) contrast(0.96);
+}
+
+@keyframes flowBanner {
+  from {
+    transform: translateX(0);
+  }
+
+  to {
+    transform: translateX(-50%);
+  }
+}
+
 .tile {
   position: absolute;
   display: block;
@@ -55,6 +110,32 @@
     url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.52' numOctaves='5'/%3E%3C/filter%3E%3Crect width='180' height='180' filter='url(%23n)' opacity='0.8'/%3E%3C/svg%3E");
   background-blend-mode: screen, normal;
   opacity: 0.36;
+}
+
+.linkPage .tile {
+  background:
+    linear-gradient(155deg, rgba(128, 58, 74, 0.72), rgba(184, 92, 115, 0.56) 48%, rgba(234, 148, 159, 0.38)),
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.52' numOctaves='5'/%3E%3C/filter%3E%3Crect width='180' height='180' filter='url(%23n)' opacity='0.8'/%3E%3C/svg%3E");
+  background-blend-mode: screen, normal;
+  opacity: 0.48;
+}
+
+.linkPage .tileOne {
+  left: auto;
+  right: 5%;
+  top: 8%;
+}
+
+.linkPage .tileTwo {
+  left: auto;
+  right: 14%;
+  top: 0;
+}
+
+.linkPage .tileThree {
+  left: auto;
+  right: 6%;
+  bottom: 8%;
 }
 
 .tileOne {
@@ -80,7 +161,7 @@
 
 .content {
   position: relative;
-  z-index: 1;
+  z-index: 2;
   width: min(820px, 100%);
   color: rgba(255, 255, 255, 0.94);
   text-shadow: 0 1px 22px rgba(69, 75, 61, 0.18);

@@ -10,6 +10,7 @@
   padding: 0 clamp(1.2rem, 3vw, 2.5rem);
   z-index: var(--z-ui);
   pointer-events: none;
+  background: transparent;
 }
 
 .timestamp {

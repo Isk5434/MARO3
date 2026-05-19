@@ -8,10 +8,11 @@
     calc(var(--footer-height) + 4rem);
   overflow: hidden;
   background:
-    linear-gradient(90deg, rgba(176, 184, 165, 0.94), rgba(194, 188, 173, 0.86)),
-    #b7bca8;
-  border-top: 1px solid rgba(255, 255, 255, 0.28);
+    linear-gradient(120deg, rgba(18, 15, 12, 0.98), rgba(28, 22, 16, 0.96)),
+    #0f0d0a;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
   isolation: isolate;
+  contain: layout paint;
 }
 
 .section::before {
@@ -38,11 +39,11 @@
   display: block;
   border-radius: 4px;
   background:
-    linear-gradient(155deg, rgba(114, 158, 194, 0.64), rgba(241, 154, 173, 0.58) 48%, rgba(255, 226, 158, 0.62)),
+    linear-gradient(155deg, rgba(220, 100, 20, 0.72), rgba(255, 175, 40, 0.68) 48%, rgba(255, 230, 80, 0.64)),
     url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.52' numOctaves='5'/%3E%3C/filter%3E%3Crect width='180' height='180' filter='url(%23n)' opacity='0.8'/%3E%3C/svg%3E");
   background-blend-mode: screen, normal;
-  box-shadow: 0 24px 54px rgba(74, 79, 69, 0.14);
-  opacity: 0.42;
+  box-shadow: 0 24px 54px rgba(180, 100, 0, 0.22);
+  opacity: 0.55;
 }
 
 .tileOne {
@@ -66,46 +67,94 @@
   bottom: 9%;
 }
 
+.contact .content {
+  justify-self: end;
+  margin-left: auto;
+  margin-right: 0;
+  text-align: right;
+}
+
+.contact .content h2,
+.contact .button {
+  text-align: right;
+}
+
+.contact .tile {
+  background:
+    linear-gradient(155deg, rgba(20, 70, 50, 0.82), rgba(40, 100, 65, 0.75) 48%, rgba(70, 130, 80, 0.68)),
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.52' numOctaves='5'/%3E%3C/filter%3E%3Crect width='180' height='180' filter='url(%23n)' opacity='0.8'/%3E%3C/svg%3E");
+  background-blend-mode: screen, normal;
+  box-shadow: 0 24px 54px rgba(20, 60, 40, 0.28);
+}
+
 .contact .tileOne {
-  left: auto;
-  right: 9%;
-  top: 9%;
-}
-
-.contact .tileTwo {
-  left: 47%;
+  left: 5%;
   right: auto;
-  top: 17%;
-}
-
-.contact .tileThree {
-  left: 8%;
-  right: auto;
-}
-
-.link .tileOne {
-  left: 10%;
-  top: 11%;
-}
-
-.link .tileTwo {
-  right: 9%;
   top: 8%;
 }
 
+.contact .tileTwo {
+  left: 14%;
+  right: auto;
+  top: 0;
+}
+
+.contact .tileThree {
+  left: 6%;
+  right: auto;
+  bottom: 8%;
+}
+
+.link .tile {
+  background:
+    linear-gradient(155deg, rgba(220, 80, 120, 0.72), rgba(240, 140, 160, 0.68) 48%, rgba(255, 200, 210, 0.62)),
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.52' numOctaves='5'/%3E%3C/filter%3E%3Crect width='180' height='180' filter='url(%23n)' opacity='0.8'/%3E%3C/svg%3E");
+  background-blend-mode: screen, normal;
+  box-shadow: 0 24px 54px rgba(180, 60, 100, 0.22);
+}
+
+.link .tileOne {
+  left: auto;
+  right: 5%;
+  top: 8%;
+}
+
+.link .tileTwo {
+  left: auto;
+  right: 14%;
+  top: 0;
+}
+
 .link .tileThree {
-  right: 26%;
-  bottom: 6%;
+  left: auto;
+  right: 6%;
+  bottom: 8%;
+}
+
+.link {
+  box-shadow: 0 24svh 0 #0f0d0a;
 }
 
 .content {
   position: relative;
   z-index: 1;
-  width: min(780px, 100%);
-  margin-left: min(14vw, 13rem);
+  width: min(680px, 100%);
+  margin-left: 0;
+  justify-self: start;
   color: rgba(255, 255, 255, 0.94);
   text-align: left;
   text-shadow: 0 1px 22px rgba(69, 75, 61, 0.18);
+}
+
+.activity .content {
+  margin-left: auto;
+  margin-right: min(48vw, 36rem);
+  text-align: left;
+}
+
+.activity .lead,
+.activity .body {
+  text-align: right;
 }
 
 .eyebrow {
@@ -118,10 +167,11 @@
 .content h2 {
   margin-bottom: 1.1rem;
   font-family: var(--font-jp);
-  font-size: clamp(3rem, 8vw, 6.8rem);
+  font-size: clamp(2rem, 5vw, 4rem);
   font-weight: 500;
   line-height: 1.25;
   letter-spacing: 0.16em;
+  white-space: nowrap;
 }
 
 .lead {
@@ -188,18 +238,46 @@
 
 @media (max-width: 980px) {
   .content {
+    width: 82%;
     margin-left: 0;
+    justify-self: start;
+  }
+
+  .activity .content {
+    margin-left: 0;
+    margin-right: auto;
+    justify-self: start;
+    text-align: left;
+  }
+
+  .activity .lead,
+  .activity .body {
+    text-align: left;
+  }
+
+  .activity .content h2,
+  .activity .button {
+    text-align: left;
+  }
+
+  .contact .content {
+    margin-left: auto;
+    margin-right: 0;
+    justify-self: end;
+    text-align: right;
   }
 
   .tileOne,
   .tileThree {
     opacity: 0.28;
   }
+
 }
 
 @media (max-width: 720px) {
   .content h2 {
-    font-size: 2.55rem;
+    font-size: clamp(1.4rem, 6vw, 2rem);
+    white-space: normal;
   }
 
   .lead,

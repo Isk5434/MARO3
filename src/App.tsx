@@ -1,4 +1,4 @@
-import { useCallback, useRef, useState } from 'react'
+import { useCallback, useEffect, useRef, useState } from 'react'
 import { AboutModal } from './components/AboutModal'
 import { AboutMaroSection } from './components/AboutMaroSection'
 import { Footer } from './components/Footer'
@@ -18,6 +18,7 @@ export default function App() {
   const [loaded, setLoaded] = useState(isInternalPage)
   const [showAbout, setShowAbout] = useState(false)
   const [isDark, setIsDark] = useState(false)
+  const [heroActive, setHeroActive] = useState(true)
   const firstContentRef = useRef<HTMLElement | null>(null)
   const mouseRef = useRef({ nx: 0, ny: 0 })
 
@@ -38,6 +39,28 @@ export default function App() {
     firstContentRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' })
   }, [])
 
+  useEffect(() => {
+    if (isInternalPage) return
+
+    let rafId = 0
+    const updateHeroActive = () => {
+      rafId = 0
+      setHeroActive(window.scrollY < window.innerHeight * 1.2)
+    }
+
+    const handleScroll = () => {
+      if (rafId) return
+      rafId = requestAnimationFrame(updateHeroActive)
+    }
+
+    updateHeroActive()
+    window.addEventListener('scroll', handleScroll, { passive: true })
+    return () => {
+      window.removeEventListener('scroll', handleScroll)
+      if (rafId) cancelAnimationFrame(rafId)
+    }
+  }, [isInternalPage])
+
   return (
     <>
       <SvgFilters />
@@ -48,13 +71,12 @@ export default function App() {
         ) : (
           <>
             <Header
-              onAboutClick={() => setShowAbout(true)}
               isDark={isDark}
               onBgToggle={handleBgToggle}
             />
             <main className={styles.page}>
               <div className={styles.pinnedPhase}>
-                <HeroSection mouseRef={mouseRef} onCtaClick={handleHeroCta} />
+                <HeroSection mouseRef={mouseRef} onCtaClick={handleHeroCta} active={heroActive} />
               </div>
               <div className={styles.coverTransition}>
                 <AboutMaroSection ref={firstContentRef} />

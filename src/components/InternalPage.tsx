@@ -7,6 +7,10 @@ interface Props {
   pageId: InternalPageId
 }
 
+const LINK_BANNER_IMAGE = `${import.meta.env.BASE_URL}${encodeURIComponent(
+  'ChatGPT Image 2026年5月19日 16_59_27.png',
+)}`
+
 function setRevealMask(elements: NodeListOf<HTMLElement>, transparent: number, black: number) {
   elements.forEach((el, index) => {
     const offset = index * 10
@@ -26,13 +30,13 @@ export function InternalPage({ pageId }: Props) {
     if (!section) return
 
     const revealTargets = section.querySelectorAll<HTMLElement>('[data-internal-reveal]')
-    const actionTargets = section.querySelectorAll<HTMLElement>('[data-internal-action]')
+    const actionTargets = Array.from(section.querySelectorAll<HTMLElement>('[data-internal-action]'))
     const mask = { transparent: 100, black: 150 }
 
-    gsap.set(actionTargets, { y: 16, opacity: 0 })
+    if (actionTargets.length > 0) gsap.set(actionTargets, { y: 16, opacity: 0 })
     setRevealMask(revealTargets, mask.transparent, mask.black)
 
-    gsap
+    const timeline = gsap
       .timeline({ defaults: { ease: 'power3.out' } })
       .fromTo(
         mask,
@@ -52,16 +56,32 @@ export function InternalPage({ pageId }: Props) {
           },
         },
       )
-      .to(actionTargets, { y: 0, opacity: 1, duration: 0.6, stagger: 0.06 }, '<55%')
+
+    if (actionTargets.length > 0) {
+      timeline.to(actionTargets, { y: 0, opacity: 1, duration: 0.6, stagger: 0.06 }, '<55%')
+    }
   }, [pageId])
 
   return (
-    <main className={styles.page}>
+    <main className={`${styles.page} ${pageId === 'link' ? styles.linkPage : ''}`}>
       <a href={getAppPath('')} className={styles.backLink}>
         TOPへ戻る
       </a>
 
-      <section ref={sectionRef} className={styles.section}>
+      <section
+        ref={sectionRef}
+        className={`${styles.section} ${pageId === 'link' ? styles.linkSection : ''}`}
+      >
+        {pageId === 'link' && (
+          <div className={styles.flowBanner} aria-hidden="true">
+            <div className={styles.flowTrack}>
+              {[0, 1, 2, 3, 4, 5].map((item) => (
+                <img key={item} src={LINK_BANNER_IMAGE} alt="" className={styles.flowImage} />
+              ))}
+            </div>
+          </div>
+        )}
+
         <div className={styles.visualTiles} aria-hidden="true">
           <span className={`${styles.tile} ${styles.tileOne}`} />
           <span className={`${styles.tile} ${styles.tileTwo}`} />

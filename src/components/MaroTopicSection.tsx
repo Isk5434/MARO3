@@ -80,7 +80,12 @@ export function MaroTopicSection({
   }, [])
 
   return (
-    <section ref={sectionRef} className={`${styles.section} ${styles[variant]}`} aria-label={title}>
+    <section
+      id={pageId}
+      ref={sectionRef}
+      className={`${styles.section} ${styles[variant]}`}
+      aria-label={title}
+    >
       <div className={styles.visualTiles} aria-hidden="true">
         <span className={`${styles.tile} ${styles.tileOne}`} />
         <span className={`${styles.tile} ${styles.tileTwo}`} />

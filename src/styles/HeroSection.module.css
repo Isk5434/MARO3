@@ -4,6 +4,7 @@
   height: 100svh;
   overflow: hidden;
   flex-shrink: 0;
+  background: var(--color-bg);
 }
 
 .content {

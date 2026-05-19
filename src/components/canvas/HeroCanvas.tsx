@@ -9,13 +9,16 @@ useGLTF.setDecoderPath(`${import.meta.env.BASE_URL}draco/gltf/`)
 
 interface Props {
   mouseRef: MutableRefObject<{ nx: number; ny: number }>
+  active?: boolean
 }
 
-export function HeroCanvas({ mouseRef }: Props) {
+export function HeroCanvas({ mouseRef, active = true }: Props) {
   return (
     <Canvas
       camera={{ position: [0, 0, 5.5], fov: 48 }}
       gl={{ antialias: true, alpha: true }}
+      dpr={[1, 1.5]}
+      frameloop={active ? 'always' : 'never'}
       style={{
         position: 'absolute',
         inset: 0,
