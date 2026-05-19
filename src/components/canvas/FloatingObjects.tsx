@@ -1,12 +1,12 @@
-import { useRef, Suspense, Component, type ReactNode } from 'react'
+import { useEffect, useRef, Suspense, Component, type ReactNode } from 'react'
 import { useFrame } from '@react-three/fiber'
 import { useGLTF } from '@react-three/drei'
 import * as THREE from 'three'
 import { FLOATING_OBJECTS } from '../../config/floating-objects.config'
 import type { FloatingObjectConfig } from '../../config/floating-objects.config'
 
-FLOATING_OBJECTS.filter(c => c.shape === 'glb' && c.glbPath).forEach(c => useGLTF.preload(c.glbPath!))
-
+const GLB_ITEMS = FLOATING_OBJECTS.filter((cfg) => cfg.shape === 'glb')
+const PRIMITIVE_ITEMS = FLOATING_OBJECTS.filter((cfg) => cfg.shape !== 'glb')
 
 function FloatingGlb({ cfg }: { cfg: FloatingObjectConfig }) {
   const { scene } = useGLTF(cfg.glbPath!)
@@ -117,19 +117,24 @@ class GlbErrorBoundary extends Component<{ children: ReactNode }, { failed: bool
 // 着地後はサインカーブで持続フロート + 緩やかに自転。
 
 export function FloatingObjects({ isMobile }: { isMobile: boolean }) {
-  const glbItems = FLOATING_OBJECTS.filter((cfg) => cfg.shape === 'glb')
-  const primitiveItems = FLOATING_OBJECTS.filter((cfg) => cfg.shape !== 'glb')
+  useEffect(() => {
+    if (isMobile) return
+    GLB_ITEMS.forEach((cfg) => {
+      if (cfg.glbPath) useGLTF.preload(cfg.glbPath)
+    })
+  }, [isMobile])
 
   return (
     <>
-      {!isMobile && primitiveItems.map((cfg) => (
+      {!isMobile && PRIMITIVE_ITEMS.map((cfg) => (
         <FloatingItem key={cfg.id} cfg={cfg} />
       ))}
-      {glbItems.map((cfg) => {
+      {GLB_ITEMS.map((cfg) => {
         const resolved = isMobile
           ? {
               ...cfg,
               position: cfg.mobilePosition ?? cfg.position,
+              rotation: cfg.mobileRotation ?? cfg.rotation,
               scale: cfg.mobileScale ?? cfg.scale,
             }
           : cfg

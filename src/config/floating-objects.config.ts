@@ -33,6 +33,7 @@ export interface FloatingObjectConfig {
   rotateAxis?: [number, number, number]  // rotation added per frame on each axis
   // mobile overrides
   mobilePosition?: [number, number, number]
+  mobileRotation?: [number, number, number]
   mobileScale?: number
 }
 
@@ -157,6 +158,7 @@ export const FLOATING_OBJECTS: FloatingObjectConfig[] = [
     floatOffset: 0.5, floatAmplitude: 0.18, floatSpeed: 0.6,
     rotateAxis: [0.0, 0.006, 0.0],
     mobilePosition: [-0.9, 2.0, 0],
+    mobileRotation: [0, 0.4, 0],
     mobileScale: 1.0,
   },
   {
@@ -172,6 +174,7 @@ export const FLOATING_OBJECTS: FloatingObjectConfig[] = [
     floatOffset: 2.0, floatAmplitude: 0.20, floatSpeed: 0.75,
     rotateAxis: [0.0, 0.005, 0.0],
     mobilePosition: [1.0, 0.2, -0.3],
+    mobileRotation: [0, -0.5, 0],
     mobileScale: 1.0,
   },
   {
@@ -185,8 +188,9 @@ export const FLOATING_OBJECTS: FloatingObjectConfig[] = [
     color: '#ffffff',
     roughness: 0.4, metalness: 0.0,
     floatOffset: 4.0, floatAmplitude: 0.14, floatSpeed: 0.85,
-    rotateAxis: [0.001, 0.004, 0.001],
+    rotateAxis: [0.0, 0.004, 0.0],
     mobilePosition: [-0.2, -2.0, 0],
+    mobileRotation: [0, 0.3, 0],
     mobileScale: 1.0,
   },
 ]

@@ -28,12 +28,14 @@ function useIsMobile() {
 export function HeroCanvas({ mouseRef, active = true }: Props) {
   const isMobile = useIsMobile()
 
+  if (isMobile || !active) return null
+
   return (
     <Canvas
       camera={{ position: [0, 0, 5.5], fov: 48 }}
       gl={{ antialias: true, alpha: true }}
       dpr={[1, 1.5]}
-      frameloop={active ? 'always' : 'never'}
+      frameloop="always"
       style={{
         position: 'absolute',
         inset: 0,
