@@ -1,0 +1,34 @@
+.appShell {
+  min-height: 100svh;
+  visibility: hidden;
+  pointer-events: none;
+}
+
+.appShell.loaded {
+  visibility: visible;
+  pointer-events: auto;
+}
+
+.page {
+  position: relative;
+  min-height: 200svh;
+  isolation: isolate;
+}
+
+.pinnedPhase {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  height: 100svh;
+  overflow: hidden;
+}
+
+.coverTransition {
+  position: sticky;
+  top: 0;
+  z-index: 1;
+  min-height: 100svh;
+  margin-top: 100svh;
+  transform: translateZ(0);
+  will-change: transform;
+}

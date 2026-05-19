@@ -1,0 +1,7 @@
+.filter-wobble {
+  filter: url(#wobble-filter);
+}
+
+.filter-crumple {
+  filter: url(#crumple-filter);
+}

@@ -1,0 +1,42 @@
+.footer {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: var(--footer-height);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 clamp(1.2rem, 3vw, 2.5rem);
+  z-index: var(--z-ui);
+  pointer-events: none;
+}
+
+.timestamp {
+  font-size: 0.7rem;
+  letter-spacing: 0.1em;
+  color: var(--color-text-light);
+  font-family: var(--font-serif);
+  pointer-events: none;
+  user-select: none;
+}
+
+.links {
+  display: flex;
+  gap: 1.2rem;
+  pointer-events: auto;
+}
+
+.link {
+  font-size: 0.75rem;
+  letter-spacing: 0.08em;
+  color: var(--color-text-light);
+  text-decoration: none;
+  font-family: var(--font-serif);
+  transition: color var(--transition-fast), opacity var(--transition-fast);
+}
+
+.link:hover {
+  color: var(--color-text);
+  opacity: 1;
+}

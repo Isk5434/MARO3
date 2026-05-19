@@ -1,0 +1,172 @@
+.overlay {
+  position: fixed;
+  inset: 0;
+  background-color: var(--color-bg);
+  display: grid;
+  place-items: center;
+  z-index: var(--z-loading);
+  transform-origin: center;
+  will-change: transform, opacity;
+}
+
+.overlay.clear {
+  background: transparent;
+  pointer-events: none;
+}
+
+.content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 1.4rem;
+  margin-top: -5svh;
+  will-change: transform, opacity;
+}
+
+.mark {
+  position: relative;
+  width: 3.8rem;
+  height: 3.8rem;
+  filter: url(#wobble-filter);
+}
+
+.mark span {
+  position: absolute;
+  display: block;
+  border: 1px solid currentColor;
+  border-radius: 999px;
+  color: var(--color-text);
+  opacity: 0.82;
+}
+
+.mark span:nth-child(1) {
+  inset: 0.2rem 1.35rem;
+}
+
+.mark span:nth-child(2) {
+  inset: 1.35rem 0.2rem;
+}
+
+.mark span:nth-child(3) {
+  inset: 0.62rem;
+  transform: rotate(45deg);
+}
+
+.switcher {
+  position: relative;
+  min-width: 13rem;
+  height: 2.3rem;
+  display: grid;
+  place-items: center;
+}
+
+.title {
+  font-family: var(--font-script);
+  font-size: clamp(1.8rem, 4vw, 3rem);
+  color: var(--color-text);
+  filter: url(#wobble-filter);
+  line-height: 1;
+}
+
+.loadingLine {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  gap: 0.45rem;
+  transition: opacity 0.5s ease-in-out;
+}
+
+.dot {
+  width: 4px;
+  height: 4px;
+  margin-bottom: 0.48rem;
+  background: var(--color-text);
+  border-radius: 999px;
+  animation: floatFade 0.8s ease-in-out forwards infinite;
+}
+
+.ready .loadingLine {
+  opacity: 0;
+  pointer-events: none;
+}
+
+.ready .dot {
+  animation-play-state: paused;
+}
+
+.percent {
+  min-height: 1rem;
+  font-size: 0.75rem;
+  letter-spacing: 0.12em;
+  color: var(--color-text-light);
+  font-family: var(--font-serif);
+  opacity: 0.58;
+  transition: opacity 0.35s ease;
+}
+
+.ready .percent {
+  opacity: 0;
+}
+
+.enterBtn {
+  position: absolute;
+  inset: 0;
+  font-family: var(--font-serif);
+  font-size: clamp(1.25rem, 2.5vw, 1.9rem);
+  letter-spacing: 0;
+  text-transform: uppercase;
+  color: var(--color-text);
+  background: transparent;
+  border: 0;
+  padding: 0;
+  cursor: pointer;
+  opacity: 0;
+  white-space: nowrap;
+  transition:
+    opacity 0.5s ease-in-out 0.25s,
+    letter-spacing 0.5s ease-in-out;
+  pointer-events: none;
+}
+
+.enterBtn:hover {
+  letter-spacing: 0.06em;
+}
+
+.enterBtn:disabled {
+  cursor: default;
+}
+
+.ready .enterBtn {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+@keyframes floatFade {
+  0% {
+    transform: translateY(-10px);
+    opacity: 1;
+  }
+
+  50% {
+    transform: translateY(0);
+    opacity: 0;
+  }
+
+  100% {
+    transform: translateY(-10px);
+    opacity: 1;
+  }
+}
+
+@media (max-width: 640px) {
+  .content {
+    margin-top: -8svh;
+  }
+
+  .switcher {
+    min-width: 11rem;
+  }
+}
