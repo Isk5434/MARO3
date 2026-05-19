@@ -92,6 +92,7 @@ export function LoadingScreen({ onLoaded }: Props) {
   const loadStartRef = useRef(0)
 
   const displayProgress = total > 0 ? progress : fakeEnabled ? fakeProgress : 0
+  const visibleProgress = Math.min(100, Math.round(displayProgress))
   const isReady = phase === 'ready' || phase === 'entering'
 
   const setHeroMask = useCallback((value: string) => {
@@ -127,14 +128,15 @@ export function LoadingScreen({ onLoaded }: Props) {
   }, [fakeEnabled, total])
 
   const completedRef = useRef(false)
+  const readyTimeoutRef = useRef<number | null>(null)
 
   useEffect(() => {
-    if (displayProgress < 100 || completedRef.current) return
+    if (visibleProgress < 100 || completedRef.current) return
 
     completedRef.current = true
     const elapsed = performance.now() - loadStartRef.current
     const readyDelay = Math.max(READY_REVEAL_DELAY_MS, MIN_LOADING_MS - elapsed)
-    const timeoutId = window.setTimeout(() => {
+    readyTimeoutRef.current = window.setTimeout(() => {
       gsap.set('[data-hero-visual]', { scale: 1.06, opacity: 0 })
       gsap.set('[data-hero-title]', { opacity: 1 })
       gsap.set('[data-hero-subtitle]', { opacity: 1 })
@@ -145,9 +147,13 @@ export function LoadingScreen({ onLoaded }: Props) {
       setPhase('ready')
       document.body.classList.add('webgl-ready')
     }, readyDelay)
+  }, [visibleProgress, onLoaded, setHeroMask])
 
-    return () => window.clearTimeout(timeoutId)
-  }, [displayProgress, onLoaded, setHeroMask])
+  useEffect(() => {
+    return () => {
+      if (readyTimeoutRef.current !== null) window.clearTimeout(readyTimeoutRef.current)
+    }
+  }, [])
 
   useEffect(() => {
     document.body.classList.add('is-loading')
@@ -259,7 +265,7 @@ export function LoadingScreen({ onLoaded }: Props) {
           </button>
         </div>
 
-        <span className={styles.percent}>{Math.round(displayProgress)}%</span>
+        <span className={styles.percent}>{visibleProgress}%</span>
       </div>
 
       {shards.map((shard, index) => (
