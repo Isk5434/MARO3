@@ -102,19 +102,6 @@ export const AboutMaroSection = forwardRef<HTMLElement>(function AboutMaroSectio
 
   return (
     <section ref={setRefs} className={styles.section} aria-label="What is MARO">
-      <div className={styles.brandLine} aria-hidden="true">
-        <span>名古屋市博物館</span>
-        <span>MARO</span>
-      </div>
-
-      <nav className={styles.sideNav} aria-hidden="true">
-        <span>TOP</span>
-        <span>ABOUT</span>
-        <span>ACTIVITY</span>
-        <span>NEWS</span>
-        <span>INFO</span>
-      </nav>
-
       <div className={styles.visualTiles} aria-hidden="true">
         <span className={`${styles.tile} ${styles.tileOne}`} />
         <span className={`${styles.tile} ${styles.tileTwo}`} />

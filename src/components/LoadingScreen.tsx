@@ -233,11 +233,12 @@ export function LoadingScreen({ onLoaded }: Props) {
       aria-live="polite"
     >
       <div ref={contentRef} className={styles.content}>
-        <div className={styles.mark} aria-hidden="true">
-          <span />
-          <span />
-          <span />
-        </div>
+        <img
+          className={styles.mark}
+          src="/maro-hp3/ChatGPT_Image_2026年5月19日_16_25_30-removebg-preview.png"
+          alt=""
+          aria-hidden="true"
+        />
 
         <div className={styles.switcher}>
           <div className={styles.loadingLine} aria-hidden={isReady}>

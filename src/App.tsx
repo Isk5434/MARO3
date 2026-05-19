@@ -4,13 +4,18 @@ import { AboutMaroSection } from './components/AboutMaroSection'
 import { Footer } from './components/Footer'
 import { Header } from './components/Header'
 import { HeroSection } from './components/HeroSection'
+import { InternalPage } from './components/InternalPage'
 import { LoadingScreen } from './components/LoadingScreen'
+import { MaroTopicSection } from './components/MaroTopicSection'
 import { SvgFilters } from './components/SvgFilters'
+import { getCurrentInternalPage } from './config/internal-pages'
 import { useMouseTracker } from './hooks/useMouseTracker'
 import styles from './styles/App.module.css'
 
 export default function App() {
-  const [loaded, setLoaded] = useState(false)
+  const internalPageId = getCurrentInternalPage()
+  const isInternalPage = internalPageId !== null
+  const [loaded, setLoaded] = useState(isInternalPage)
   const [showAbout, setShowAbout] = useState(false)
   const [isDark, setIsDark] = useState(false)
   const firstContentRef = useRef<HTMLElement | null>(null)
@@ -36,23 +41,65 @@ export default function App() {
   return (
     <>
       <SvgFilters />
-      <LoadingScreen onLoaded={() => setLoaded(true)} />
+      {!isInternalPage && <LoadingScreen onLoaded={() => setLoaded(true)} />}
       <div className={`${styles.appShell} ${loaded ? styles.loaded : ''}`} aria-hidden={!loaded}>
-        <Header
-          onAboutClick={() => setShowAbout(true)}
-          isDark={isDark}
-          onBgToggle={handleBgToggle}
-        />
-        <main className={styles.page}>
-          <div className={styles.pinnedPhase}>
-            <HeroSection mouseRef={mouseRef} onCtaClick={handleHeroCta} />
-          </div>
-          <div className={styles.coverTransition}>
-            <AboutMaroSection ref={firstContentRef} />
-          </div>
-        </main>
-        <Footer />
-        <AboutModal isOpen={showAbout} onClose={() => setShowAbout(false)} />
+        {isInternalPage ? (
+          <InternalPage pageId={internalPageId} />
+        ) : (
+          <>
+            <Header
+              onAboutClick={() => setShowAbout(true)}
+              isDark={isDark}
+              onBgToggle={handleBgToggle}
+            />
+            <main className={styles.page}>
+              <div className={styles.pinnedPhase}>
+                <HeroSection mouseRef={mouseRef} onCtaClick={handleHeroCta} />
+              </div>
+              <div className={styles.coverTransition}>
+                <AboutMaroSection ref={firstContentRef} />
+                <MaroTopicSection
+                  eyebrow="ACTIVITY"
+                  title="活動内容"
+                  lead="毎週木曜日に大学や博物館で会議などの活動を行っています。"
+                  lines={[
+                    '名古屋市博物館でのイベントや、魅力発信のための取り組みを行ってきました。',
+                    '若い世代が博物館と出会うきっかけをつくるため、企画・運営・発信を続けています。',
+                  ]}
+                  pageId="activity"
+                  action="活動内容を見る"
+                  variant="activity"
+                />
+                <MaroTopicSection
+                  eyebrow="CONTACT"
+                  title="お問い合わせ"
+                  lead="MAROの活動見学・入部希望・取材・お問い合わせ等はこちらから。"
+                  lines={[
+                    '活動に興味がある方、見学や入部を希望される方、取材や協働の相談をしたい方へ。',
+                    'このホームページ内にお問い合わせページを用意しています。',
+                  ]}
+                  pageId="contact"
+                  action="お問い合わせへ"
+                  variant="contact"
+                />
+                <MaroTopicSection
+                  eyebrow="LINK"
+                  title="リンク"
+                  lead="SNS、ブログ、各種リンクをまとめて見られるページです。"
+                  lines={[
+                    'Facebook、Twitter / X、Instagram の更新情報と、MAROブログへの入口をまとめています。',
+                    '各種リンクやサイトマップも、このホームページ内のページとして整理します。',
+                  ]}
+                  pageId="link"
+                  action="リンクを見る"
+                  variant="link"
+                />
+              </div>
+            </main>
+            <Footer />
+            <AboutModal isOpen={showAbout} onClose={() => setShowAbout(false)} />
+          </>
+        )}
       </div>
     </>
   )

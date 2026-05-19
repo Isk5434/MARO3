@@ -24,10 +24,8 @@
 }
 
 .coverTransition {
-  position: sticky;
-  top: 0;
+  position: relative;
   z-index: 1;
-  min-height: 100svh;
   margin-top: 100svh;
   transform: translateZ(0);
   will-change: transform;
