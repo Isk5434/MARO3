@@ -47,6 +47,13 @@
   opacity: 0.92;
 }
 
+.loopRing picture,
+.contactRoundel picture {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
 .loopRing img {
   width: 100%;
   height: 100%;
@@ -89,17 +96,23 @@
   will-change: transform;
 }
 
-.contactSashImage {
+.contactSashPicture {
   width: 23rem;
   height: 23rem;
   flex: 0 0 auto;
   display: block;
   align-self: center;
+  transform: rotate(90deg) scale(1);
+  transform-origin: center;
+}
+
+.contactSashImage {
+  width: 100%;
+  height: 100%;
+  display: block;
   object-fit: cover;
   object-position: 50% 50%;
   filter: saturate(1.02) contrast(1.06);
-  transform: rotate(90deg) scale(1);
-  transform-origin: center;
 }
 
 @keyframes contactSashFlow {
@@ -188,10 +201,17 @@
   animation-direction: reverse;
 }
 
-.flowImage {
+.flowPicture {
   width: 22rem;
   height: 10rem;
   flex: 0 0 auto;
+  display: block;
+}
+
+.flowImage {
+  width: 100%;
+  height: 100%;
+  display: block;
   object-fit: cover;
   filter: saturate(1.08) contrast(1.08);
 }
@@ -458,11 +478,14 @@
     transform: rotate(32deg);
   }
 
-  .contactSashImage {
+  .contactSashPicture {
     width: 22rem;
     height: 22rem;
-    object-position: 50% 50%;
     transform: rotate(90deg) scale(1.05);
+  }
+
+  .contactSashImage {
+    object-position: 50% 50%;
   }
 
   .contactRoundel {

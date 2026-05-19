@@ -102,10 +102,17 @@
   animation-direction: reverse;
 }
 
-.flowImage {
+.flowPicture {
   width: 22rem;
   height: 10rem;
   flex: 0 0 auto;
+  display: block;
+}
+
+.flowImage {
+  width: 100%;
+  height: 100%;
+  display: block;
   object-fit: cover;
   filter: saturate(1.08) contrast(1.08);
 }

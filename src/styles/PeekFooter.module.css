@@ -17,6 +17,10 @@
   will-change: transform;
 }
 
+.imageWrap picture {
+  display: block;
+}
+
 .image {
   display: block;
   width: 100%;

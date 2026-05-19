@@ -1,6 +1,6 @@
 import gsap from 'gsap'
 import { useEffect, useRef } from 'react'
-import { PEEK_FOOTER_IMAGE } from '../config/assets'
+import { PEEK_FOOTER_IMAGE, PEEK_FOOTER_MOBILE_IMAGE } from '../config/assets'
 import styles from '../styles/PeekFooter.module.css'
 
 export function PeekFooter() {
@@ -37,7 +37,10 @@ export function PeekFooter() {
   return (
     <div ref={wrapperRef} className={styles.wrapper} aria-hidden="true">
       <div ref={imageWrapRef} className={styles.imageWrap}>
-        <img src={PEEK_FOOTER_IMAGE} alt="" className={styles.image} />
+        <picture>
+          <source media="(max-width: 720px)" srcSet={PEEK_FOOTER_MOBILE_IMAGE} type="image/webp" />
+          <img src={PEEK_FOOTER_IMAGE} alt="" className={styles.image} />
+        </picture>
       </div>
     </div>
   )

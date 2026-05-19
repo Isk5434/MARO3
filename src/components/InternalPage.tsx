@@ -1,6 +1,6 @@
 import gsap from 'gsap'
 import { useEffect, useRef } from 'react'
-import { LINK_RIBBON_IMAGE } from '../config/assets'
+import { LINK_RIBBON_IMAGE, LINK_RIBBON_MOBILE_IMAGE } from '../config/assets'
 import { INTERNAL_PAGES, getAppPath, type InternalPageId } from '../config/internal-pages'
 import styles from '../styles/InternalPage.module.css'
 
@@ -77,7 +77,10 @@ export function InternalPage({ pageId }: Props) {
               <div key={position} className={`${styles.diagonalRibbon} ${styles[position]}`}>
                 <div className={styles.flowTrack}>
                   {RIBBON_REPEAT.map((item) => (
-                    <img key={item} src={LINK_RIBBON_IMAGE} alt="" className={styles.flowImage} />
+                    <picture key={item} className={styles.flowPicture}>
+                      <source media="(max-width: 720px)" srcSet={LINK_RIBBON_MOBILE_IMAGE} type="image/webp" />
+                      <img src={LINK_RIBBON_IMAGE} alt="" className={styles.flowImage} />
+                    </picture>
                   ))}
                 </div>
               </div>

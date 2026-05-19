@@ -115,3 +115,30 @@
   50%       { transform: scaleY(1.3); opacity: 0.8; }
 }
 
+@media (max-width: 768px) {
+  .hero {
+    background: #0f0d0a;
+  }
+  .heading {
+    color: #f5f0e8;
+  }
+  .subtitle {
+    color: rgba(245, 240, 232, 0.65);
+  }
+  .cta {
+    color: #f5f0e8;
+    border-color: rgba(245, 240, 232, 0.35);
+    background: rgba(245, 240, 232, 0.08);
+  }
+  .cta:hover {
+    background: rgba(245, 240, 232, 0.16);
+    border-color: rgba(245, 240, 232, 0.65);
+  }
+  .scrollHint {
+    color: rgba(245, 240, 232, 0.45);
+  }
+  .scrollLine {
+    background: linear-gradient(to bottom, transparent, rgba(245, 240, 232, 0.45));
+  }
+}
+

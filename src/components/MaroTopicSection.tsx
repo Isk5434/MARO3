@@ -2,9 +2,13 @@ import gsap from 'gsap'
 import { useEffect, useRef } from 'react'
 import {
   CONTACT_ROUNDEL_IMAGE,
+  CONTACT_ROUNDEL_MOBILE_IMAGE,
   CONTACT_SASH_IMAGE,
+  CONTACT_SASH_MOBILE_IMAGE,
   LINK_RIBBON_IMAGE,
+  LINK_RIBBON_MOBILE_IMAGE,
   LOOP_RING_IMAGE,
+  LOOP_RING_MOBILE_IMAGE,
 } from '../config/assets'
 import { getAppPath, type InternalPageId } from '../config/internal-pages'
 import styles from '../styles/MaroTopicSection.module.css'
@@ -101,7 +105,10 @@ export function MaroTopicSection({
 
       {variant === 'activity' && (
         <div className={styles.loopRing} aria-hidden="true">
-          <img src={LOOP_RING_IMAGE} alt="" />
+          <picture>
+            <source media="(max-width: 720px)" srcSet={LOOP_RING_MOBILE_IMAGE} type="image/webp" />
+            <img src={LOOP_RING_IMAGE} alt="" />
+          </picture>
         </div>
       )}
 
@@ -110,12 +117,18 @@ export function MaroTopicSection({
           <div className={styles.contactSash} aria-hidden="true">
             <div className={styles.contactSashTrack}>
               {CONTACT_SASH_REPEAT.map((item) => (
-                <img key={item} src={CONTACT_SASH_IMAGE} alt="" className={styles.contactSashImage} />
+                <picture key={item} className={styles.contactSashPicture}>
+                  <source media="(max-width: 720px)" srcSet={CONTACT_SASH_MOBILE_IMAGE} type="image/webp" />
+                  <img src={CONTACT_SASH_IMAGE} alt="" className={styles.contactSashImage} />
+                </picture>
               ))}
             </div>
           </div>
           <div className={styles.contactRoundel} aria-hidden="true">
-            <img src={CONTACT_ROUNDEL_IMAGE} alt="" />
+            <picture>
+              <source media="(max-width: 720px)" srcSet={CONTACT_ROUNDEL_MOBILE_IMAGE} type="image/webp" />
+              <img src={CONTACT_ROUNDEL_IMAGE} alt="" />
+            </picture>
           </div>
         </>
       )}
@@ -126,7 +139,10 @@ export function MaroTopicSection({
             <div key={position} className={`${styles.diagonalRibbon} ${styles[position]}`}>
               <div className={styles.flowTrack}>
                 {RIBBON_REPEAT.map((item) => (
-                  <img key={item} src={LINK_RIBBON_IMAGE} alt="" className={styles.flowImage} />
+                  <picture key={item} className={styles.flowPicture}>
+                    <source media="(max-width: 720px)" srcSet={LINK_RIBBON_MOBILE_IMAGE} type="image/webp" />
+                    <img src={LINK_RIBBON_IMAGE} alt="" className={styles.flowImage} />
+                  </picture>
                 ))}
               </div>
             </div>
