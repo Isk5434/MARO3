@@ -42,8 +42,8 @@
   position: absolute;
   inset: 0;
   background:
-    radial-gradient(circle at 50% 49%, rgba(15, 13, 10, 0.1), rgba(15, 13, 10, 0.34) 44%, rgba(15, 13, 10, 0.72) 78%),
-    linear-gradient(180deg, rgba(15, 13, 10, 0.24), rgba(15, 13, 10, 0.06) 42%, rgba(15, 13, 10, 0.32));
+    radial-gradient(circle at 50% 49%, rgba(15, 13, 10, 0.02), rgba(15, 13, 10, 0.22) 48%, rgba(15, 13, 10, 0.52) 84%),
+    linear-gradient(180deg, rgba(15, 13, 10, 0.08), rgba(15, 13, 10, 0) 45%, rgba(15, 13, 10, 0.18));
 }
 
 .backdropImage {
@@ -51,7 +51,7 @@
   height: 100%;
   display: block;
   object-fit: contain;
-  filter: saturate(1.02) contrast(1.04);
+  filter: brightness(1.28) saturate(1.18) contrast(1.12);
 }
 
 .heading {
@@ -154,11 +154,20 @@
     background: #0f0d0a;
   }
   .backdrop {
-    opacity: 0.95;
+    opacity: 1;
+    place-items: start center;
+  }
+  .backdrop::after {
+    background:
+      radial-gradient(circle at 50% 46%, rgba(15, 13, 10, 0), rgba(15, 13, 10, 0.16) 52%, rgba(15, 13, 10, 0.38) 88%),
+      linear-gradient(180deg, rgba(15, 13, 10, 0.02), rgba(15, 13, 10, 0) 48%, rgba(15, 13, 10, 0.12));
   }
   .backdropImage {
-    width: 100%;
+    width: 118%;
+    height: 100%;
     object-fit: cover;
+    object-position: center top;
+    filter: brightness(1.75) saturate(1.35) contrast(1.22);
   }
   .heading {
     color: #f5f0e8;
