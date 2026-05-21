@@ -483,6 +483,23 @@
 }
 
 @media (max-width: 720px) {
+  .backLink {
+    top: auto;
+    bottom: calc(env(safe-area-inset-bottom, 0px) + 1rem);
+    left: 1rem;
+    max-width: calc(100vw - 2rem);
+    padding: 0.55rem 0.8rem;
+    border: 1px solid rgba(255, 255, 255, 0.42);
+    border-radius: 999px;
+    background: rgba(18, 14, 10, 0.5);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    box-shadow: 0 0.8rem 2rem rgba(15, 13, 10, 0.18);
+    font-size: 0.76rem;
+    line-height: 1;
+    z-index: calc(var(--z-ui) + 1);
+  }
+
   .tileOne,
   .tileThree {
     display: none;

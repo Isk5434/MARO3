@@ -138,6 +138,7 @@ export function LoadingScreen({ onLoaded }: Props) {
     const readyDelay = Math.max(READY_REVEAL_DELAY_MS, MIN_LOADING_MS - elapsed)
     readyTimeoutRef.current = window.setTimeout(() => {
       gsap.set('[data-hero-visual]', { scale: 1.06, opacity: 0 })
+      gsap.set('[data-hero-backdrop]', { scale: 1.04, opacity: 0 })
       gsap.set('[data-hero-title]', { opacity: 1 })
       gsap.set('[data-hero-subtitle]', { opacity: 1 })
       gsap.set('[data-hero-cta]', { y: 18, opacity: 0 })
@@ -182,6 +183,7 @@ export function LoadingScreen({ onLoaded }: Props) {
 
       timeline
         .to('[data-hero-visual]', { scale: 1, opacity: 1, duration: 1.2, ease: 'power3.out' })
+        .to('[data-hero-backdrop]', { scale: 1, opacity: 0.88, duration: 1.35, ease: 'power3.out' }, '<')
         .fromTo(
           mask,
           { transparent: 100, black: 150 },

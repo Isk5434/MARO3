@@ -1,5 +1,6 @@
 import { HeroCanvas } from './canvas/HeroCanvas'
 import { SITE_CONTENT } from '../config/content'
+import { PHASE_ONE_BACKDROP_IMAGE } from '../config/assets'
 import styles from '../styles/HeroSection.module.css'
 import type { MutableRefObject } from 'react'
 
@@ -16,6 +17,10 @@ export function HeroSection({ mouseRef, onCtaClick, active = true }: Props) {
     <section className={styles.hero}>
       <div data-hero-visual style={{ position: 'absolute', inset: 0 }}>
         <HeroCanvas mouseRef={mouseRef} active={active} />
+      </div>
+
+      <div className={styles.backdrop} data-hero-backdrop data-hero-mask aria-hidden="true">
+        <img src={PHASE_ONE_BACKDROP_IMAGE} alt="" className={styles.backdropImage} />
       </div>
 
       <div className={styles.content}>
