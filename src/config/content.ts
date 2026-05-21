@@ -21,7 +21,6 @@ Ut enim ad minim veniam, quis nostrud exercitation.`,
       { label: 'Contact', href: '#' },
     ],
   },
-  contactFormEndpoint: 'https://formspree.io/f/REPLACE_WITH_YOUR_FORM_ID',
   sections: [
     {
       id: 'intro',

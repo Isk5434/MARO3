@@ -1,0 +1,107 @@
+.page {
+  min-height: 100svh;
+  padding: calc(var(--header-height) + 4.5rem) clamp(1.3rem, 6vw, 5rem)
+    calc(var(--footer-height) + 4rem);
+  color: rgba(255, 255, 255, 0.94);
+  background:
+    linear-gradient(90deg, rgba(176, 184, 165, 0.94), rgba(194, 188, 173, 0.86)),
+    #b7bca8;
+}
+
+.backLink {
+  position: fixed;
+  top: calc(var(--header-height) + 1.5rem);
+  left: clamp(1.2rem, 4vw, 3rem);
+  z-index: var(--z-ui);
+  color: rgba(255, 255, 255, 0.9);
+  font-family: var(--font-jp);
+  font-size: 0.86rem;
+  letter-spacing: 0.1em;
+  text-decoration: none;
+}
+
+.article {
+  width: min(840px, 100%);
+  margin: 0 auto;
+  text-shadow: 0 1px 22px rgba(69, 75, 61, 0.18);
+}
+
+.eyebrow {
+  margin-bottom: 0.8rem;
+  font-family: var(--font-serif);
+  font-size: 0.78rem;
+  letter-spacing: 0.18em;
+}
+
+.article h1 {
+  margin-bottom: 1rem;
+  font-family: var(--font-jp);
+  font-size: clamp(2.5rem, 7vw, 5rem);
+  font-weight: 500;
+  line-height: 1.32;
+  letter-spacing: 0.12em;
+}
+
+.article time {
+  display: block;
+  margin-bottom: 1.5rem;
+  font-family: var(--font-serif);
+  font-size: 0.86rem;
+  letter-spacing: 0.12em;
+  opacity: 0.82;
+}
+
+.lead {
+  max-width: 42rem;
+  margin-bottom: 2rem;
+  font-family: var(--font-jp);
+  font-size: 1.04rem;
+  line-height: 2;
+  letter-spacing: 0.07em;
+}
+
+.eyecatch {
+  width: 100%;
+  max-height: 34rem;
+  margin: 0 0 2.4rem;
+  display: block;
+  object-fit: cover;
+  border-radius: 8px;
+  box-shadow: 0 1.4rem 4rem rgba(44, 50, 38, 0.22);
+}
+
+.body {
+  display: grid;
+  gap: 1.1rem;
+  font-family: var(--font-jp);
+  font-size: 1rem;
+  line-height: 2.05;
+  letter-spacing: 0.06em;
+}
+
+.body :where(h2, h3) {
+  margin-top: 1.5rem;
+  font-family: var(--font-jp);
+  font-weight: 600;
+  line-height: 1.5;
+}
+
+.body :where(a) {
+  color: inherit;
+}
+
+.body :where(img) {
+  max-width: 100%;
+  height: auto;
+  border-radius: 8px;
+}
+
+@media (max-width: 720px) {
+  .page {
+    padding-top: calc(var(--header-height) + 5.5rem);
+  }
+
+  .backLink {
+    position: absolute;
+  }
+}

@@ -1,5 +1,7 @@
 // To add / remove / swap 3D objects in the hero section, edit this file.
 // shape: 'torus' | 'box' | 'sphere' | 'cone' | 'torusKnot' | 'glb'
+import { assetPath } from './base-path'
+
 // For a custom GLB: shape: 'glb' + glbPath: '/models/xxx.glb'
 
 export type FloatingShape = 'torus' | 'box' | 'sphere' | 'cone' | 'torusKnot' | 'glb'
@@ -149,7 +151,7 @@ export const FLOATING_OBJECTS: FloatingObjectConfig[] = [
     id: 'glb-bunny',
     shape: 'glb',
     args: [],
-    glbPath: `${import.meta.env.BASE_URL}models/bunny.glb`,
+    glbPath: assetPath('models/bunny.glb'),
     position: [-3.0, 1.0, -0.4],
     rotation: [0.1, 0.4, -0.1],
     scale: 0.7,
@@ -165,7 +167,7 @@ export const FLOATING_OBJECTS: FloatingObjectConfig[] = [
     id: 'glb-maro-banzai',
     shape: 'glb',
     args: [],
-    glbPath: `${import.meta.env.BASE_URL}models/maro-inu-banzai.glb`,
+    glbPath: assetPath('models/maro-inu-banzai.glb'),
     position: [0.8, 1.6, -0.8],
     rotation: [0.0, -0.5, 0.1],
     scale: 0.7,
@@ -181,7 +183,7 @@ export const FLOATING_OBJECTS: FloatingObjectConfig[] = [
     id: 'glb-maro-hand',
     shape: 'glb',
     args: [],
-    glbPath: `${import.meta.env.BASE_URL}models/maro-inu-hand.glb`,
+    glbPath: assetPath('models/maro-inu-hand.glb'),
     position: [3.2, -0.6, 0.2],
     rotation: [0.2, 0.3, 0.0],
     scale: 0.7,

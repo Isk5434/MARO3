@@ -4,9 +4,11 @@ import { LINK_RIBBON_IMAGE, LINK_RIBBON_MOBILE_IMAGE } from '../config/assets'
 import { SITE_CONTENT } from '../config/content'
 import { INTERNAL_PAGES, getAppPath, type InternalPageId } from '../config/internal-pages'
 import styles from '../styles/InternalPage.module.css'
+import type { ActivityArticleSummary } from '../types/activity'
 
 interface Props {
   pageId: InternalPageId
+  activityArticles?: ActivityArticleSummary[]
 }
 
 function ContactForm() {
@@ -21,12 +23,16 @@ function ContactForm() {
     e.preventDefault()
     setStatus('sending')
     try {
-      const res = await fetch(SITE_CONTENT.contactFormEndpoint, {
+      const res = await fetch('https://api.web3forms.com/submit', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
-        body: JSON.stringify(fields),
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          access_key: process.env.NEXT_PUBLIC_WEB3FORMS_KEY,
+          ...fields,
+        }),
       })
-      setStatus(res.ok ? 'sent' : 'error')
+      const json = await res.json()
+      setStatus(json.success ? 'sent' : 'error')
     } catch {
       setStatus('error')
     }
@@ -99,7 +105,16 @@ function setRevealMask(elements: NodeListOf<HTMLElement>, transparent: number, b
   })
 }
 
-export function InternalPage({ pageId }: Props) {
+function formatDate(date?: string) {
+  if (!date) return ''
+  return new Intl.DateTimeFormat('ja-JP', {
+    year: 'numeric',
+    month: '2-digit',
+    day: '2-digit',
+  }).format(new Date(date))
+}
+
+export function InternalPage({ pageId, activityArticles = [] }: Props) {
   const page = INTERNAL_PAGES[pageId]
   const sectionRef = useRef<HTMLElement>(null)
 
@@ -182,6 +197,44 @@ export function InternalPage({ pageId }: Props) {
               <p key={paragraph} data-internal-reveal>{paragraph}</p>
             ))}
           </div>
+
+          {pageId === 'activity' && (
+            <section className={styles.articleList} aria-label="活動記事一覧">
+              <div className={styles.articleListHeader} data-internal-action>
+                <p>ACTIVITY LOG</p>
+                <h2>記事一覧</h2>
+              </div>
+
+              {activityArticles.length > 0 ? (
+                <div className={styles.articleGrid}>
+                  {activityArticles.map((article) => (
+                    <a
+                      key={article.id}
+                      href={`${getAppPath('activity')}/${article.id}`}
+                      className={styles.articleCard}
+                      data-internal-action
+                    >
+                      {article.eyecatch?.url && (
+                        <img
+                          src={article.eyecatch.url}
+                          alt=""
+                          className={styles.articleImage}
+                          loading="lazy"
+                        />
+                      )}
+                      <span className={styles.articleMeta}>{formatDate(article.publishedAt)}</span>
+                      <strong>{article.title}</strong>
+                      {article.description && <small>{article.description}</small>}
+                    </a>
+                  ))}
+                </div>
+              ) : (
+                <p className={styles.emptyArticles} data-internal-action>
+                  記事はまだありません。microCMSを接続すると、ここに活動記事が表示されます。
+                </p>
+              )}
+            </section>
+          )}
 
           {pageId === 'contact' && <ContactForm />}
 

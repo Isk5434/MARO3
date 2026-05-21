@@ -1,10 +1,12 @@
-export const LINK_RIBBON_IMAGE = `${import.meta.env.BASE_URL}link-ribbon.png`
-export const LINK_RIBBON_MOBILE_IMAGE = `${import.meta.env.BASE_URL}link-ribbon-mobile.webp`
-export const LOOP_RING_IMAGE = `${import.meta.env.BASE_URL}loop-ring.png`
-export const LOOP_RING_MOBILE_IMAGE = `${import.meta.env.BASE_URL}loop-ring-mobile.webp`
-export const CONTACT_SASH_IMAGE = `${import.meta.env.BASE_URL}contact-sash.png`
-export const CONTACT_SASH_MOBILE_IMAGE = `${import.meta.env.BASE_URL}contact-sash-mobile.webp`
-export const CONTACT_ROUNDEL_IMAGE = `${import.meta.env.BASE_URL}contact-roundel.png`
-export const CONTACT_ROUNDEL_MOBILE_IMAGE = `${import.meta.env.BASE_URL}contact-roundel-mobile.webp`
-export const PEEK_FOOTER_IMAGE = `${import.meta.env.BASE_URL}15765-compressed.jpg`
-export const LOADING_MARK_IMAGE = `${import.meta.env.BASE_URL}ChatGPT_Image_2026年5月19日_16_25_30-removebg-preview.png`
+import { assetPath } from './base-path'
+
+export const LINK_RIBBON_IMAGE = assetPath('link-ribbon.png')
+export const LINK_RIBBON_MOBILE_IMAGE = assetPath('link-ribbon-mobile.webp')
+export const LOOP_RING_IMAGE = assetPath('loop-ring.png')
+export const LOOP_RING_MOBILE_IMAGE = assetPath('loop-ring-mobile.webp')
+export const CONTACT_SASH_IMAGE = assetPath('contact-sash.png')
+export const CONTACT_SASH_MOBILE_IMAGE = assetPath('contact-sash-mobile.webp')
+export const CONTACT_ROUNDEL_IMAGE = assetPath('contact-roundel.png')
+export const CONTACT_ROUNDEL_MOBILE_IMAGE = assetPath('contact-roundel-mobile.webp')
+export const PEEK_FOOTER_IMAGE = assetPath('15765-compressed.jpg')
+export const LOADING_MARK_IMAGE = assetPath('loading-mark.png')

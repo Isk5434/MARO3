@@ -1,3 +1,5 @@
+import { BASE_PATH } from './base-path'
+
 export type InternalPageId = 'activity' | 'contact' | 'link'
 
 export interface InternalPageContent {
@@ -48,16 +50,14 @@ export const INTERNAL_PAGES: Record<InternalPageId, InternalPageContent> = {
 }
 
 export function getAppPath(path: InternalPageId | '') {
-  const base = import.meta.env.BASE_URL.endsWith('/')
-    ? import.meta.env.BASE_URL
-    : `${import.meta.env.BASE_URL}/`
-  return `${base}${path}`
+  const base = BASE_PATH ? `${BASE_PATH}/` : '/'
+  return path ? `${base}${path}/` : base
 }
 
 export function getCurrentInternalPage(): InternalPageId | null {
-  const base = import.meta.env.BASE_URL.endsWith('/')
-    ? import.meta.env.BASE_URL
-    : `${import.meta.env.BASE_URL}/`
+  if (typeof window === 'undefined') return null
+
+  const base = BASE_PATH ? `${BASE_PATH}/` : '/'
   const pathname = window.location.pathname
   const relativePath = pathname.startsWith(base)
     ? pathname.slice(base.length)

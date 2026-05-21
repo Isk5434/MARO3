@@ -1,3 +1,5 @@
+'use client'
+
 import { useCallback, useEffect, useLayoutEffect, useRef, useState } from 'react'
 import { AboutModal } from './components/AboutModal'
 import { AboutMaroSection } from './components/AboutMaroSection'
@@ -9,12 +11,51 @@ import { LoadingScreen } from './components/LoadingScreen'
 import { MaroTopicSection } from './components/MaroTopicSection'
 import { PeekFooter } from './components/PeekFooter'
 import { SvgFilters } from './components/SvgFilters'
-import { getCurrentInternalPage } from './config/internal-pages'
+import type { InternalPageId } from './config/internal-pages'
 import { useMouseTracker } from './hooks/useMouseTracker'
 import styles from './styles/App.module.css'
+import type { ActivityArticleSummary } from './types/activity'
 
-export default function App() {
-  const internalPageId = getCurrentInternalPage()
+interface AppProps {
+  initialPageId?: InternalPageId | null
+  activityArticles?: ActivityArticleSummary[]
+}
+
+function installZoomGuard() {
+  let lastTouchEnd = 0
+
+  const prevent = (event: Event) => event.preventDefault()
+  const preventMultiTouch = (event: TouchEvent) => {
+    if (event.touches.length > 1) event.preventDefault()
+  }
+  const preventDoubleTap = (event: TouchEvent) => {
+    const now = Date.now()
+    if (now - lastTouchEnd <= 300) event.preventDefault()
+    lastTouchEnd = now
+  }
+  const preventCtrlWheel = (event: WheelEvent) => {
+    if (event.ctrlKey) event.preventDefault()
+  }
+
+  document.addEventListener('gesturestart', prevent)
+  document.addEventListener('gesturechange', prevent)
+  document.addEventListener('gestureend', prevent)
+  document.addEventListener('touchmove', preventMultiTouch, { passive: false })
+  document.addEventListener('touchend', preventDoubleTap, { passive: false })
+  window.addEventListener('wheel', preventCtrlWheel, { passive: false })
+
+  return () => {
+    document.removeEventListener('gesturestart', prevent)
+    document.removeEventListener('gesturechange', prevent)
+    document.removeEventListener('gestureend', prevent)
+    document.removeEventListener('touchmove', preventMultiTouch)
+    document.removeEventListener('touchend', preventDoubleTap)
+    window.removeEventListener('wheel', preventCtrlWheel)
+  }
+}
+
+export default function App({ initialPageId = null, activityArticles = [] }: AppProps) {
+  const internalPageId = initialPageId
   const isInternalPage = internalPageId !== null
   const [loaded, setLoaded] = useState(isInternalPage)
   const [showAbout, setShowAbout] = useState(false)
@@ -31,6 +72,8 @@ export default function App() {
   const handleBgToggle = useCallback(() => {
     setIsDark((current) => !current)
   }, [])
+
+  useEffect(() => installZoomGuard(), [])
 
   useLayoutEffect(() => {
     document.body.classList.toggle('dark-bg', isDark)
@@ -68,7 +111,7 @@ export default function App() {
       {!isInternalPage && <LoadingScreen onLoaded={() => setLoaded(true)} />}
       <div className={`${styles.appShell} ${loaded ? styles.loaded : ''}`} aria-hidden={!loaded}>
         {isInternalPage ? (
-          <InternalPage pageId={internalPageId} />
+          <InternalPage pageId={internalPageId} activityArticles={activityArticles} />
         ) : (
           <>
             <Header

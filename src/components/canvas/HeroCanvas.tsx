@@ -1,11 +1,12 @@
 import { Canvas } from '@react-three/fiber'
-import { Suspense, useState, useEffect } from 'react'
+import { Suspense, useSyncExternalStore } from 'react'
 import { FloatingObjects } from './FloatingObjects'
 import { CameraRig } from './CameraRig'
 import { useGLTF } from '@react-three/drei'
 import type { MutableRefObject } from 'react'
+import { assetPath } from '../../config/base-path'
 
-useGLTF.setDecoderPath(`${import.meta.env.BASE_URL}draco/gltf/`)
+useGLTF.setDecoderPath(assetPath('draco/gltf/'))
 
 interface Props {
   mouseRef: MutableRefObject<{ nx: number; ny: number }>
@@ -13,16 +14,16 @@ interface Props {
 }
 
 function useIsMobile() {
-  const [isMobile, setIsMobile] = useState(() =>
-    typeof window !== 'undefined' && window.matchMedia('(max-width: 768px)').matches
+  return useSyncExternalStore(
+    (onStoreChange) => {
+      const mq = window.matchMedia('(max-width: 768px)')
+      const handler = () => onStoreChange()
+      mq.addEventListener('change', handler)
+      return () => mq.removeEventListener('change', handler)
+    },
+    () => window.matchMedia('(max-width: 768px)').matches,
+    () => true,
   )
-  useEffect(() => {
-    const mq = window.matchMedia('(max-width: 768px)')
-    const handler = (e: MediaQueryListEvent) => setIsMobile(e.matches)
-    mq.addEventListener('change', handler)
-    return () => mq.removeEventListener('change', handler)
-  }, [])
-  return isMobile
 }
 
 export function HeroCanvas({ mouseRef, active = true }: Props) {

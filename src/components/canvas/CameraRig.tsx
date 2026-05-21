@@ -1,7 +1,6 @@
-import { useFrame, useThree } from '@react-three/fiber'
-import { useEffect, useRef } from 'react'
+import { useFrame } from '@react-three/fiber'
+import { useRef } from 'react'
 import type { MutableRefObject } from 'react'
-import * as THREE from 'three'
 
 interface Props {
   mouseRef: MutableRefObject<{ nx: number; ny: number }>
@@ -9,15 +8,8 @@ interface Props {
 }
 
 export function CameraRig({ mouseRef, isMobile }: Props) {
-  const { camera } = useThree()
   const targetX = useRef(0)
   const targetY = useRef(0)
-
-  useEffect(() => {
-    const cam = camera as THREE.PerspectiveCamera
-    cam.fov = isMobile ? 70 : 48
-    cam.updateProjectionMatrix()
-  }, [camera, isMobile])
 
   useFrame((state) => {
     if (isMobile) return
