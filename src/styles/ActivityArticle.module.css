@@ -1,8 +1,5 @@
 .page {
   min-height: 100svh;
-  padding: calc(var(--header-height) + 4.5rem) clamp(1.3rem, 6vw, 5rem)
-    calc(var(--footer-height) + 4rem);
-  color: rgba(255, 255, 255, 0.94);
   background:
     linear-gradient(90deg, rgba(176, 184, 165, 0.94), rgba(194, 188, 173, 0.86)),
     #b7bca8;
@@ -20,9 +17,74 @@
   text-decoration: none;
 }
 
-.article {
-  width: min(840px, 100%);
-  margin: 0 auto;
+.section {
+  position: relative;
+  min-height: 100svh;
+  display: grid;
+  align-items: start;
+  justify-items: center;
+  padding: calc(var(--header-height) + 5rem) clamp(1.3rem, 6vw, 5rem)
+    calc(var(--footer-height) + 4rem);
+  overflow: hidden;
+  isolation: isolate;
+  contain: layout paint;
+}
+
+.section::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: -2;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='260' height='260'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.74' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='260' height='260' filter='url(%23n)' opacity='0.72'/%3E%3C/svg%3E");
+  background-size: 260px 260px;
+  opacity: 0.12;
+  mix-blend-mode: soft-light;
+}
+
+.visualTiles {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+}
+
+.tile {
+  position: absolute;
+  display: block;
+  border-radius: 4px;
+  background:
+    linear-gradient(155deg, rgba(114, 158, 194, 0.55), rgba(241, 154, 173, 0.48) 48%, rgba(255, 226, 158, 0.58)),
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.52' numOctaves='5'/%3E%3C/filter%3E%3Crect width='180' height='180' filter='url(%23n)' opacity='0.8'/%3E%3C/svg%3E");
+  background-blend-mode: screen, normal;
+  opacity: 0.36;
+}
+
+.tileOne {
+  width: 8.5rem;
+  height: 18rem;
+  top: 3%;
+  left: 43%;
+}
+
+.tileTwo {
+  width: 16rem;
+  height: 34rem;
+  top: 0;
+  right: 15%;
+}
+
+.tileThree {
+  width: 14rem;
+  height: 15rem;
+  right: 8%;
+  bottom: 9%;
+}
+
+.content {
+  position: relative;
+  z-index: 2;
+  width: min(760px, 100%);
+  color: rgba(255, 255, 255, 0.94);
   text-shadow: 0 1px 22px rgba(69, 75, 61, 0.18);
 }
 
@@ -33,16 +95,16 @@
   letter-spacing: 0.18em;
 }
 
-.article h1 {
+.content h1 {
   margin-bottom: 1rem;
   font-family: var(--font-jp);
-  font-size: clamp(2.5rem, 7vw, 5rem);
+  font-size: clamp(2rem, 5vw, 3.5rem);
   font-weight: 500;
-  line-height: 1.32;
+  line-height: 1.35;
   letter-spacing: 0.12em;
 }
 
-.article time {
+.content time {
   display: block;
   margin-bottom: 1.5rem;
   font-family: var(--font-serif);
@@ -96,12 +158,26 @@
   border-radius: 8px;
 }
 
-@media (max-width: 720px) {
-  .page {
-    padding-top: calc(var(--header-height) + 5.5rem);
-  }
+/* Reveal mask animation — applied to header elements */
+.eyebrow,
+.content h1,
+.content time,
+.lead {
+  --article-reveal-mask: linear-gradient(-15deg, transparent 100%, black 150%);
+  -webkit-mask-image: var(--article-reveal-mask);
+  mask-image: var(--article-reveal-mask);
+  -webkit-mask-size: 100% 100%;
+  mask-size: 100% 100%;
+  will-change: mask-image;
+}
 
+@media (max-width: 720px) {
   .backLink {
     position: absolute;
+  }
+
+  .tileOne,
+  .tileThree {
+    display: none;
   }
 }
