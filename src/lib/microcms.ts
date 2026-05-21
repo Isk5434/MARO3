@@ -66,7 +66,7 @@ export async function getActivityArticleIds() {
     limit: '100',
   })
 
-  return data?.contents.map((article) => article.id) ?? []
+  return data?.contents.map((article) => article.id) ?? ['preview']
 }
 
 export async function getActivityArticle(id: string): Promise<ActivityArticle | null> {
