@@ -1,11 +1,90 @@
 import gsap from 'gsap'
-import { useEffect, useRef } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { LINK_RIBBON_IMAGE, LINK_RIBBON_MOBILE_IMAGE } from '../config/assets'
+import { SITE_CONTENT } from '../config/content'
 import { INTERNAL_PAGES, getAppPath, type InternalPageId } from '../config/internal-pages'
 import styles from '../styles/InternalPage.module.css'
 
 interface Props {
   pageId: InternalPageId
+}
+
+function ContactForm() {
+  const [fields, setFields] = useState({ name: '', email: '', message: '' })
+  const [status, setStatus] = useState<'idle' | 'sending' | 'sent' | 'error'>('idle')
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    setFields((prev) => ({ ...prev, [e.target.name]: e.target.value }))
+  }
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault()
+    setStatus('sending')
+    try {
+      const res = await fetch(SITE_CONTENT.contactFormEndpoint, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
+        body: JSON.stringify(fields),
+      })
+      setStatus(res.ok ? 'sent' : 'error')
+    } catch {
+      setStatus('error')
+    }
+  }
+
+  if (status === 'sent') {
+    return (
+      <p className={styles.formSuccess} data-internal-action>
+        送信が完了しました。ありがとうございます。
+      </p>
+    )
+  }
+
+  return (
+    <form className={styles.form} onSubmit={handleSubmit}>
+      <label>
+        お名前
+        <input
+          type="text"
+          name="name"
+          required
+          autoComplete="name"
+          value={fields.name}
+          onChange={handleChange}
+          data-internal-action
+        />
+      </label>
+      <label>
+        メールアドレス
+        <input
+          type="email"
+          name="email"
+          required
+          autoComplete="email"
+          value={fields.email}
+          onChange={handleChange}
+          data-internal-action
+        />
+      </label>
+      <label>
+        お問い合わせ内容
+        <textarea
+          name="message"
+          rows={5}
+          required
+          value={fields.message}
+          onChange={handleChange}
+          data-internal-action
+        />
+      </label>
+      {status === 'error' && (
+        <p className={styles.formError}>送信に失敗しました。時間をおいて再度お試しください。</p>
+      )}
+      <button type="submit" disabled={status === 'sending'} data-internal-action>
+        {status === 'sending' ? '送信中…' : '送信する'}
+      </button>
+    </form>
+  )
 }
 
 const RIBBON_REPEAT = Array.from({ length: 10 }, (_, index) => index)
@@ -104,23 +183,7 @@ export function InternalPage({ pageId }: Props) {
             ))}
           </div>
 
-          {pageId === 'contact' && (
-            <form className={styles.form}>
-              <label>
-                お名前
-                <input type="text" name="name" autoComplete="name" data-internal-action />
-              </label>
-              <label>
-                メールアドレス
-                <input type="email" name="email" autoComplete="email" data-internal-action />
-              </label>
-              <label>
-                お問い合わせ内容
-                <textarea name="message" rows={5} data-internal-action />
-              </label>
-              <button type="button" data-internal-action>送信内容を確認</button>
-            </form>
-          )}
+          {pageId === 'contact' && <ContactForm />}
 
           {pageId === 'link' && (
             <div className={styles.summaryGrid}>

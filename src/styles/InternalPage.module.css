@@ -287,6 +287,21 @@
   text-decoration: none;
 }
 
+.formSuccess {
+  padding: 1rem 1.2rem;
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.1);
+  color: rgba(255, 255, 255, 0.9);
+  font-size: 0.95rem;
+  letter-spacing: 0.06em;
+}
+
+.formError {
+  color: rgba(255, 160, 140, 0.9);
+  font-size: 0.85rem;
+  letter-spacing: 0.05em;
+}
+
 .linkList {
   display: flex;
   flex-wrap: wrap;
