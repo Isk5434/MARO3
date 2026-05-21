@@ -27,6 +27,9 @@ jobs:
         env:
           NEXT_PUBLIC_BASE_PATH: /MARO3
           NEXT_PUBLIC_WEB3FORMS_KEY: ${{ secrets.WEB3FORMS_KEY }}
+          MICROCMS_SERVICE_DOMAIN: ${{ secrets.MICROCMS_SERVICE_DOMAIN }}
+          MICROCMS_API_KEY: ${{ secrets.MICROCMS_API_KEY }}
+          MICROCMS_ACTIVITY_ENDPOINT: activities
       - uses: actions/upload-pages-artifact@v3
         with:
           path: out
