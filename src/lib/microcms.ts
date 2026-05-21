@@ -33,11 +33,10 @@ async function requestMicroCms<T>(path = '', params?: Record<string, string>) {
     url.searchParams.set(key, value)
   })
 
-  const response = await fetch(url, {
+  const response = await fetch(url.toString(), {
     headers: {
       'X-MICROCMS-API-KEY': apiKey!,
     },
-    cache: 'force-cache',
   })
 
   if (!response.ok) {
