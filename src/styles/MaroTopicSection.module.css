@@ -271,6 +271,11 @@
   text-align: right;
 }
 
+.contact .lead {
+  max-width: 44rem;
+  line-height: 1.8;
+}
+
 .contact .tile {
   background:
     linear-gradient(155deg, rgba(20, 70, 50, 0.82), rgba(40, 100, 65, 0.75) 48%, rgba(70, 130, 80, 0.68)),
