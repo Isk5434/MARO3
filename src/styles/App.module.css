@@ -33,3 +33,54 @@
   will-change: transform;
 }
 
+.orientationGuard {
+  position: fixed;
+  inset: 0;
+  z-index: calc(var(--z-loading) + 10);
+  display: none;
+  place-items: center;
+  padding: 1.5rem;
+  color: #f5f0e8;
+  background:
+    radial-gradient(circle at 50% 38%, rgba(190, 146, 84, 0.18), transparent 18rem),
+    #0f0d0a;
+  pointer-events: auto;
+}
+
+.orientationGuard p {
+  max-width: 18rem;
+  font-family: var(--font-jp);
+  font-size: clamp(1rem, 4svh, 1.35rem);
+  line-height: 1.8;
+  letter-spacing: 0.1em;
+  text-align: center;
+}
+
+.orientationMark {
+  position: absolute;
+  top: 1.2rem;
+  left: 50%;
+  width: 1.9rem;
+  height: 3rem;
+  border: 1px solid rgba(245, 240, 232, 0.55);
+  border-radius: 0.42rem;
+  transform: translateX(-50%);
+}
+
+.orientationMark::after {
+  content: '';
+  position: absolute;
+  bottom: 0.28rem;
+  left: 50%;
+  width: 0.28rem;
+  height: 0.28rem;
+  border-radius: 999px;
+  background: rgba(245, 240, 232, 0.72);
+  transform: translateX(-50%);
+}
+
+@media (orientation: landscape) and (max-height: 540px) and (max-width: 980px) {
+  .orientationGuard {
+    display: grid;
+  }
+}

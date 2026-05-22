@@ -109,6 +109,10 @@ export default function App({ initialPageId = null, activityArticles = [] }: App
     <>
       <SvgFilters />
       {!isInternalPage && <LoadingScreen onLoaded={() => setLoaded(true)} />}
+      <div className={styles.orientationGuard} role="alert" aria-live="assertive">
+        <div className={styles.orientationMark} aria-hidden="true" />
+        <p>スマートフォンは縦向きでご覧ください。</p>
+      </div>
       <div className={`${styles.appShell} ${loaded ? styles.loaded : ''}`} aria-hidden={!loaded}>
         {isInternalPage ? (
           <InternalPage pageId={internalPageId} activityArticles={activityArticles} />
