@@ -382,6 +382,10 @@
   letter-spacing: 0.06em;
 }
 
+.contact .body {
+  max-width: 43rem;
+}
+
 .button {
   min-width: 9.8rem;
   min-height: 2.9rem;

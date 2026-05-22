@@ -25,7 +25,7 @@
   position: absolute;
   inset: 0;
   z-index: calc(var(--z-ui) - 1);
-  display: grid;
+  display: none;
   place-items: center;
   pointer-events: none;
   opacity: 0.88;
@@ -157,6 +157,7 @@
     background: #0f0d0a;
   }
   .backdrop {
+    display: grid;
     opacity: 1;
     place-items: start center;
   }

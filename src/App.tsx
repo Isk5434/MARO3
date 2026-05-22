@@ -158,7 +158,6 @@ export default function App({ initialPageId = null, activityArticles = [] }: App
                   lead="SNS、ブログ、各種リンクをまとめて見られるページです。"
                   lines={[
                     'Facebook、Twitter / X、Instagram の更新情報と、MAROブログへの入口をまとめています。',
-                    '各種リンクやサイトマップも、このホームページ内のページとして整理します。',
                   ]}
                   pageId="link"
                   action="リンクを見る"
