@@ -131,7 +131,7 @@ export default function App({ initialPageId = null, activityArticles = [] }: App
                 <MaroTopicSection
                   eyebrow="ACTIVITY"
                   title="活動内容"
-                  lead="毎週木曜日に大学や博物館で会議などの活動を行っています。"
+                  lead="毎週決まった曜日に大学や博物館で会議などの活動を行っています。"
                   lines={[
                     '名古屋市博物館でのイベントや、魅力発信のための取り組みを行ってきました。',
                     '若い世代が博物館と出会うきっかけをつくるため、企画・運営・発信を続けています。',

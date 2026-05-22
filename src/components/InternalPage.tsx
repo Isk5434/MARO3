@@ -298,44 +298,100 @@ export function InternalPage({ pageId, activityArticles = [] }: Props) {
           {pageId === 'contact' && <ContactForm />}
 
           {pageId === 'link' && (
-            <div className={styles.summaryGrid}>
-              <section className={styles.summaryBlock}>
-                <h2>▼SNSも更新中！</h2>
-                <div className={styles.socialIconList} aria-label="SNS links">
-                  <a href="https://www.facebook.com/ncumaro/" aria-label="Facebook" target="_blank" rel="noopener noreferrer" data-internal-action>
-                    <span className={styles.socialIcon}>f</span>
-                    Facebook
-                  </a>
-                  <a href="https://x.com/meishihakusapo" aria-label="Twitter / X" target="_blank" rel="noopener noreferrer" data-internal-action>
-                    <span className={styles.socialIcon}>X</span>
-                    Twitter / X
-                  </a>
-                  <a href="https://www.instagram.com/maroinu_dayo" aria-label="Instagram" target="_blank" rel="noopener noreferrer" data-internal-action>
-                    <span className={styles.socialIcon}>◎</span>
-                    Instagram
-                  </a>
+            <div className={styles.linkCardGrid}>
+              <a
+                href="https://www.facebook.com/ncumaro/"
+                className={`${styles.linkCard} ${styles.linkCardLight}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label="Facebook"
+                data-internal-action
+              >
+                <span className={styles.linkCardLabel}>● SNS</span>
+                <div className={styles.linkCardCenter}>
+                  <span className={styles.linkCardIcon}>f</span>
                 </div>
-              </section>
-
-              <section className={styles.summaryBlock}>
-                <h2>▼ブログも見てね！</h2>
-                <a href="#blog" className={styles.blogCard} data-internal-action>
-                  <img src={FAVICON_IMAGE} alt="" className={styles.blogThumb} aria-hidden="true" />
-                  <span>
-                    <strong>MAROブログ</strong>
-                    <small>「知的好奇心こしょぐり隊」</small>
-                  </span>
-                </a>
-              </section>
-
-              <section className={styles.summaryBlock}>
-                <h2>各種リンク / サイトマップ</h2>
-                <div className={styles.linkList}>
-                  <a href={getAppPath('activity')} data-internal-action>活動内容</a>
-                  <a href={getAppPath('contact')} data-internal-action>お問い合わせ</a>
-                  <a href={getAppPath('')} data-internal-action>トップページ</a>
+                <div className={styles.linkCardFooter}>
+                  <span className={styles.linkCardTitle}>Facebook</span>
+                  <span className={styles.linkCardPlus}>+</span>
                 </div>
-              </section>
+              </a>
+              <a
+                href="https://x.com/meishihakusapo"
+                className={`${styles.linkCard} ${styles.linkCardDark}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label="Twitter / X"
+                data-internal-action
+              >
+                <span className={styles.linkCardLabel}>● SNS</span>
+                <div className={styles.linkCardCenter}>
+                  <span className={styles.linkCardIcon}>X</span>
+                </div>
+                <div className={styles.linkCardFooter}>
+                  <span className={styles.linkCardTitle}>Twitter / X</span>
+                  <span className={styles.linkCardPlus}>+</span>
+                </div>
+              </a>
+              <a
+                href="https://www.instagram.com/maroinu_dayo"
+                className={`${styles.linkCard} ${styles.linkCardLight}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label="Instagram"
+                data-internal-action
+              >
+                <span className={styles.linkCardLabel}>● SNS</span>
+                <div className={styles.linkCardCenter}>
+                  <span className={styles.linkCardIcon}>◎</span>
+                </div>
+                <div className={styles.linkCardFooter}>
+                  <span className={styles.linkCardTitle}>Instagram</span>
+                  <span className={styles.linkCardPlus}>+</span>
+                </div>
+              </a>
+              <a
+                href="#blog"
+                className={`${styles.linkCard} ${styles.linkCardDark}`}
+                data-internal-action
+              >
+                <span className={styles.linkCardLabel}>● BLOG</span>
+                <div className={styles.linkCardCenter}>
+                  <img src={FAVICON_IMAGE} alt="" className={styles.linkCardThumb} />
+                </div>
+                <div className={styles.linkCardFooter}>
+                  <span className={styles.linkCardTitle}>MAROブログ</span>
+                  <span className={styles.linkCardPlus}>+</span>
+                </div>
+              </a>
+              <a
+                href={getAppPath('activity')}
+                className={`${styles.linkCard} ${styles.linkCardLight}`}
+                data-internal-action
+              >
+                <span className={styles.linkCardLabel}>● ACTIVITY</span>
+                <div className={styles.linkCardCenter}>
+                  <span className={styles.linkCardBigText}>活動内容</span>
+                </div>
+                <div className={styles.linkCardFooter}>
+                  <span className={styles.linkCardTitle}>活動内容を見る</span>
+                  <span className={styles.linkCardPlus}>+</span>
+                </div>
+              </a>
+              <a
+                href={getAppPath('contact')}
+                className={`${styles.linkCard} ${styles.linkCardDark}`}
+                data-internal-action
+              >
+                <span className={styles.linkCardLabel}>● CONTACT</span>
+                <div className={styles.linkCardCenter}>
+                  <span className={styles.linkCardBigText}>お問い合わせ</span>
+                </div>
+                <div className={styles.linkCardFooter}>
+                  <span className={styles.linkCardTitle}>お問い合わせへ</span>
+                  <span className={styles.linkCardPlus}>+</span>
+                </div>
+              </a>
             </div>
           )}
         </article>
