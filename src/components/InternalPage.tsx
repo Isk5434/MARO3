@@ -210,7 +210,7 @@ export function InternalPage({ pageId, activityArticles = [] }: Props) {
 
         {pageId === 'link' && (
           <div className={styles.flowBanner} aria-hidden="true">
-            {['top', 'bottom'].map((position) => (
+            {['top'].map((position) => (
               <div key={position} className={`${styles.diagonalRibbon} ${styles[position]}`}>
                 <div className={styles.flowTrack}>
                   {RIBBON_REPEAT.map((item) => (
