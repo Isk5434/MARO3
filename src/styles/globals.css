@@ -80,6 +80,15 @@ body {
   transition: background-color var(--transition-slow), color var(--transition-slow);
 }
 
+body.is-loading {
+  position: fixed;
+  inset: 0;
+  width: 100%;
+  overflow: hidden;
+  overscroll-behavior: none;
+  touch-action: none;
+}
+
 #root {
   position: relative;
   min-height: 100svh;
