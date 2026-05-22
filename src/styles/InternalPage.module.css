@@ -553,6 +553,7 @@
   width: min(560px, 100%);
   margin-top: 2rem;
   font-family: var(--font-jp);
+  text-align: left;
 }
 
 .form label {
