@@ -30,7 +30,6 @@
   margin-top: 100svh;
   background: #0f0d0a;
   transform: translateZ(0);
-  will-change: transform;
 }
 
 .orientationGuard {
