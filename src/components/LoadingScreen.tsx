@@ -263,7 +263,8 @@ export function LoadingScreen({ onLoaded }: Props) {
             onClick={handleEnter}
             disabled={phase !== 'ready'}
           >
-            Enter Site
+            <span>Enter Site</span>
+            <span className={styles.enterArrow} aria-hidden="true">↓</span>
           </button>
         </div>
 
