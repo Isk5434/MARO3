@@ -216,7 +216,6 @@ export function LoadingScreen({ onLoaded }: Props) {
 
     gsap.to(btnRef.current, {
       opacity: 0,
-      letterSpacing: '0.38em',
       duration: 0.32,
       ease: 'power2.in',
     })
@@ -264,6 +263,7 @@ export function LoadingScreen({ onLoaded }: Props) {
             disabled={phase !== 'ready'}
           >
             <span>Enter Site</span>
+            <span className={styles.enterArrow} aria-hidden="true">→</span>
           </button>
         </div>
 
