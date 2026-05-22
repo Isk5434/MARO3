@@ -1,7 +1,15 @@
 import gsap from 'gsap'
 import { useEffect, useRef, useState } from 'react'
-import { LINK_RIBBON_IMAGE, LINK_RIBBON_MOBILE_IMAGE } from '../config/assets'
-import { SITE_CONTENT } from '../config/content'
+import {
+  CONTACT_ROUNDEL_IMAGE,
+  CONTACT_ROUNDEL_MOBILE_IMAGE,
+  CONTACT_SASH_IMAGE,
+  CONTACT_SASH_MOBILE_IMAGE,
+  LINK_RIBBON_IMAGE,
+  LINK_RIBBON_MOBILE_IMAGE,
+  LOOP_RING_IMAGE,
+  LOOP_RING_MOBILE_IMAGE,
+} from '../config/assets'
 import { INTERNAL_PAGES, getAppPath, type InternalPageId } from '../config/internal-pages'
 import styles from '../styles/InternalPage.module.css'
 import type { ActivityArticleSummary } from '../types/activity'
@@ -94,6 +102,7 @@ function ContactForm() {
 }
 
 const RIBBON_REPEAT = Array.from({ length: 10 }, (_, index) => index)
+const CONTACT_SASH_REPEAT = Array.from({ length: 8 }, (_, index) => index)
 
 function setRevealMask(elements: NodeListOf<HTMLElement>, transparent: number, black: number) {
   elements.forEach((el, index) => {
@@ -117,6 +126,8 @@ function formatDate(date?: string) {
 export function InternalPage({ pageId, activityArticles = [] }: Props) {
   const page = INTERNAL_PAGES[pageId]
   const sectionRef = useRef<HTMLElement>(null)
+  const pageClassName = styles[`${pageId}Page`] ?? ''
+  const sectionClassName = styles[`${pageId}Section`] ?? ''
 
   useEffect(() => {
     const section = sectionRef.current
@@ -156,15 +167,45 @@ export function InternalPage({ pageId, activityArticles = [] }: Props) {
   }, [pageId])
 
   return (
-    <main className={`${styles.page} ${pageId === 'link' ? styles.linkPage : ''}`}>
+    <main className={`${styles.page} ${pageClassName}`}>
       <a href={getAppPath('')} className={styles.backLink}>
         TOPへ戻る
       </a>
 
       <section
         ref={sectionRef}
-        className={`${styles.section} ${pageId === 'link' ? styles.linkSection : ''}`}
+        className={`${styles.section} ${sectionClassName}`}
       >
+        {pageId === 'activity' && (
+          <div className={styles.loopRing} aria-hidden="true">
+            <picture>
+              <source media="(max-width: 720px)" srcSet={LOOP_RING_MOBILE_IMAGE} type="image/webp" />
+              <img src={LOOP_RING_IMAGE} alt="" />
+            </picture>
+          </div>
+        )}
+
+        {pageId === 'contact' && (
+          <>
+            <div className={styles.contactSash} aria-hidden="true">
+              <div className={styles.contactSashTrack}>
+                {CONTACT_SASH_REPEAT.map((item) => (
+                  <picture key={item} className={styles.contactSashPicture}>
+                    <source media="(max-width: 720px)" srcSet={CONTACT_SASH_MOBILE_IMAGE} type="image/webp" />
+                    <img src={CONTACT_SASH_IMAGE} alt="" className={styles.contactSashImage} />
+                  </picture>
+                ))}
+              </div>
+            </div>
+            <div className={styles.contactRoundel} aria-hidden="true">
+              <picture>
+                <source media="(max-width: 720px)" srcSet={CONTACT_ROUNDEL_MOBILE_IMAGE} type="image/webp" />
+                <img src={CONTACT_ROUNDEL_IMAGE} alt="" />
+              </picture>
+            </div>
+          </>
+        )}
+
         {pageId === 'link' && (
           <div className={styles.flowBanner} aria-hidden="true">
             {['top', 'bottom'].map((position) => (

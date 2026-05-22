@@ -11,6 +11,20 @@
     linear-gradient(90deg, #0c0907 0%, #14100d 53%, #21150f 100%);
 }
 
+.activityPage {
+  background:
+    radial-gradient(circle at 18% 46%, rgba(220, 100, 20, 0.28), transparent 27rem),
+    linear-gradient(120deg, rgba(18, 15, 12, 0.98), rgba(28, 22, 16, 0.96)),
+    #0f0d0a;
+}
+
+.contactPage {
+  background:
+    radial-gradient(circle at 78% 38%, rgba(40, 100, 65, 0.28), transparent 28rem),
+    linear-gradient(120deg, rgba(18, 15, 12, 0.98), rgba(24, 30, 22, 0.96)),
+    #0f0d0a;
+}
+
 .backLink {
   position: fixed;
   top: calc(var(--header-height) + 1.5rem);
@@ -39,6 +53,14 @@
   padding-top: calc(var(--header-height) + 8rem);
 }
 
+.activitySection,
+.contactSection,
+.linkSection {
+  background:
+    linear-gradient(120deg, rgba(18, 15, 12, 0.98), rgba(28, 22, 16, 0.96)),
+    #0f0d0a;
+}
+
 .section::before {
   content: '';
   position: absolute;
@@ -55,6 +77,129 @@
   inset: 0;
   z-index: 0;
   pointer-events: none;
+}
+
+.loopRing {
+  position: absolute;
+  top: 37%;
+  left: 0;
+  z-index: 1;
+  width: clamp(15rem, 28vw, 28rem);
+  aspect-ratio: 1;
+  pointer-events: none;
+  transform: translate(-52%, -50%);
+  filter: drop-shadow(0 20px 42px rgba(0, 0, 0, 0.36));
+  opacity: 0.92;
+}
+
+.loopRing picture,
+.contactRoundel picture {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+.loopRing img {
+  width: 100%;
+  height: 100%;
+  display: block;
+  object-fit: contain;
+  animation: loopRingSpin 34s linear infinite;
+  will-change: transform;
+}
+
+@keyframes loopRingSpin {
+  from {
+    transform: rotate(0deg);
+  }
+
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.contactSash {
+  position: absolute;
+  top: 13%;
+  right: -9rem;
+  z-index: 1;
+  width: min(54rem, 58vw);
+  height: clamp(4rem, 5.8vw, 6rem);
+  overflow: hidden;
+  pointer-events: none;
+  transform: rotate(38deg);
+  transform-origin: center;
+  box-shadow: 0 20px 46px rgba(0, 0, 0, 0.35);
+  opacity: 0.9;
+}
+
+.contactSashTrack {
+  display: flex;
+  width: max-content;
+  height: 100%;
+  animation: contactSashFlow 24s linear infinite;
+  will-change: transform;
+}
+
+.contactSashPicture {
+  width: 23rem;
+  height: 23rem;
+  flex: 0 0 auto;
+  display: block;
+  align-self: center;
+  transform: rotate(90deg) scale(1);
+  transform-origin: center;
+}
+
+.contactSashImage {
+  width: 100%;
+  height: 100%;
+  display: block;
+  object-fit: cover;
+  object-position: 50% 50%;
+  filter: saturate(1.02) contrast(1.06);
+}
+
+@keyframes contactSashFlow {
+  from {
+    transform: translateX(0);
+  }
+
+  to {
+    transform: translateX(-23rem);
+  }
+}
+
+.contactRoundel {
+  --contact-roundel-size: clamp(18rem, 28vw, 31rem);
+  position: absolute;
+  left: calc(var(--contact-roundel-size) / -2);
+  bottom: calc(var(--contact-roundel-size) / -2);
+  z-index: 1;
+  width: var(--contact-roundel-size);
+  aspect-ratio: 1;
+  pointer-events: none;
+  opacity: 0.9;
+  filter: drop-shadow(0 20px 46px rgba(0, 0, 0, 0.34));
+}
+
+.contactRoundel img {
+  width: 100%;
+  height: 100%;
+  display: block;
+  object-fit: contain;
+  animation: contactRoundelSpin 38s linear infinite reverse;
+  will-change: transform;
+}
+
+@keyframes contactRoundelSpin {
+  from {
+    transform: rotate(0deg);
+  }
+
+  to {
+    transform: rotate(360deg);
+  }
 }
 
 .flowBanner {
@@ -132,10 +277,11 @@
   display: block;
   border-radius: 4px;
   background:
-    linear-gradient(155deg, rgba(114, 158, 194, 0.55), rgba(241, 154, 173, 0.48) 48%, rgba(255, 226, 158, 0.58)),
+    linear-gradient(155deg, rgba(220, 100, 20, 0.72), rgba(255, 175, 40, 0.68) 48%, rgba(255, 230, 80, 0.64)),
     url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.52' numOctaves='5'/%3E%3C/filter%3E%3Crect width='180' height='180' filter='url(%23n)' opacity='0.8'/%3E%3C/svg%3E");
   background-blend-mode: screen, normal;
-  opacity: 0.36;
+  box-shadow: 0 24px 54px rgba(180, 100, 0, 0.22);
+  opacity: 0.55;
 }
 
 .linkPage .tile {
@@ -144,6 +290,14 @@
     url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.52' numOctaves='5'/%3E%3C/filter%3E%3Crect width='180' height='180' filter='url(%23n)' opacity='0.8'/%3E%3C/svg%3E");
   background-blend-mode: screen, normal;
   opacity: 0.48;
+}
+
+.contactPage .tile {
+  background:
+    linear-gradient(155deg, rgba(20, 70, 50, 0.82), rgba(40, 100, 65, 0.75) 48%, rgba(70, 130, 80, 0.68)),
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.52' numOctaves='5'/%3E%3C/filter%3E%3Crect width='180' height='180' filter='url(%23n)' opacity='0.8'/%3E%3C/svg%3E");
+  background-blend-mode: screen, normal;
+  box-shadow: 0 24px 54px rgba(20, 60, 40, 0.28);
 }
 
 .linkPage .tileOne {
@@ -161,6 +315,24 @@
 .linkPage .tileThree {
   left: auto;
   right: 6%;
+  bottom: 8%;
+}
+
+.contactPage .tileOne {
+  left: 5%;
+  right: auto;
+  top: 8%;
+}
+
+.contactPage .tileTwo {
+  left: 14%;
+  right: auto;
+  top: 0;
+}
+
+.contactPage .tileThree {
+  left: 6%;
+  right: auto;
   bottom: 8%;
 }
 
@@ -191,6 +363,22 @@
   width: min(820px, 100%);
   color: rgba(255, 255, 255, 0.94);
   text-shadow: 0 1px 22px rgba(69, 75, 61, 0.18);
+}
+
+.activitySection .content {
+  width: min(760px, 100%);
+  justify-self: start;
+}
+
+.contactSection .content {
+  width: min(680px, 100%);
+  justify-self: end;
+  text-align: right;
+}
+
+.contactSection .body,
+.contactSection .form {
+  margin-left: auto;
 }
 
 .eyebrow {
@@ -498,6 +686,44 @@
     font-size: 0.76rem;
     line-height: 1;
     z-index: calc(var(--z-ui) + 1);
+  }
+
+  .content {
+    width: 100%;
+  }
+
+  .contactSection .content {
+    text-align: right;
+  }
+
+  .loopRing {
+    --loop-ring-size: min(26rem, 106vw);
+    left: auto;
+    right: calc(var(--loop-ring-size) / -2);
+    top: 0;
+    width: var(--loop-ring-size);
+    transform: translateY(-50%);
+  }
+
+  .contactSash {
+    top: 10%;
+    left: -20%;
+    right: auto;
+    width: 144vw;
+    height: 6rem;
+    transform: rotate(32deg);
+  }
+
+  .contactSashPicture {
+    width: 22rem;
+    height: 22rem;
+    transform: rotate(90deg) scale(1.05);
+  }
+
+  .contactRoundel {
+    --contact-roundel-size: min(21rem, 86vw);
+    left: calc(var(--contact-roundel-size) / -2);
+    bottom: calc(var(--contact-roundel-size) / -2);
   }
 
   .tileOne,
