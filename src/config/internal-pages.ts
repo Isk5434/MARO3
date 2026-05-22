@@ -31,8 +31,7 @@ export const INTERNAL_PAGES: Record<InternalPageId, InternalPageContent> = {
     title: 'お問い合わせ',
     lead: '活動見学、入部希望、取材、協働の相談などはこちらから。',
     body: [
-      'MAROの活動に興味がある方、見学や入部を希望される方、取材やお問い合わせをご希望の方は、こちらのページから連絡内容を整理できます。',
-      '今後フォームや送信先を接続できるよう、ページ内で完結する導線として用意しています。',
+      'MAROの活動に興味がある方、見学や入部を希望される方、取材やお問い合わせをご希望の方は、こちらのページから連絡ください。',
     ],
   },
   link: {
@@ -42,9 +41,6 @@ export const INTERNAL_PAGES: Record<InternalPageId, InternalPageContent> = {
     title: 'リンク',
     lead: 'SNS、ブログ、各種リンク / サイトマップをひとつにまとめた案内ページです。',
     body: [
-      '▼SNSも更新中！',
-      '▼ブログも見てね！',
-      '各種リンク / サイトマップ',
     ],
   },
 }

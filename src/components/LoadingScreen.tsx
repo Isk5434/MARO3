@@ -264,7 +264,6 @@ export function LoadingScreen({ onLoaded }: Props) {
             disabled={phase !== 'ready'}
           >
             <span>Enter Site</span>
-            <span className={styles.enterArrow} aria-hidden="true">↓</span>
           </button>
         </div>
 
