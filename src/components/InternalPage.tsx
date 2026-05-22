@@ -37,6 +37,7 @@ function ContactForm() {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           access_key: process.env.NEXT_PUBLIC_WEB3FORMS_KEY,
+          subject: 'お問い合わせがきたまろ～',
           ...fields,
         }),
       })
@@ -287,15 +288,15 @@ export function InternalPage({ pageId, activityArticles = [] }: Props) {
               <section className={styles.summaryBlock}>
                 <h2>▼SNSも更新中！</h2>
                 <div className={styles.socialIconList} aria-label="SNS links">
-                  <a href="#facebook" aria-label="Facebook" data-internal-action>
+                  <a href="https://www.facebook.com/ncumaro/" aria-label="Facebook" target="_blank" rel="noopener noreferrer" data-internal-action>
                     <span className={styles.socialIcon}>f</span>
                     Facebook
                   </a>
-                  <a href="#twitter" aria-label="Twitter / X" data-internal-action>
+                  <a href="https://x.com/meishihakusapo" aria-label="Twitter / X" target="_blank" rel="noopener noreferrer" data-internal-action>
                     <span className={styles.socialIcon}>X</span>
                     Twitter / X
                   </a>
-                  <a href="#instagram" aria-label="Instagram" data-internal-action>
+                  <a href="https://www.instagram.com/maroinu_dayo" aria-label="Instagram" target="_blank" rel="noopener noreferrer" data-internal-action>
                     <span className={styles.socialIcon}>◎</span>
                     Instagram
                   </a>
