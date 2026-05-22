@@ -71,7 +71,7 @@ export const FLOATING_OBJECTS: FloatingObjectConfig[] = [
     args: [0.65, 0.08, 16, 48],
     position: [1.5, 1.2, -1.2],
     rotation: [1.2, 0.5, 0.4],
-    color: '#c0c0c0',
+    color: '#98e8c2',
     roughness: 0.05, metalness: 0.0,
     transmission: 0.95, ior: 1.45, thickness: 0.25,
     floatOffset: 3.0, floatAmplitude: 0.12, floatSpeed: 0.6,
