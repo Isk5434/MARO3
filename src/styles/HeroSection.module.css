@@ -166,7 +166,7 @@
       linear-gradient(180deg, rgba(15, 13, 10, 0.02), rgba(15, 13, 10, 0) 48%, rgba(15, 13, 10, 0.12));
   }
   .backdropImage {
-    --phase-one-art-offset-x: clamp(-0.95rem, -2.2svw, -0.45rem);
+    --phase-one-art-offset-x: clamp(-2.35rem, -7svw, -1.55rem);
     width: max(118svw, 56.3svh);
     height: max(100svh, 150svw);
     object-fit: cover;
@@ -198,7 +198,7 @@
 
 @media (max-width: 768px) and (max-aspect-ratio: 9 / 20) {
   .backdropImage {
-    --phase-one-art-offset-x: clamp(-1.15rem, -2.8svw, -0.55rem);
+    --phase-one-art-offset-x: clamp(-2.65rem, -8svw, -1.75rem);
     width: max(126svw, 56.3svh);
     object-position: center top;
   }
@@ -206,7 +206,7 @@
 
 @media (max-width: 768px) and (min-aspect-ratio: 1 / 2) {
   .backdropImage {
-    --phase-one-art-offset-x: clamp(-0.75rem, -1.7svw, -0.35rem);
+    --phase-one-art-offset-x: clamp(-1.85rem, -5.5svw, -1.15rem);
     width: max(110svw, 56.3svh);
     object-position: center 6%;
   }
@@ -220,7 +220,7 @@
   }
 
   .backdropImage {
-    --phase-one-art-offset-x: clamp(-0.65rem, -1.4svw, -0.25rem);
+    --phase-one-art-offset-x: clamp(-1.65rem, -5svw, -1rem);
     width: max(104svw, 56.3svh);
     object-position: center 10%;
   }
@@ -228,7 +228,7 @@
 
 @media (max-width: 768px) and (orientation: landscape) {
   .backdropImage {
-    --phase-one-art-offset-x: -0.25rem;
+    --phase-one-art-offset-x: -1rem;
     width: 100svw;
     height: auto;
     min-height: 100svh;
