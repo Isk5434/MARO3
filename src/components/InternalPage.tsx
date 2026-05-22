@@ -263,9 +263,11 @@ export function InternalPage({ pageId, activityArticles = [] }: Props) {
                           loading="lazy"
                         />
                       )}
-                      <span className={styles.articleMeta}>{formatDate(article.publishedAt)}</span>
-                      <strong>{article.title}</strong>
-                      {article.description && <small>{article.description}</small>}
+                      <div className={styles.articleText}>
+                        <span className={styles.articleMeta}>{formatDate(article.publishedAt)}</span>
+                        <strong>{article.title}</strong>
+                        {article.description && <small>{article.description}</small>}
+                      </div>
                     </a>
                   ))}
                 </div>
