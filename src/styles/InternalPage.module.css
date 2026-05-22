@@ -372,13 +372,12 @@
 
 .contactSection .content {
   width: min(680px, 100%);
-  justify-self: end;
-  text-align: right;
+  text-align: center;
 }
 
 .contactSection .body,
 .contactSection .form {
-  margin-left: auto;
+  margin-inline: auto;
 }
 
 .eyebrow {
