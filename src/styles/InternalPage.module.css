@@ -453,7 +453,6 @@
   display: grid;
   align-content: end;
   border: 1px solid rgba(255, 255, 255, 0.14);
-  border-radius: 10px;
   color: rgba(255, 255, 255, 0.95);
   background: rgba(24, 26, 22, 0.72);
   box-shadow: 0 1.4rem 3.6rem rgba(30, 34, 24, 0.22);
