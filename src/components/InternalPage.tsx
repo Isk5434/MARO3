@@ -127,9 +127,23 @@ function formatDate(date?: string) {
 
 export function InternalPage({ pageId, activityArticles = [] }: Props) {
   const page = INTERNAL_PAGES[pageId]
+  const mainRef = useRef<HTMLElement>(null)
   const sectionRef = useRef<HTMLElement>(null)
   const pageClassName = styles[`${pageId}Page`] ?? ''
   const sectionClassName = styles[`${pageId}Section`] ?? ''
+
+  const handleBack = (e: React.MouseEvent<HTMLAnchorElement>) => {
+    e.preventDefault()
+    const href = getAppPath('')
+    sessionStorage.setItem('_maroBack', '1')
+    document.body.style.overflow = 'hidden'
+    gsap.to(mainRef.current, {
+      x: '100%',
+      duration: 0.38,
+      ease: 'power2.in',
+      onComplete: () => { window.location.href = href },
+    })
+  }
 
   useEffect(() => {
     const section = sectionRef.current
@@ -169,8 +183,8 @@ export function InternalPage({ pageId, activityArticles = [] }: Props) {
   }, [pageId])
 
   return (
-    <main className={`${styles.page} ${pageClassName}`}>
-      <a href={getAppPath('')} className={styles.backLink}>
+    <main ref={mainRef} className={`${styles.page} ${pageClassName}`}>
+      <a href={getAppPath('')} className={styles.backLink} onClick={handleBack}>
         TOPへ戻る
       </a>
 

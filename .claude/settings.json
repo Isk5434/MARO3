@@ -3,7 +3,8 @@
     "allow": [
       "PowerShell(\\(Invoke-WebRequest -Uri \"https://isk5434.github.io/MARO3/activity/asdjiyubxx/\" -UseBasicParsing\\).Content | Select-String -Pattern \"tile|visual|section_\" | Select-Object -First 10)",
       "PowerShell(\\(Invoke-WebRequest -Uri \"https://isk5434.github.io/MARO3/_next/static/chunks/01xla15s2s787.css\" -UseBasicParsing\\).Content | Select-String -Pattern \"tileOne|tileTwo|visualTile\" | Select-Object -First 5)",
-      "Bash(Get-ChildItem \"c:\\\\Users\\\\tryss\\\\maro-hp3\\\\app\" -Recurse -Filter \"*.tsx\")"
+      "Bash(Get-ChildItem \"c:\\\\Users\\\\tryss\\\\maro-hp3\\\\app\" -Recurse -Filter \"*.tsx\")",
+      "Bash(git commit -m ' *)"
     ]
   }
 }
