@@ -11,3 +11,4 @@ export const CONTACT_ROUNDEL_MOBILE_IMAGE = assetPath('contact-roundel-mobile.we
 export const PEEK_FOOTER_IMAGE = assetPath('15765-compressed.jpg')
 export const LOADING_MARK_IMAGE = assetPath('loading-mark.png')
 export const PHASE_ONE_BACKDROP_IMAGE = assetPath('phase-1-backdrop.jpg')
+export const FAVICON_IMAGE = assetPath('favicon.jpg')

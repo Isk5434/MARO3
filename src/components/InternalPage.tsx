@@ -5,6 +5,7 @@ import {
   CONTACT_ROUNDEL_MOBILE_IMAGE,
   CONTACT_SASH_IMAGE,
   CONTACT_SASH_MOBILE_IMAGE,
+  FAVICON_IMAGE,
   LINK_RIBBON_IMAGE,
   LINK_RIBBON_MOBILE_IMAGE,
   LOOP_RING_IMAGE,
@@ -304,7 +305,7 @@ export function InternalPage({ pageId, activityArticles = [] }: Props) {
               <section className={styles.summaryBlock}>
                 <h2>▼ブログも見てね！</h2>
                 <a href="#blog" className={styles.blogCard} data-internal-action>
-                  <span className={styles.blogThumb} aria-hidden="true" />
+                  <img src={FAVICON_IMAGE} alt="" className={styles.blogThumb} aria-hidden="true" />
                   <span>
                     <strong>MAROブログ</strong>
                     <small>「知的好奇心こしょぐり隊」</small>
