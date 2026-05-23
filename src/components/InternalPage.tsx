@@ -1,5 +1,5 @@
 import gsap from 'gsap'
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useMemo, useRef, useState } from 'react'
 import {
   CONTACT_ROUNDEL_IMAGE,
   CONTACT_ROUNDEL_MOBILE_IMAGE,
@@ -127,10 +127,29 @@ function formatDate(date?: string) {
 
 export function InternalPage({ pageId, activityArticles = [] }: Props) {
   const page = INTERNAL_PAGES[pageId]
+  const [articleQuery, setArticleQuery] = useState('')
   const mainRef = useRef<HTMLElement>(null)
   const sectionRef = useRef<HTMLElement>(null)
   const pageClassName = styles[`${pageId}Page`] ?? ''
   const sectionClassName = styles[`${pageId}Section`] ?? ''
+  const filteredArticles = useMemo(() => {
+    const query = articleQuery.trim().toLowerCase()
+    if (!query) return activityArticles
+
+    return activityArticles.filter((article) => {
+      const searchText = [
+        article.title,
+        article.description,
+        article.category,
+        formatDate(article.publishedAt),
+      ]
+        .filter(Boolean)
+        .join(' ')
+        .toLowerCase()
+
+      return searchText.includes(query)
+    })
+  }, [activityArticles, articleQuery])
 
   const handleBack = (e: React.MouseEvent<HTMLAnchorElement>) => {
     e.preventDefault()
@@ -274,46 +293,73 @@ export function InternalPage({ pageId, activityArticles = [] }: Props) {
                 <h2>記事一覧</h2>
               </div>
 
+              {activityArticles.length > 0 && (
+                <label className={styles.articleSearch} data-internal-action>
+                  <span>記事を検索</span>
+                  <input
+                    type="search"
+                    value={articleQuery}
+                    onChange={(event) => setArticleQuery(event.target.value)}
+                    placeholder="キーワード、カテゴリ、日付"
+                    aria-describedby="activity-search-result"
+                  />
+                </label>
+              )}
+
               {activityArticles.length > 0 ? (
-                <div className={styles.articleGrid}>
-                  {activityArticles.map((article) => (
-                    <a
-                      key={article.id}
-                      href={`${getAppPath('activity')}/${article.id}`}
-                      className={styles.articleCard}
-                      data-internal-action
-                    >
-                      <span className={styles.articleCardLabel}>● ACTIVITY LOG</span>
-                      <div className={styles.articleCardInner}>
-                        <div className={styles.articleCardMedia}>
-                          {article.eyecatch?.url ? (
-                            <img
-                              src={article.eyecatch.url}
-                              alt=""
-                              className={styles.articleImage}
-                              loading="lazy"
-                              decoding="async"
-                            />
-                          ) : (
-                            <span className={styles.articleCardNoImage} aria-hidden="true">活動</span>
-                          )}
-                        </div>
-                        <div className={styles.articleCardInfo}>
-                          <div className={styles.articleCardMeta}>
-                            {article.category && (
-                              <span className={styles.articleCardTag}>{article.category}</span>
-                            )}
-                            <span className={styles.articleMeta}>{formatDate(article.publishedAt)}</span>
+                <>
+                  <p id="activity-search-result" className={styles.articleSearchResult} data-internal-action>
+                    {articleQuery.trim()
+                      ? `${filteredArticles.length}件の記事が見つかりました。`
+                      : `${activityArticles.length}件の記事があります。`}
+                  </p>
+
+                  {filteredArticles.length > 0 ? (
+                    <div className={styles.articleGrid}>
+                      {filteredArticles.map((article) => (
+                        <a
+                          key={article.id}
+                          href={`${getAppPath('activity')}/${article.id}`}
+                          className={styles.articleCard}
+                          data-internal-action
+                        >
+                          <span className={styles.articleCardLabel}>● ACTIVITY LOG</span>
+                          <div className={styles.articleCardInner}>
+                            <div className={styles.articleCardMedia}>
+                              {article.eyecatch?.url ? (
+                                <img
+                                  src={article.eyecatch.url}
+                                  alt=""
+                                  className={styles.articleImage}
+                                  loading="lazy"
+                                  decoding="async"
+                                />
+                              ) : (
+                                <span className={styles.articleCardNoImage} aria-hidden="true">活動</span>
+                              )}
+                            </div>
+                            <div className={styles.articleCardInfo}>
+                              <div className={styles.articleCardMeta}>
+                                {article.category && (
+                                  <span className={styles.articleCardTag}>{article.category}</span>
+                                )}
+                                <span className={styles.articleMeta}>{formatDate(article.publishedAt)}</span>
+                              </div>
+                              <strong>{article.title}</strong>
+                              {article.description && (
+                                <p className={styles.articleCardDesc}>{article.description}</p>
+                              )}
+                            </div>
                           </div>
-                          <strong>{article.title}</strong>
-                          {article.description && (
-                            <p className={styles.articleCardDesc}>{article.description}</p>
-                          )}
-                        </div>
-                      </div>
-                    </a>
-                  ))}
-                </div>
+                        </a>
+                      ))}
+                    </div>
+                  ) : (
+                    <p className={styles.emptyArticles} data-internal-action>
+                      条件に合う記事はありません。キーワードを変えて検索してください。
+                    </p>
+                  )}
+                </>
               ) : (
                 <p className={styles.emptyArticles} data-internal-action>
                   記事はまだありません。microCMSを接続すると、ここに活動記事が表示されます。

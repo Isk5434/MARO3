@@ -12,6 +12,7 @@ import { MaroTopicSection } from './components/MaroTopicSection'
 import { PeekFooter } from './components/PeekFooter'
 import { SvgFilters } from './components/SvgFilters'
 import type { InternalPageId } from './config/internal-pages'
+import { BASE_PATH } from './config/base-path'
 import { useMouseTracker } from './hooks/useMouseTracker'
 import styles from './styles/App.module.css'
 import type { ActivityArticleSummary } from './types/activity'
@@ -43,6 +44,15 @@ export default function App({ initialPageId = null, activityArticles = [] }: App
   useLayoutEffect(() => {
     document.body.classList.toggle('dark-bg', isDark)
   }, [isDark])
+
+  useEffect(() => {
+    if (!('serviceWorker' in navigator)) return
+
+    const swPath = `${BASE_PATH}/sw.js`
+    navigator.serviceWorker.register(swPath).catch(() => {
+      // PWA support should never block the site experience.
+    })
+  }, [])
 
   const handleHeroCta = useCallback(() => {
     firstContentRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' })

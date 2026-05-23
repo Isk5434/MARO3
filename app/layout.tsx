@@ -4,6 +4,7 @@ import '../src/styles/filters.css'
 import { organizationSchema, websiteSchema } from '../src/lib/structured-data'
 
 const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://maroinu.pages.dev'
+const basePath = process.env.NEXT_PUBLIC_BASE_PATH || ''
 
 const defaultTitle = 'MARO | 名古屋市博物館サポーター・名古屋市立大学発の学生団体'
 const defaultDescription =
@@ -30,6 +31,12 @@ export const metadata: Metadata = {
     'ミュージアム',
   ],
   authors: [{ name: 'MARO' }],
+  manifest: `${basePath}/manifest.webmanifest`,
+  appleWebApp: {
+    capable: true,
+    title: 'MARO',
+    statusBarStyle: 'default',
+  },
   openGraph: {
     type: 'website',
     locale: 'ja_JP',
