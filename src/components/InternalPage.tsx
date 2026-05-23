@@ -12,6 +12,7 @@ import {
   LOOP_RING_MOBILE_IMAGE,
 } from '../config/assets'
 import { INTERNAL_PAGES, getAppPath, type InternalPageId } from '../config/internal-pages'
+import { formatDate } from '../lib/format'
 import styles from '../styles/InternalPage.module.css'
 import type { ActivityArticleSummary } from '../types/activity'
 
@@ -116,14 +117,6 @@ function setRevealMask(elements: NodeListOf<HTMLElement>, transparent: number, b
   })
 }
 
-function formatDate(date?: string) {
-  if (!date) return ''
-  return new Intl.DateTimeFormat('ja-JP', {
-    year: 'numeric',
-    month: '2-digit',
-    day: '2-digit',
-  }).format(new Date(date))
-}
 
 export function InternalPage({ pageId, activityArticles = [] }: Props) {
   const page = INTERNAL_PAGES[pageId]
