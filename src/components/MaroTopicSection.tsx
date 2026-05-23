@@ -107,7 +107,7 @@ export function MaroTopicSection({
         <div className={styles.loopRing} aria-hidden="true">
           <picture>
             <source media="(max-width: 720px)" srcSet={LOOP_RING_MOBILE_IMAGE} type="image/webp" />
-            <img src={LOOP_RING_IMAGE} alt="" />
+            <img src={LOOP_RING_IMAGE} alt="" loading="lazy" decoding="async" />
           </picture>
         </div>
       )}
@@ -119,7 +119,13 @@ export function MaroTopicSection({
               {CONTACT_SASH_REPEAT.map((item) => (
                 <picture key={item} className={styles.contactSashPicture}>
                   <source media="(max-width: 720px)" srcSet={CONTACT_SASH_MOBILE_IMAGE} type="image/webp" />
-                  <img src={CONTACT_SASH_IMAGE} alt="" className={styles.contactSashImage} />
+                  <img
+                    src={CONTACT_SASH_IMAGE}
+                    alt=""
+                    className={styles.contactSashImage}
+                    loading="lazy"
+                    decoding="async"
+                  />
                 </picture>
               ))}
             </div>
@@ -127,7 +133,7 @@ export function MaroTopicSection({
           <div className={styles.contactRoundel} aria-hidden="true">
             <picture>
               <source media="(max-width: 720px)" srcSet={CONTACT_ROUNDEL_MOBILE_IMAGE} type="image/webp" />
-              <img src={CONTACT_ROUNDEL_IMAGE} alt="" />
+              <img src={CONTACT_ROUNDEL_IMAGE} alt="" loading="lazy" decoding="async" />
             </picture>
           </div>
         </>
@@ -141,7 +147,13 @@ export function MaroTopicSection({
                 {RIBBON_REPEAT.map((item) => (
                   <picture key={item} className={styles.flowPicture}>
                     <source media="(max-width: 720px)" srcSet={LINK_RIBBON_MOBILE_IMAGE} type="image/webp" />
-                    <img src={LINK_RIBBON_IMAGE} alt="" className={styles.flowImage} />
+                    <img
+                      src={LINK_RIBBON_IMAGE}
+                      alt=""
+                      className={styles.flowImage}
+                      loading="lazy"
+                      decoding="async"
+                    />
                   </picture>
                 ))}
               </div>

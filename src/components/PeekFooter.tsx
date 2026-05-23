@@ -37,7 +37,7 @@ export function PeekFooter() {
   return (
     <div ref={wrapperRef} className={styles.wrapper} aria-hidden="true">
       <div ref={imageWrapRef} className={styles.imageWrap}>
-        <img src={PEEK_FOOTER_IMAGE} alt="" className={styles.image} />
+        <img src={PEEK_FOOTER_IMAGE} alt="" className={styles.image} loading="lazy" decoding="async" />
       </div>
     </div>
   )

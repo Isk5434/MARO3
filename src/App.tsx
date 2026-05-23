@@ -21,39 +21,6 @@ interface AppProps {
   activityArticles?: ActivityArticleSummary[]
 }
 
-function installZoomGuard() {
-  let lastTouchEnd = 0
-
-  const prevent = (event: Event) => event.preventDefault()
-  const preventMultiTouch = (event: TouchEvent) => {
-    if (event.touches.length > 1) event.preventDefault()
-  }
-  const preventDoubleTap = (event: TouchEvent) => {
-    const now = Date.now()
-    if (now - lastTouchEnd <= 300) event.preventDefault()
-    lastTouchEnd = now
-  }
-  const preventCtrlWheel = (event: WheelEvent) => {
-    if (event.ctrlKey) event.preventDefault()
-  }
-
-  document.addEventListener('gesturestart', prevent)
-  document.addEventListener('gesturechange', prevent)
-  document.addEventListener('gestureend', prevent)
-  document.addEventListener('touchmove', preventMultiTouch, { passive: false })
-  document.addEventListener('touchend', preventDoubleTap, { passive: false })
-  window.addEventListener('wheel', preventCtrlWheel, { passive: false })
-
-  return () => {
-    document.removeEventListener('gesturestart', prevent)
-    document.removeEventListener('gesturechange', prevent)
-    document.removeEventListener('gestureend', prevent)
-    document.removeEventListener('touchmove', preventMultiTouch)
-    document.removeEventListener('touchend', preventDoubleTap)
-    window.removeEventListener('wheel', preventCtrlWheel)
-  }
-}
-
 export default function App({ initialPageId = null, activityArticles = [] }: AppProps) {
   const internalPageId = initialPageId
   const isInternalPage = internalPageId !== null
@@ -72,8 +39,6 @@ export default function App({ initialPageId = null, activityArticles = [] }: App
   const handleBgToggle = useCallback(() => {
     setIsDark((current) => !current)
   }, [])
-
-  useEffect(() => installZoomGuard(), [])
 
   useLayoutEffect(() => {
     document.body.classList.toggle('dark-bg', isDark)
@@ -122,7 +87,7 @@ export default function App({ initialPageId = null, activityArticles = [] }: App
               isDark={isDark}
               onBgToggle={handleBgToggle}
             />
-            <main className={styles.page}>
+            <main id="main-content" className={styles.page}>
               <div className={styles.pinnedPhase}>
                 <HeroSection mouseRef={mouseRef} onCtaClick={handleHeroCta} active={heroActive} />
               </div>

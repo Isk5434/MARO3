@@ -34,8 +34,8 @@ export function HeroCanvas({ mouseRef, active = true }: Props) {
   return (
     <Canvas
       camera={{ position: [0, 0, 5.5], fov: 48 }}
-      gl={{ antialias: true, alpha: true }}
-      dpr={[1, 1.5]}
+      gl={{ antialias: true, alpha: true, powerPreference: 'high-performance' }}
+      dpr={[1, 1.25]}
       frameloop="always"
       style={{
         position: 'absolute',

@@ -1,4 +1,4 @@
-import { useEffect, useRef, Suspense, Component, type ReactNode } from 'react'
+import { useEffect, useMemo, useRef, Suspense, Component, type ReactNode } from 'react'
 import { useFrame } from '@react-three/fiber'
 import { useGLTF } from '@react-three/drei'
 import * as THREE from 'three'
@@ -14,7 +14,7 @@ function FloatingGlb({ cfg }: { cfg: FloatingObjectConfig }) {
   const baseY = cfg.position[1]
   const time = useRef(cfg.floatOffset ?? 0)
 
-  const normalizedScene = (() => {
+  const normalizedScene = useMemo(() => {
     const clone = scene.clone()
     const box = new THREE.Box3().setFromObject(clone)
     const size = new THREE.Vector3()
@@ -26,7 +26,7 @@ function FloatingGlb({ cfg }: { cfg: FloatingObjectConfig }) {
     new THREE.Box3().setFromObject(clone).getCenter(center)
     clone.position.sub(center)
     return clone
-  })()
+  }, [scene])
 
   useFrame((_, delta) => {
     if (!groupRef.current) return

@@ -45,15 +45,16 @@ export function Header({ isDark, onBgToggle }: Props) {
       <div className={styles.controls}>
         <button
           className={`${styles.bgToggle}${isDark ? ` ${styles.dark}` : ''}`}
+          type="button"
           onClick={onBgToggle}
-          aria-label="Toggle background"
+          aria-label={isDark ? '背景を明るくする' : '背景を暗くする'}
         />
         <div ref={menuRef} className={styles.menuArea}>
           <button
             className={`${styles.menuToggle}${menuOpen ? ` ${styles.open}` : ''}`}
             type="button"
             onClick={() => setMenuOpen((current) => !current)}
-            aria-label="Open menu"
+            aria-label={menuOpen ? 'メニューを閉じる' : 'メニューを開く'}
             aria-expanded={menuOpen}
             aria-controls="phase-menu"
           >
@@ -64,10 +65,16 @@ export function Header({ isDark, onBgToggle }: Props) {
           <nav
             id="phase-menu"
             className={`${styles.menuPanel}${menuOpen ? ` ${styles.visible}` : ''}`}
-            aria-label="Main menu"
+            aria-label="メインメニュー"
+            aria-hidden={!menuOpen}
           >
             {MENU_ITEMS.map((item) => (
-              <a key={item.id} href={getAppPath(item.id)} onClick={() => setMenuOpen(false)}>
+              <a
+                key={item.id}
+                href={getAppPath(item.id)}
+                onClick={() => setMenuOpen(false)}
+                tabIndex={menuOpen ? 0 : -1}
+              >
                 <span>{item.eyebrow}</span>
                 {item.label}
               </a>

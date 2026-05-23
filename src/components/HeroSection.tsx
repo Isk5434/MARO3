@@ -20,13 +20,19 @@ export function HeroSection({ mouseRef, onCtaClick, active = true }: Props) {
       </div>
 
       <div className={styles.backdrop} data-hero-backdrop data-hero-mask aria-hidden="true">
-        <img src={PHASE_ONE_BACKDROP_IMAGE} alt="" className={styles.backdropImage} />
+        <img
+          src={PHASE_ONE_BACKDROP_IMAGE}
+          alt=""
+          className={styles.backdropImage}
+          decoding="async"
+          fetchPriority="high"
+        />
       </div>
 
       <div className={styles.content}>
         <h1 className={styles.heading} data-hero-title data-hero-mask>{hero.heading}</h1>
         <p className={styles.subtitle} data-hero-subtitle data-hero-mask>{hero.subtitle}</p>
-        <button className={styles.cta} data-hero-cta onClick={onCtaClick}>
+        <button className={styles.cta} data-hero-cta type="button" onClick={onCtaClick}>
           {hero.cta} &nbsp;↓
         </button>
       </div>

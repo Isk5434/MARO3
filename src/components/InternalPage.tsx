@@ -196,7 +196,7 @@ export function InternalPage({ pageId, activityArticles = [] }: Props) {
           <div className={styles.loopRing} aria-hidden="true">
             <picture>
               <source media="(max-width: 720px)" srcSet={LOOP_RING_MOBILE_IMAGE} type="image/webp" />
-              <img src={LOOP_RING_IMAGE} alt="" />
+              <img src={LOOP_RING_IMAGE} alt="" loading="lazy" decoding="async" />
             </picture>
           </div>
         )}
@@ -208,7 +208,13 @@ export function InternalPage({ pageId, activityArticles = [] }: Props) {
                 {CONTACT_SASH_REPEAT.map((item) => (
                   <picture key={item} className={styles.contactSashPicture}>
                     <source media="(max-width: 720px)" srcSet={CONTACT_SASH_MOBILE_IMAGE} type="image/webp" />
-                    <img src={CONTACT_SASH_IMAGE} alt="" className={styles.contactSashImage} />
+                    <img
+                      src={CONTACT_SASH_IMAGE}
+                      alt=""
+                      className={styles.contactSashImage}
+                      loading="lazy"
+                      decoding="async"
+                    />
                   </picture>
                 ))}
               </div>
@@ -216,7 +222,7 @@ export function InternalPage({ pageId, activityArticles = [] }: Props) {
             <div className={styles.contactRoundel} aria-hidden="true">
               <picture>
                 <source media="(max-width: 720px)" srcSet={CONTACT_ROUNDEL_MOBILE_IMAGE} type="image/webp" />
-                <img src={CONTACT_ROUNDEL_IMAGE} alt="" />
+                <img src={CONTACT_ROUNDEL_IMAGE} alt="" loading="lazy" decoding="async" />
               </picture>
             </div>
           </>
@@ -230,7 +236,13 @@ export function InternalPage({ pageId, activityArticles = [] }: Props) {
                   {RIBBON_REPEAT.map((item) => (
                     <picture key={item} className={styles.flowPicture}>
                       <source media="(max-width: 720px)" srcSet={LINK_RIBBON_MOBILE_IMAGE} type="image/webp" />
-                      <img src={LINK_RIBBON_IMAGE} alt="" className={styles.flowImage} />
+                      <img
+                        src={LINK_RIBBON_IMAGE}
+                        alt=""
+                        className={styles.flowImage}
+                        loading="lazy"
+                        decoding="async"
+                      />
                     </picture>
                   ))}
                 </div>
@@ -280,6 +292,7 @@ export function InternalPage({ pageId, activityArticles = [] }: Props) {
                               alt=""
                               className={styles.articleImage}
                               loading="lazy"
+                              decoding="async"
                             />
                           ) : (
                             <span className={styles.articleCardNoImage} aria-hidden="true">活動</span>
@@ -373,7 +386,7 @@ export function InternalPage({ pageId, activityArticles = [] }: Props) {
               >
                 <span className={styles.linkCardLabel}>● BLOG</span>
                 <div className={styles.linkCardCenter}>
-                  <img src={FAVICON_IMAGE} alt="" className={styles.linkCardThumb} />
+                  <img src={FAVICON_IMAGE} alt="" className={styles.linkCardThumb} loading="lazy" decoding="async" />
                 </div>
                 <div className={styles.linkCardFooter}>
                   <span className={styles.linkCardTitle}>MAROブログ</span>

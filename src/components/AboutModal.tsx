@@ -18,16 +18,25 @@ export function AboutModal({ isOpen, onClose }: Props) {
 
   const { about } = SITE_CONTENT
 
+  if (!isOpen) return null
+
   return (
     <div
       className={`${styles.backdrop}${isOpen ? ` ${styles.open}` : ''}`}
       onClick={onClose}
+      role="presentation"
     >
-      <div className={styles.card} onClick={(e) => e.stopPropagation()}>
-        <button className={styles.closeBtn} onClick={onClose} aria-label="Close">
+      <div
+        className={styles.card}
+        onClick={(e) => e.stopPropagation()}
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="about-modal-title"
+      >
+        <button className={styles.closeBtn} type="button" onClick={onClose} aria-label="閉じる">
           ✕
         </button>
-        <h2 className={styles.heading}>{about.heading}</h2>
+        <h2 id="about-modal-title" className={styles.heading}>{about.heading}</h2>
         <p className={styles.body}>{about.body}</p>
         <div className={styles.links}>
           {about.links.map((l) => (

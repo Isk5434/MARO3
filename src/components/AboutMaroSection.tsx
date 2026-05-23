@@ -120,6 +120,7 @@ export const AboutMaroSection = forwardRef<HTMLElement>(function AboutMaroSectio
             </p>
             <button
               className={styles.primaryButton}
+              type="button"
               onClick={handleOpen}
               data-about-button
               aria-label="MAROとは？を開く"

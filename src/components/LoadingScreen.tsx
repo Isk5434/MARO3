@@ -4,9 +4,9 @@ import { useCallback, useEffect, useRef, useState } from 'react'
 import { LOADING_MARK_IMAGE } from '../config/assets'
 import styles from '../styles/LoadingScreen.module.css'
 
-const MIN_LOADING_MS = 3800
-const FAKE_LOADING_MS = 3000
-const READY_REVEAL_DELAY_MS = 800
+const MIN_LOADING_MS = 1800
+const FAKE_LOADING_MS = 1400
+const READY_REVEAL_DELAY_MS = 300
 const GLASS_EFFECT_SPEED = 0.5
 const GLASS_DURATION_MS = 750 / GLASS_EFFECT_SPEED
 const GLASS_FADE_MS = 600 / GLASS_EFFECT_SPEED
@@ -246,6 +246,7 @@ export function LoadingScreen({ onLoaded }: Props) {
           src={LOADING_MARK_IMAGE}
           alt=""
           aria-hidden="true"
+          decoding="async"
         />
 
         <div className={styles.switcher}>
@@ -259,8 +260,10 @@ export function LoadingScreen({ onLoaded }: Props) {
           <button
             ref={btnRef}
             className={styles.enterBtn}
+            type="button"
             onClick={handleEnter}
             disabled={phase !== 'ready'}
+            aria-label="サイトに入る"
           >
             <span>Enter Site</span>
           </button>
