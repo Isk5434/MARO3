@@ -3,12 +3,12 @@ import App from '../../src/App'
 import { getActivityArticles } from '../../src/lib/microcms'
 import { breadcrumbSchema, webPageSchema } from '../../src/lib/structured-data'
 
-const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://example.com'
+const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://maroinu.pages.dev'
 
 export const metadata: Metadata = {
   title: '活動内容',
   description:
-    'MAROの活動内容一覧。名古屋市博物館でのイベントや、若い世代と博物館をつなぐ企画・運営・発信の取り組みを紹介します。',
+    'MAROの活動内容一覧。名古屋市立大学（名市大）から始まった学生主体の博物館サポーター活動や、名古屋市博物館でのイベント・発信の取り組みを紹介します。',
   alternates: { canonical: '/activity/' },
 }
 
@@ -23,7 +23,7 @@ export default async function ActivityPage() {
   const page = webPageSchema({
     name: '活動内容 | MARO',
     description:
-      'MAROの活動内容一覧。名古屋市博物館でのイベントや、若い世代と博物館をつなぐ企画・運営・発信の取り組みを紹介します。',
+      'MAROの活動内容一覧。名古屋市立大学（名市大）から始まった学生主体の博物館サポーター活動や、名古屋市博物館でのイベント・発信の取り組みを紹介します。',
     url: `${siteUrl}/activity/`,
   })
 

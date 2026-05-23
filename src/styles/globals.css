@@ -6,8 +6,8 @@
   font-weight: 400;
   font-display: swap;
   src:
-    url('/MARO3/fonts/alex-brush-v23.ttf') format('truetype'),
-    url('/fonts/alex-brush-v23.ttf') format('truetype');
+    url('/fonts/alex-brush-v23.ttf') format('truetype'),
+    url('/MARO3/fonts/alex-brush-v23.ttf') format('truetype');
 }
 
 :root {

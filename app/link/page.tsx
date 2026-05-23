@@ -2,7 +2,7 @@ import type { Metadata } from 'next'
 import App from '../../src/App'
 import { breadcrumbSchema, webPageSchema } from '../../src/lib/structured-data'
 
-const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://example.com'
+const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://maroinu.pages.dev'
 
 export const metadata: Metadata = {
   title: 'リンク',

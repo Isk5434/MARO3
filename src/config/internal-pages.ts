@@ -17,7 +17,7 @@ export const INTERNAL_PAGES: Record<InternalPageId, InternalPageContent> = {
     label: '活動内容',
     eyebrow: 'ACTIVITY',
     title: '活動内容',
-    lead: '大学生が主体となって、名古屋市博物館と若者をつなぐ企画や発信に取り組んでいます。',
+    lead: '名古屋市立大学（名市大）から始まった学生主体の活動として、名古屋市博物館と若者をつなぐ企画や発信に取り組んでいます。',
     body: [
       '毎週木曜日に大学や博物館で会議などの活動を行っています。',
       '名古屋市博物館でのイベントや、博物館の魅力発信のための取り組みを行ってきました。',

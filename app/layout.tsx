@@ -3,11 +3,11 @@ import '../src/styles/globals.css'
 import '../src/styles/filters.css'
 import { organizationSchema, websiteSchema } from '../src/lib/structured-data'
 
-const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://example.com'
+const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://maroinu.pages.dev'
 
-const defaultTitle = 'MARO | 名古屋市博物館サポーター'
+const defaultTitle = 'MARO | 名古屋市博物館サポーター・名古屋市立大学発の学生団体'
 const defaultDescription =
-  '名古屋市博物館サポーター団体MAROの公式サイト。毎週木曜日に大学や博物館で活動を行い、若い世代と博物館をつなぐ企画・運営・発信を続けています。'
+  '名古屋市博物館サポーター団体MAROの公式サイト。名古屋市立大学（名市大）から始まった学生主体の活動として、若い世代と博物館をつなぐ企画・運営・発信を続けています。'
 
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
@@ -16,7 +16,19 @@ export const metadata: Metadata = {
     template: '%s | MARO',
   },
   description: defaultDescription,
-  keywords: ['MARO', '名古屋市博物館', '博物館サポーター', '名古屋', '博物館', '活動', 'ミュージアム'],
+  keywords: [
+    'MARO',
+    'MARO 博物館',
+    'maro 名市大',
+    '名市大 MARO',
+    '名古屋市立大学 MARO',
+    '名古屋市博物館',
+    '博物館サポーター',
+    '名古屋',
+    '博物館',
+    '学生団体',
+    'ミュージアム',
+  ],
   authors: [{ name: 'MARO' }],
   openGraph: {
     type: 'website',

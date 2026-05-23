@@ -3,7 +3,7 @@ import { getActivityArticleIds } from '../src/lib/microcms'
 
 export const dynamic = 'force-static'
 
-const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://example.com'
+const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://maroinu.pages.dev'
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const articleIds = await getActivityArticleIds()

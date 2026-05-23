@@ -1,4 +1,4 @@
-const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://example.com'
+const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://maroinu.pages.dev'
 
 export const orgId = `${siteUrl}/#organization`
 export const websiteId = `${siteUrl}/#website`
@@ -9,9 +9,9 @@ export function organizationSchema() {
     '@type': 'Organization',
     '@id': orgId,
     name: 'MARO',
-    alternateName: '名古屋市博物館サポーターMARO',
+    alternateName: ['名古屋市博物館サポーターMARO', '名市大 MARO', '名古屋市立大学 MARO'],
     description:
-      '名古屋市博物館サポーター団体MAROは、毎週木曜日に大学や博物館で活動し、若い世代と博物館をつなぐ企画・運営・発信を続けています。',
+      '名古屋市博物館サポーター団体MAROは、名古屋市立大学（名市大）から始まった学生主体の活動として、若い世代と博物館をつなぐ企画・運営・発信を続けています。',
     url: siteUrl,
     logo: {
       '@type': 'ImageObject',
@@ -41,7 +41,7 @@ export function websiteSchema() {
     url: siteUrl,
     name: 'MARO | 名古屋市博物館サポーター',
     description:
-      '名古屋市博物館サポーター団体MAROの公式サイト。若い世代と博物館をつなぐ活動を続けています。',
+      '名古屋市博物館サポーター団体MAROの公式サイト。名古屋市立大学（名市大）から始まった学生主体の活動として、若い世代と博物館をつなぐ活動を続けています。',
     publisher: { '@id': orgId },
     inLanguage: 'ja',
   }

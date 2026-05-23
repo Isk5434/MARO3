@@ -2,7 +2,7 @@ import type { Metadata } from 'next'
 import App from '../../src/App'
 import { breadcrumbSchema, faqSchema, webPageSchema } from '../../src/lib/structured-data'
 
-const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://example.com'
+const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://maroinu.pages.dev'
 
 export const metadata: Metadata = {
   title: 'お問い合わせ',
@@ -28,7 +28,7 @@ export default function ContactPage() {
     {
       question: 'MAROとはどんな団体ですか？',
       answer:
-        'MAROは名古屋市博物館のサポーター団体です。毎週木曜日に大学や博物館で活動し、若い世代と博物館をつなぐ企画・運営・発信を行っています。',
+        'MAROは名古屋市博物館のサポーター団体です。名古屋市立大学（名市大）から始まった学生主体の活動として、若い世代と博物館をつなぐ企画・運営・発信を行っています。',
     },
     {
       question: 'MAROの活動に参加・見学するにはどうすればいいですか？',

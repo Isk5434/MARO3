@@ -4,7 +4,7 @@ import { getActivityArticle, getActivityArticleIds } from '../../../src/lib/micr
 import { ActivityArticleView } from '../../../src/components/ActivityArticleView'
 import { articleSchema, breadcrumbSchema } from '../../../src/lib/structured-data'
 
-const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://example.com'
+const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://maroinu.pages.dev'
 
 interface Props {
   params: Promise<{ id: string }>
