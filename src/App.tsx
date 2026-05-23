@@ -1,16 +1,25 @@
 'use client'
 
 import { useCallback, useEffect, useLayoutEffect, useRef, useState } from 'react'
+import dynamic from 'next/dynamic'
 import { AboutModal } from './components/AboutModal'
 import { AboutMaroSection } from './components/AboutMaroSection'
 import { Footer } from './components/Footer'
 import { Header } from './components/Header'
-import { HeroSection } from './components/HeroSection'
 import { InternalPage } from './components/InternalPage'
-import { LoadingScreen } from './components/LoadingScreen'
 import { MaroTopicSection } from './components/MaroTopicSection'
 import { PeekFooter } from './components/PeekFooter'
 import { SvgFilters } from './components/SvgFilters'
+
+const HeroSection = dynamic(
+  () => import('./components/HeroSection').then((mod) => ({ default: mod.HeroSection })),
+  { ssr: false },
+)
+
+const LoadingScreen = dynamic(
+  () => import('./components/LoadingScreen').then((mod) => ({ default: mod.LoadingScreen })),
+  { ssr: false },
+)
 import type { InternalPageId } from './config/internal-pages'
 import { BASE_PATH } from './config/base-path'
 import { useMouseTracker } from './hooks/useMouseTracker'
