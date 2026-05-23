@@ -23,13 +23,32 @@ interface Props {
 
 declare global {
   interface Window {
-    turnstile?: { getResponse: () => string | undefined; reset: () => void }
+    turnstile?: {
+      render: (el: HTMLElement, options: { sitekey: string }) => string
+      getResponse: (widgetId?: string) => string | undefined
+      reset: (widgetId?: string) => void
+    }
   }
 }
 
 function ContactForm() {
   const [fields, setFields] = useState({ name: '', email: '', message: '' })
   const [status, setStatus] = useState<'idle' | 'sending' | 'sent' | 'error' | 'captcha_error'>('idle')
+  const turnstileRef = useRef<HTMLDivElement>(null)
+  const widgetIdRef = useRef<string | null>(null)
+
+  useEffect(() => {
+    const sitekey = process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY
+    if (!sitekey) return
+    const tryRender = () => {
+      if (window.turnstile && turnstileRef.current && !widgetIdRef.current) {
+        widgetIdRef.current = window.turnstile.render(turnstileRef.current, { sitekey })
+      }
+    }
+    tryRender()
+    const id = setInterval(tryRender, 300)
+    return () => clearInterval(id)
+  }, [])
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     setFields((prev) => ({ ...prev, [e.target.name]: e.target.value }))
@@ -109,11 +128,7 @@ function ContactForm() {
           data-internal-action
         />
       </label>
-      <div
-        className="cf-turnstile"
-        data-sitekey={process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY}
-        data-internal-action
-      />
+      <div ref={turnstileRef} data-internal-action />
       {status === 'captcha_error' && (
         <p className={styles.formError}>確認が完了していません。チェックボックスにチェックを入れてください。</p>
       )}
