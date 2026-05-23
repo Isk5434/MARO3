@@ -31,7 +31,7 @@ test.describe('SEO・AI向けファイル', () => {
     const res = await page.request.get('/robots.txt')
     expect(res.status()).toBe(200)
     const text = await res.text()
-    expect(text).toContain('User-agent')
+    expect(text).toContain('User-Agent')
     expect(text).toContain('Sitemap')
   })
 
