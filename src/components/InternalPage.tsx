@@ -264,25 +264,32 @@ export function InternalPage({ pageId, activityArticles = [] }: Props) {
 
               {activityArticles.length > 0 ? (
                 <div className={styles.articleGrid}>
-                  {activityArticles.map((article) => (
+                  {activityArticles.map((article, index) => (
                     <a
                       key={article.id}
                       href={`${getAppPath('activity')}/${article.id}`}
-                      className={styles.articleCard}
+                      className={`${styles.articleCard} ${index % 2 === 0 ? styles.articleCardDark : styles.articleCardLight}`}
                       data-internal-action
                     >
-                      {article.eyecatch?.url && (
-                        <img
-                          src={article.eyecatch.url}
-                          alt=""
-                          className={styles.articleImage}
-                          loading="lazy"
-                        />
-                      )}
-                      <div className={styles.articleText}>
-                        <span className={styles.articleMeta}>{formatDate(article.publishedAt)}</span>
-                        <strong>{article.title}</strong>
-                        {article.description && <small>{article.description}</small>}
+                      <span className={styles.articleCardLabel}>● ACTIVITY LOG</span>
+                      <div className={styles.articleCardMedia}>
+                        {article.eyecatch?.url ? (
+                          <img
+                            src={article.eyecatch.url}
+                            alt=""
+                            className={styles.articleImage}
+                            loading="lazy"
+                          />
+                        ) : (
+                          <span className={styles.articleCardNoImage} aria-hidden="true">活動</span>
+                        )}
+                      </div>
+                      <div className={styles.articleCardFooter}>
+                        <div className={styles.articleText}>
+                          <span className={styles.articleMeta}>{formatDate(article.publishedAt)}</span>
+                          <strong>{article.title}</strong>
+                        </div>
+                        <span className={styles.articleCardPlus} aria-hidden="true">+</span>
                       </div>
                     </a>
                   ))}
