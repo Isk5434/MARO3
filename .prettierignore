@@ -1,5 +1,6 @@
 public/draco/
 public/sw.js
+public/google*.html
 node_modules
 .next
 out
