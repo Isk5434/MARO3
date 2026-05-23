@@ -3,6 +3,7 @@ export interface ActivityArticleSummary {
   title: string
   description?: string
   publishedAt?: string
+  category?: string
   eyecatch?: {
     url: string
     width?: number

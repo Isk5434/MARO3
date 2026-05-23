@@ -287,7 +287,9 @@ export function InternalPage({ pageId, activityArticles = [] }: Props) {
                         </div>
                         <div className={styles.articleCardInfo}>
                           <div className={styles.articleCardMeta}>
-                            <span className={styles.articleCardTag}>ACTIVITY</span>
+                            {article.category && (
+                              <span className={styles.articleCardTag}>{article.category}</span>
+                            )}
                             <span className={styles.articleMeta}>{formatDate(article.publishedAt)}</span>
                           </div>
                           <strong>{article.title}</strong>

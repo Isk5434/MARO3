@@ -49,7 +49,7 @@ async function requestMicroCms<T>(path = '', params?: Record<string, string>) {
 
 export async function getActivityArticles(): Promise<ActivityArticleSummary[]> {
   const data = await requestMicroCms<MicroCmsListResponse<MicroCmsActivityArticle>>('', {
-    fields: 'id,title,description,publishedAt,eyecatch',
+    fields: 'id,title,description,publishedAt,category,eyecatch',
     orders: '-publishedAt',
     limit: '50',
   })
