@@ -2,6 +2,7 @@ import type { Metadata, Viewport } from 'next'
 import '../src/styles/globals.css'
 import '../src/styles/filters.css'
 import { organizationSchema, websiteSchema } from '../src/lib/structured-data'
+import InstallBanner from '../src/components/InstallBanner'
 
 const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://maroinu.pages.dev'
 const basePath = process.env.NEXT_PUBLIC_BASE_PATH || ''
@@ -123,7 +124,10 @@ export default function RootLayout({
           />
         )}
       </head>
-      <body>{children}</body>
+      <body>
+        {children}
+        <InstallBanner />
+      </body>
     </html>
   )
 }
