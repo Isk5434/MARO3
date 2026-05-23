@@ -19,3 +19,14 @@ jobs:
       - run: npm run lint
       - run: npx tsc --noEmit
       - run: npm test
+      - name: Build
+        run: npm run build
+        env:
+          MICROCMS_SERVICE_DOMAIN: ${{ secrets.MICROCMS_SERVICE_DOMAIN }}
+          MICROCMS_API_KEY: ${{ secrets.MICROCMS_API_KEY }}
+          MICROCMS_ACTIVITY_ENDPOINT: activities
+          NEXT_PUBLIC_SITE_URL: https://maroinu.pages.dev
+      - name: Install Playwright browsers
+        run: npx playwright install chromium --with-deps
+      - name: E2E tests
+        run: npm run test:e2e
