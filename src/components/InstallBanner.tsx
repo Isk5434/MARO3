@@ -7,14 +7,14 @@ type InstallState = 'hidden' | 'android' | 'ios'
 
 export default function InstallBanner() {
   const [state, setState] = useState<InstallState>('hidden')
-  const [deferredPrompt, setDeferredPrompt] = useState<any>(null)
+  const [deferredPrompt, setDeferredPrompt] = useState<Event & { prompt: () => void; userChoice: Promise<{ outcome: string }> } | null>(null)
   const [installing, setInstalling] = useState(false)
 
   useEffect(() => {
     // standalone（インストール済み）なら何もしない
     const isStandalone =
       window.matchMedia('(display-mode: standalone)').matches ||
-      (navigator as any).standalone === true
+      (navigator as Navigator & { standalone?: boolean }).standalone === true
     if (isStandalone) return
 
     // 既に閉じた場合は表示しない
