@@ -753,20 +753,20 @@
 }
 
 .linkCardLight {
-  background: #f4f1ec;
-  color: #111;
+  background: #342820;
+  color: rgba(246, 240, 232, 0.92);
 }
 
 .linkCardDark {
-  background: #111;
-  color: rgba(255, 255, 255, 0.92);
+  background: #0d0c0a;
+  color: rgba(246, 240, 232, 0.94);
 }
 
 .linkCardLabel {
   font-family: var(--font-serif);
   font-size: 0.66rem;
   letter-spacing: 0.14em;
-  opacity: 0.62;
+  color: rgba(232, 222, 210, 0.72);
   line-height: 1;
 }
 
@@ -893,16 +893,6 @@
     border-top-color: rgba(200, 190, 180, 0.18);
   }
 
-  .linkCardLight {
-    background: #342820;
-    color: rgba(246, 240, 232, 0.92);
-  }
-
-  .linkCardDark {
-    background: #0d0c0a;
-    color: rgba(246, 240, 232, 0.94);
-  }
-
   .linkCardGrid .linkCard:nth-child(3) {
     background: #0d0c0a;
     color: rgba(246, 240, 232, 0.94);
@@ -911,18 +901,6 @@
   .linkCardGrid .linkCard:nth-child(4) {
     background: #342820;
     color: rgba(246, 240, 232, 0.92);
-  }
-
-  .linkCardLabel {
-    color: rgba(232, 222, 210, 0.72);
-    opacity: 1;
-  }
-
-  .linkCardTitle,
-  .linkCardPlus,
-  .linkCardIcon,
-  .linkCardBigText {
-    color: rgba(250, 246, 240, 0.92);
   }
 
   .articleCardInner {

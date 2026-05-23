@@ -97,7 +97,6 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  min-width: 13.5rem;
   min-height: 3.4rem;
   font-family: var(--font-serif);
   font-size: clamp(0.88rem, 1.8vw, 1.05rem);
