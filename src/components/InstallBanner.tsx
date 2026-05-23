@@ -27,9 +27,10 @@ export default function InstallBanner() {
       return
     }
 
+    type BeforeInstallPromptEvent = Event & { prompt: () => void; userChoice: Promise<{ outcome: string }> }
     const handler = (e: Event) => {
       e.preventDefault()
-      setDeferredPrompt(e)
+      setDeferredPrompt(e as BeforeInstallPromptEvent)
       setTimeout(() => setState('android'), 2000)
     }
     window.addEventListener('beforeinstallprompt', handler)
