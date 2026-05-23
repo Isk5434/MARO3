@@ -12,6 +12,7 @@ const defaultDescription =
 
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
+  applicationName: 'MARO',
   title: {
     default: defaultTitle,
     template: '%s | MARO',
@@ -31,6 +32,9 @@ export const metadata: Metadata = {
     'ミュージアム',
   ],
   authors: [{ name: 'MARO' }],
+  creator: 'MARO',
+  publisher: 'MARO',
+  category: 'museum supporter organization',
   manifest: `${basePath}/manifest.webmanifest`,
   appleWebApp: {
     capable: true,
@@ -63,10 +67,23 @@ export const metadata: Metadata = {
   robots: {
     index: true,
     follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      'max-image-preview': 'large',
+      'max-snippet': -1,
+      'max-video-preview': -1,
+    },
   },
   icons: {
     icon: '/favicon.svg',
     apple: '/favicon.jpg',
+  },
+  other: {
+    'llms-txt': `${siteUrl}/llms.txt`,
+    'ai-summary':
+      'MAROは名古屋市博物館サポーター団体です。名古屋市立大学から始まった学生主体の活動として、若い世代と博物館をつなぐ企画・運営・発信を行っています。',
+    'content-language': 'ja',
   },
 }
 

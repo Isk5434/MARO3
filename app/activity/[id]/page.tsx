@@ -59,6 +59,7 @@ export default async function ActivityArticlePage({ params }: Props) {
     url: `${siteUrl}/activity/${id}/`,
     publishedAt: article.publishedAt ?? new Date().toISOString(),
     imageUrl: article.eyecatch?.url,
+    category: article.category,
   })
 
   const breadcrumb = breadcrumbSchema([

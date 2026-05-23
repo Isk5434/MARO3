@@ -22,6 +22,14 @@ export default function ContactPage() {
     description:
       'MAROへの活動見学・入部希望・取材・お問い合わせはこちらから。活動に興味がある方、協働のご相談をしたい方はお気軽にどうぞ。',
     url: `${siteUrl}/contact/`,
+    type: 'ContactPage',
+    keywords: [
+      'MARO 問い合わせ',
+      'MARO 入部',
+      'MARO 見学',
+      '名市大 MARO',
+      '博物館サポーター 参加',
+    ],
   })
 
   const faq = faqSchema([
