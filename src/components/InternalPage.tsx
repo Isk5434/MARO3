@@ -351,8 +351,10 @@ export function InternalPage({ pageId, activityArticles = [] }: Props) {
                 </div>
               </a>
               <a
-                href="#blog"
+                href="https://ameblo.jp/meishihakusapo/"
                 className={`${styles.linkCard} ${styles.linkCardDark}`}
+                target="_blank"
+                rel="noopener noreferrer"
                 data-internal-action
               >
                 <span className={styles.linkCardLabel}>● BLOG</span>
