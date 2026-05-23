@@ -8,7 +8,7 @@ const basePath = process.env.NEXT_PUBLIC_BASE_PATH || ''
 
 const defaultTitle = 'MARO | 名古屋市博物館サポーター・名古屋市立大学発の学生団体'
 const defaultDescription =
-  '名古屋市博物館サポーター団体MAROの公式サイト。名古屋市立大学（名市大）から始まった学生主体の活動として、若い世代と博物館をつなぐ企画・運営・発信を続けています。'
+  '名古屋市博物館サポーター団体MAROの公式サイト。名古屋市立大学から始まった学生主体の活動として、若い世代と博物館をつなぐ企画・運営・発信を続けています。'
 
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
@@ -91,6 +91,18 @@ export default function RootLayout({
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(websiteSchema()) }}
         />
+        <script
+          src="https://challenges.cloudflare.com/turnstile/v0/api.js"
+          async
+          defer
+        />
+        {process.env.NEXT_PUBLIC_CF_ANALYTICS_TOKEN && (
+          <script
+            defer
+            src="https://static.cloudflareinsights.com/beacon.min.js"
+            data-cf-beacon={`{"token": "${process.env.NEXT_PUBLIC_CF_ANALYTICS_TOKEN}"}`}
+          />
+        )}
       </head>
       <body>{children}</body>
     </html>

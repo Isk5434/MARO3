@@ -21,9 +21,15 @@ interface Props {
   activityArticles?: ActivityArticleSummary[]
 }
 
+declare global {
+  interface Window {
+    turnstile?: { getResponse: () => string | undefined; reset: () => void }
+  }
+}
+
 function ContactForm() {
   const [fields, setFields] = useState({ name: '', email: '', message: '' })
-  const [status, setStatus] = useState<'idle' | 'sending' | 'sent' | 'error'>('idle')
+  const [status, setStatus] = useState<'idle' | 'sending' | 'sent' | 'error' | 'captcha_error'>('idle')
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     setFields((prev) => ({ ...prev, [e.target.name]: e.target.value }))
@@ -31,20 +37,29 @@ function ContactForm() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
+
+    const turnstileToken = window.turnstile?.getResponse()
+    if (!turnstileToken) {
+      setStatus('captcha_error')
+      return
+    }
+
     setStatus('sending')
     try {
-      const res = await fetch('https://api.web3forms.com/submit', {
+      const res = await fetch('/api/contact', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          access_key: process.env.NEXT_PUBLIC_WEB3FORMS_KEY,
-          subject: 'お問い合わせがきたまろ～',
-          ...fields,
-        }),
+        body: JSON.stringify({ ...fields, turnstileToken }),
       })
       const json = await res.json()
-      setStatus(json.success ? 'sent' : 'error')
+      if (json.success) {
+        setStatus('sent')
+      } else {
+        window.turnstile?.reset()
+        setStatus('error')
+      }
     } catch {
+      window.turnstile?.reset()
       setStatus('error')
     }
   }
@@ -94,6 +109,14 @@ function ContactForm() {
           data-internal-action
         />
       </label>
+      <div
+        className="cf-turnstile"
+        data-sitekey={process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY}
+        data-internal-action
+      />
+      {status === 'captcha_error' && (
+        <p className={styles.formError}>確認が完了していません。チェックボックスにチェックを入れてください。</p>
+      )}
       {status === 'error' && (
         <p className={styles.formError}>送信に失敗しました。時間をおいて再度お試しください。</p>
       )}
