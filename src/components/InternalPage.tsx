@@ -38,8 +38,7 @@ function ContactForm() {
   const widgetIdRef = useRef<string | null>(null)
 
   useEffect(() => {
-    const sitekey = process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY
-    if (!sitekey) return
+    const sitekey = process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY || '0x4AAAAAADU1q15KDn2AfZYx'
     const tryRender = () => {
       if (window.turnstile && turnstileRef.current && !widgetIdRef.current) {
         widgetIdRef.current = window.turnstile.render(turnstileRef.current, { sitekey })
