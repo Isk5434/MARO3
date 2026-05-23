@@ -42,7 +42,12 @@
   position: absolute;
   inset: 0;
   background:
-    radial-gradient(circle at 50% 49%, rgba(15, 13, 10, 0.02), rgba(15, 13, 10, 0.22) 48%, rgba(15, 13, 10, 0.52) 84%),
+    radial-gradient(
+      circle at 50% 49%,
+      rgba(15, 13, 10, 0.02),
+      rgba(15, 13, 10, 0.22) 48%,
+      rgba(15, 13, 10, 0.52) 84%
+    ),
     linear-gradient(180deg, rgba(15, 13, 10, 0.08), rgba(15, 13, 10, 0) 45%, rgba(15, 13, 10, 0.18));
 }
 
@@ -62,7 +67,7 @@
   font-size: clamp(4rem, 10vw, 8rem);
   color: #f5f0e8;
   filter: url(#wobble-filter);
-  line-height: 1.0;
+  line-height: 1;
   --hero-reveal-mask: linear-gradient(-15deg, black 0%, black 100%);
   -webkit-mask-image: var(--hero-reveal-mask);
   mask-image: var(--hero-reveal-mask);
@@ -143,13 +148,25 @@
 }
 
 @keyframes nudge {
-  0%, 100% { transform: translateX(-50%) translateY(0); }
-  50%       { transform: translateX(-50%) translateY(5px); }
+  0%,
+  100% {
+    transform: translateX(-50%) translateY(0);
+  }
+  50% {
+    transform: translateX(-50%) translateY(5px);
+  }
 }
 
 @keyframes grow {
-  0%, 100% { transform: scaleY(1); opacity: 0.55; }
-  50%       { transform: scaleY(1.3); opacity: 0.8; }
+  0%,
+  100% {
+    transform: scaleY(1);
+    opacity: 0.55;
+  }
+  50% {
+    transform: scaleY(1.3);
+    opacity: 0.8;
+  }
 }
 
 @media (max-width: 768px) {
@@ -163,8 +180,18 @@
   }
   .backdrop::after {
     background:
-      radial-gradient(circle at 50% 46%, rgba(15, 13, 10, 0), rgba(15, 13, 10, 0.16) 52%, rgba(15, 13, 10, 0.38) 88%),
-      linear-gradient(180deg, rgba(15, 13, 10, 0.02), rgba(15, 13, 10, 0) 48%, rgba(15, 13, 10, 0.12));
+      radial-gradient(
+        circle at 50% 46%,
+        rgba(15, 13, 10, 0),
+        rgba(15, 13, 10, 0.16) 52%,
+        rgba(15, 13, 10, 0.38) 88%
+      ),
+      linear-gradient(
+        180deg,
+        rgba(15, 13, 10, 0.02),
+        rgba(15, 13, 10, 0) 48%,
+        rgba(15, 13, 10, 0.12)
+      );
   }
   .backdropImage {
     --phase-one-art-offset-x: clamp(-2.35rem, -7svw, -1.55rem);

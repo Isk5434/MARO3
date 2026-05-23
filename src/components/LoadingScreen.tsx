@@ -183,7 +183,11 @@ export function LoadingScreen({ onLoaded }: Props) {
 
       timeline
         .to('[data-hero-visual]', { scale: 1, opacity: 1, duration: 1.2, ease: 'power3.out' })
-        .to('[data-hero-backdrop]', { scale: 1, opacity: 1, duration: 1.35, ease: 'power3.out' }, '<')
+        .to(
+          '[data-hero-backdrop]',
+          { scale: 1, opacity: 1, duration: 1.35, ease: 'power3.out' },
+          '<',
+        )
         .fromTo(
           mask,
           { transparent: 100, black: 150 },

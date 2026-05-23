@@ -40,8 +40,7 @@ export const INTERNAL_PAGES: Record<InternalPageId, InternalPageContent> = {
     eyebrow: 'LINK',
     title: 'リンク',
     lead: 'SNS、ブログ、各種リンク / サイトマップをひとつにまとめた案内ページです。',
-    body: [
-    ],
+    body: [],
   },
 }
 

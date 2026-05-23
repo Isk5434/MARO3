@@ -36,15 +36,7 @@ function setRevealMask(elements: NodeListOf<HTMLElement>, transparent: number, b
   })
 }
 
-export function MaroTopicSection({
-  eyebrow,
-  title,
-  lead,
-  lines,
-  pageId,
-  action,
-  variant,
-}: Props) {
+export function MaroTopicSection({ eyebrow, title, lead, lines, pageId, action, variant }: Props) {
   const sectionRef = useRef<HTMLElement>(null)
   const hasRevealedRef = useRef(false)
 
@@ -76,12 +68,19 @@ export function MaroTopicSection({
               onUpdate: () => setRevealMask(revealTargets, mask.transparent, mask.black),
               onComplete: () => {
                 revealTargets.forEach((el) => {
-                  el.style.setProperty('--topic-reveal-mask', 'linear-gradient(-15deg, black 0%, black 100%)')
+                  el.style.setProperty(
+                    '--topic-reveal-mask',
+                    'linear-gradient(-15deg, black 0%, black 100%)',
+                  )
                 })
               },
             },
           )
-          .to(section.querySelector('[data-topic-button]'), { y: 0, opacity: 1, duration: 0.65 }, '<55%')
+          .to(
+            section.querySelector('[data-topic-button]'),
+            { y: 0, opacity: 1, duration: 0.65 },
+            '<55%',
+          )
       },
       { threshold: 0.58 },
     )
@@ -118,7 +117,11 @@ export function MaroTopicSection({
             <div className={styles.contactSashTrack}>
               {CONTACT_SASH_REPEAT.map((item) => (
                 <picture key={item} className={styles.contactSashPicture}>
-                  <source media="(max-width: 720px)" srcSet={CONTACT_SASH_MOBILE_IMAGE} type="image/webp" />
+                  <source
+                    media="(max-width: 720px)"
+                    srcSet={CONTACT_SASH_MOBILE_IMAGE}
+                    type="image/webp"
+                  />
                   <img
                     src={CONTACT_SASH_IMAGE}
                     alt=""
@@ -132,7 +135,11 @@ export function MaroTopicSection({
           </div>
           <div className={styles.contactRoundel} aria-hidden="true">
             <picture>
-              <source media="(max-width: 720px)" srcSet={CONTACT_ROUNDEL_MOBILE_IMAGE} type="image/webp" />
+              <source
+                media="(max-width: 720px)"
+                srcSet={CONTACT_ROUNDEL_MOBILE_IMAGE}
+                type="image/webp"
+              />
               <img src={CONTACT_ROUNDEL_IMAGE} alt="" loading="lazy" decoding="async" />
             </picture>
           </div>
@@ -146,7 +153,11 @@ export function MaroTopicSection({
               <div className={styles.flowTrack}>
                 {RIBBON_REPEAT.map((item) => (
                   <picture key={item} className={styles.flowPicture}>
-                    <source media="(max-width: 720px)" srcSet={LINK_RIBBON_MOBILE_IMAGE} type="image/webp" />
+                    <source
+                      media="(max-width: 720px)"
+                      srcSet={LINK_RIBBON_MOBILE_IMAGE}
+                      type="image/webp"
+                    />
                     <img
                       src={LINK_RIBBON_IMAGE}
                       alt=""
@@ -163,12 +174,18 @@ export function MaroTopicSection({
       )}
 
       <div className={styles.content}>
-        <p className={styles.eyebrow} data-topic-reveal>{eyebrow}</p>
+        <p className={styles.eyebrow} data-topic-reveal>
+          {eyebrow}
+        </p>
         <h2 data-topic-reveal>{title}</h2>
-        <p className={styles.lead} data-topic-reveal>{lead}</p>
+        <p className={styles.lead} data-topic-reveal>
+          {lead}
+        </p>
         <div className={styles.body}>
           {lines.map((line) => (
-            <p key={line} data-topic-reveal>{line}</p>
+            <p key={line} data-topic-reveal>
+              {line}
+            </p>
           ))}
         </div>
         <a href={getAppPath(pageId)} className={styles.button} data-topic-button>

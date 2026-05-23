@@ -33,7 +33,9 @@ declare global {
 
 function ContactForm() {
   const [fields, setFields] = useState({ name: '', email: '', message: '' })
-  const [status, setStatus] = useState<'idle' | 'sending' | 'sent' | 'error' | 'captcha_error'>('idle')
+  const [status, setStatus] = useState<'idle' | 'sending' | 'sent' | 'error' | 'captcha_error'>(
+    'idle',
+  )
   const turnstileRef = useRef<HTMLDivElement>(null)
   const widgetIdRef = useRef<string | null>(null)
 
@@ -129,7 +131,9 @@ function ContactForm() {
       </label>
       <div ref={turnstileRef} data-internal-action />
       {status === 'captcha_error' && (
-        <p className={styles.formError}>確認が完了していません。チェックボックスにチェックを入れてください。</p>
+        <p className={styles.formError}>
+          確認が完了していません。チェックボックスにチェックを入れてください。
+        </p>
       )}
       {status === 'error' && (
         <p className={styles.formError}>送信に失敗しました。時間をおいて再度お試しください。</p>
@@ -153,7 +157,6 @@ function setRevealMask(elements: NodeListOf<HTMLElement>, transparent: number, b
     )
   })
 }
-
 
 export function InternalPage({ pageId, activityArticles = [] }: Props) {
   const page = INTERNAL_PAGES[pageId]
@@ -190,7 +193,9 @@ export function InternalPage({ pageId, activityArticles = [] }: Props) {
       x: '100%',
       duration: 0.38,
       ease: 'power2.in',
-      onComplete: () => { window.location.href = href },
+      onComplete: () => {
+        window.location.href = href
+      },
     })
   }
 
@@ -199,32 +204,32 @@ export function InternalPage({ pageId, activityArticles = [] }: Props) {
     if (!section) return
 
     const revealTargets = section.querySelectorAll<HTMLElement>('[data-internal-reveal]')
-    const actionTargets = Array.from(section.querySelectorAll<HTMLElement>('[data-internal-action]'))
+    const actionTargets = Array.from(
+      section.querySelectorAll<HTMLElement>('[data-internal-action]'),
+    )
     const mask = { transparent: 100, black: 150 }
 
     if (actionTargets.length > 0) gsap.set(actionTargets, { y: 16, opacity: 0 })
     setRevealMask(revealTargets, mask.transparent, mask.black)
 
-    const timeline = gsap
-      .timeline({ defaults: { ease: 'power3.out' } })
-      .fromTo(
-        mask,
-        { transparent: 100, black: 150 },
-        {
-          duration: 2.2,
-          transparent: -35,
-          black: 0,
-          ease: 'sine.out',
-          onUpdate: () => setRevealMask(revealTargets, mask.transparent, mask.black),
-          onComplete: () => {
-            revealTargets.forEach((el) => {
-              el.style.removeProperty('--internal-reveal-mask')
-              el.style.webkitMaskImage = 'none'
-              el.style.maskImage = 'none'
-            })
-          },
+    const timeline = gsap.timeline({ defaults: { ease: 'power3.out' } }).fromTo(
+      mask,
+      { transparent: 100, black: 150 },
+      {
+        duration: 2.2,
+        transparent: -35,
+        black: 0,
+        ease: 'sine.out',
+        onUpdate: () => setRevealMask(revealTargets, mask.transparent, mask.black),
+        onComplete: () => {
+          revealTargets.forEach((el) => {
+            el.style.removeProperty('--internal-reveal-mask')
+            el.style.webkitMaskImage = 'none'
+            el.style.maskImage = 'none'
+          })
         },
-      )
+      },
+    )
 
     if (actionTargets.length > 0) {
       timeline.to(actionTargets, { y: 0, opacity: 1, duration: 0.6, stagger: 0.06 }, '<55%')
@@ -237,14 +242,15 @@ export function InternalPage({ pageId, activityArticles = [] }: Props) {
         TOPへ戻る
       </a>
 
-      <section
-        ref={sectionRef}
-        className={`${styles.section} ${sectionClassName}`}
-      >
+      <section ref={sectionRef} className={`${styles.section} ${sectionClassName}`}>
         {pageId === 'activity' && (
           <div className={styles.loopRing} aria-hidden="true">
             <picture>
-              <source media="(max-width: 720px)" srcSet={LOOP_RING_MOBILE_IMAGE} type="image/webp" />
+              <source
+                media="(max-width: 720px)"
+                srcSet={LOOP_RING_MOBILE_IMAGE}
+                type="image/webp"
+              />
               <img src={LOOP_RING_IMAGE} alt="" loading="lazy" decoding="async" />
             </picture>
           </div>
@@ -256,7 +262,11 @@ export function InternalPage({ pageId, activityArticles = [] }: Props) {
               <div className={styles.contactSashTrack}>
                 {CONTACT_SASH_REPEAT.map((item) => (
                   <picture key={item} className={styles.contactSashPicture}>
-                    <source media="(max-width: 720px)" srcSet={CONTACT_SASH_MOBILE_IMAGE} type="image/webp" />
+                    <source
+                      media="(max-width: 720px)"
+                      srcSet={CONTACT_SASH_MOBILE_IMAGE}
+                      type="image/webp"
+                    />
                     <img
                       src={CONTACT_SASH_IMAGE}
                       alt=""
@@ -270,7 +280,11 @@ export function InternalPage({ pageId, activityArticles = [] }: Props) {
             </div>
             <div className={styles.contactRoundel} aria-hidden="true">
               <picture>
-                <source media="(max-width: 720px)" srcSet={CONTACT_ROUNDEL_MOBILE_IMAGE} type="image/webp" />
+                <source
+                  media="(max-width: 720px)"
+                  srcSet={CONTACT_ROUNDEL_MOBILE_IMAGE}
+                  type="image/webp"
+                />
                 <img src={CONTACT_ROUNDEL_IMAGE} alt="" loading="lazy" decoding="async" />
               </picture>
             </div>
@@ -284,7 +298,11 @@ export function InternalPage({ pageId, activityArticles = [] }: Props) {
                 <div className={styles.flowTrack}>
                   {RIBBON_REPEAT.map((item) => (
                     <picture key={item} className={styles.flowPicture}>
-                      <source media="(max-width: 720px)" srcSet={LINK_RIBBON_MOBILE_IMAGE} type="image/webp" />
+                      <source
+                        media="(max-width: 720px)"
+                        srcSet={LINK_RIBBON_MOBILE_IMAGE}
+                        type="image/webp"
+                      />
                       <img
                         src={LINK_RIBBON_IMAGE}
                         alt=""
@@ -307,12 +325,18 @@ export function InternalPage({ pageId, activityArticles = [] }: Props) {
         </div>
 
         <article className={styles.content}>
-          <p className={styles.eyebrow} data-internal-reveal>{page.eyebrow}</p>
+          <p className={styles.eyebrow} data-internal-reveal>
+            {page.eyebrow}
+          </p>
           <h1 data-internal-reveal>{page.title}</h1>
-          <p className={styles.lead} data-internal-reveal>{page.lead}</p>
+          <p className={styles.lead} data-internal-reveal>
+            {page.lead}
+          </p>
           <div className={styles.body}>
             {page.body.map((paragraph) => (
-              <p key={paragraph} data-internal-reveal>{paragraph}</p>
+              <p key={paragraph} data-internal-reveal>
+                {paragraph}
+              </p>
             ))}
           </div>
 
@@ -338,7 +362,11 @@ export function InternalPage({ pageId, activityArticles = [] }: Props) {
 
               {activityArticles.length > 0 ? (
                 <>
-                  <p id="activity-search-result" className={styles.articleSearchResult} data-internal-action>
+                  <p
+                    id="activity-search-result"
+                    className={styles.articleSearchResult}
+                    data-internal-action
+                  >
                     {articleQuery.trim()
                       ? `${filteredArticles.length}件の記事が見つかりました。`
                       : `${activityArticles.length}件の記事があります。`}
@@ -365,7 +393,9 @@ export function InternalPage({ pageId, activityArticles = [] }: Props) {
                                   decoding="async"
                                 />
                               ) : (
-                                <span className={styles.articleCardNoImage} aria-hidden="true">活動</span>
+                                <span className={styles.articleCardNoImage} aria-hidden="true">
+                                  活動
+                                </span>
                               )}
                             </div>
                             <div className={styles.articleCardInfo}>
@@ -373,7 +403,9 @@ export function InternalPage({ pageId, activityArticles = [] }: Props) {
                                 {article.category && (
                                   <span className={styles.articleCardTag}>{article.category}</span>
                                 )}
-                                <span className={styles.articleMeta}>{formatDate(article.publishedAt)}</span>
+                                <span className={styles.articleMeta}>
+                                  {formatDate(article.publishedAt)}
+                                </span>
                               </div>
                               <strong>{article.title}</strong>
                               {article.description && (
@@ -462,7 +494,13 @@ export function InternalPage({ pageId, activityArticles = [] }: Props) {
               >
                 <span className={styles.linkCardLabel}>● BLOG</span>
                 <div className={styles.linkCardCenter}>
-                  <img src={FAVICON_IMAGE} alt="" className={styles.linkCardThumb} loading="lazy" decoding="async" />
+                  <img
+                    src={FAVICON_IMAGE}
+                    alt=""
+                    className={styles.linkCardThumb}
+                    loading="lazy"
+                    decoding="async"
+                  />
                 </div>
                 <div className={styles.linkCardFooter}>
                   <span className={styles.linkCardTitle}>MAROブログ</span>

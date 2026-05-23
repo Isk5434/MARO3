@@ -8,11 +8,7 @@ interface Props {
   onBgToggle: () => void
 }
 
-const MENU_ITEMS = [
-  INTERNAL_PAGES.activity,
-  INTERNAL_PAGES.contact,
-  INTERNAL_PAGES.link,
-]
+const MENU_ITEMS = [INTERNAL_PAGES.activity, INTERNAL_PAGES.contact, INTERNAL_PAGES.link]
 
 export function Header({ isDark, onBgToggle }: Props) {
   const [menuOpen, setMenuOpen] = useState(false)

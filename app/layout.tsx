@@ -77,9 +77,7 @@ export const metadata: Metadata = {
     },
   },
   icons: {
-    icon: [
-      { url: '/favicon.jpg', type: 'image/jpeg' },
-    ],
+    icon: [{ url: '/favicon.jpg', type: 'image/jpeg' }],
     apple: '/favicon.jpg',
   },
   other: {
@@ -111,11 +109,7 @@ export default function RootLayout({
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(websiteSchema()) }}
         />
-        <script
-          src="https://challenges.cloudflare.com/turnstile/v0/api.js"
-          async
-          defer
-        />
+        <script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer />
         {process.env.NEXT_PUBLIC_CF_ANALYTICS_TOKEN && (
           <script
             defer

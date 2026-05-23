@@ -18,10 +18,30 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
 
   return [
     { url: `${siteUrl}/`, lastModified: generatedAt, changeFrequency: 'weekly', priority: 1.0 },
-    { url: `${siteUrl}/activity/`, lastModified: generatedAt, changeFrequency: 'weekly', priority: 0.9 },
-    { url: `${siteUrl}/contact/`, lastModified: generatedAt, changeFrequency: 'monthly', priority: 0.6 },
-    { url: `${siteUrl}/link/`, lastModified: generatedAt, changeFrequency: 'monthly', priority: 0.5 },
-    { url: `${siteUrl}/llms.txt`, lastModified: generatedAt, changeFrequency: 'monthly', priority: 0.4 },
+    {
+      url: `${siteUrl}/activity/`,
+      lastModified: generatedAt,
+      changeFrequency: 'weekly',
+      priority: 0.9,
+    },
+    {
+      url: `${siteUrl}/contact/`,
+      lastModified: generatedAt,
+      changeFrequency: 'monthly',
+      priority: 0.6,
+    },
+    {
+      url: `${siteUrl}/link/`,
+      lastModified: generatedAt,
+      changeFrequency: 'monthly',
+      priority: 0.5,
+    },
+    {
+      url: `${siteUrl}/llms.txt`,
+      lastModified: generatedAt,
+      changeFrequency: 'monthly',
+      priority: 0.4,
+    },
     ...articleUrls,
   ]
 }

@@ -1,7 +1,11 @@
 import type { Metadata } from 'next'
 import App from '../../src/App'
 import { getActivityArticles } from '../../src/lib/microcms'
-import { activityItemListSchema, breadcrumbSchema, webPageSchema } from '../../src/lib/structured-data'
+import {
+  activityItemListSchema,
+  breadcrumbSchema,
+  webPageSchema,
+} from '../../src/lib/structured-data'
 
 const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://maroinu.pages.dev'
 
@@ -39,9 +43,18 @@ export default async function ActivityPage() {
 
   return (
     <>
-      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumb) }} />
-      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(page) }} />
-      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(itemList) }} />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumb) }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(page) }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(itemList) }}
+      />
       <App initialPageId="activity" activityArticles={articles} />
     </>
   )

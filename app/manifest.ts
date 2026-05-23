@@ -9,7 +9,7 @@ export default function manifest(): MetadataRoute.Manifest {
     name: 'MARO | 名古屋市博物館サポーター',
     short_name: 'MARO',
     description:
-      '名古屋市博物館サポーター団体MAROの公式サイト。名古屋市立大学（名市大）から始まった学生主体の活動として、若い世代と博物館をつなぎます。',
+      '名古屋市博物館サポーター団体MAROの公式サイト。名古屋市立大学から始まった学生主体の活動として、若い世代と博物館をつなぎます。',
     start_url: `${basePath}/`,
     scope: `${basePath}/`,
     display: 'standalone',

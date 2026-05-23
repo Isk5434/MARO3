@@ -17,6 +17,9 @@ out
 # Source 3D model files (copied to public/models/)
 3d-model/
 
+tsconfig.tsbuildinfo
+lighthouse-*.json
+
 # Editor directories and files
 .vscode/*
 !.vscode/extensions.json

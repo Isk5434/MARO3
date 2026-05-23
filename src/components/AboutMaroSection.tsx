@@ -126,7 +126,9 @@ export const AboutMaroSection = forwardRef<HTMLElement>(function AboutMaroSectio
               aria-label="MAROとは？を開く"
             >
               <span className={styles.buttonLabel}>MAROとは？</span>
-              <span className={styles.buttonArrow} aria-hidden="true">→</span>
+              <span className={styles.buttonArrow} aria-hidden="true">
+                →
+              </span>
             </button>
           </div>
         ) : (
