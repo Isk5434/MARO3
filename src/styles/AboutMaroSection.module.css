@@ -7,9 +7,7 @@
   padding: calc(var(--header-height) + 4rem) clamp(1.3rem, 6vw, 5rem)
     calc(var(--footer-height) + 4rem);
   overflow-x: hidden;
-  background:
-    linear-gradient(90deg, rgba(178, 184, 164, 0.92), rgba(194, 190, 174, 0.84)),
-    #b8bba8;
+  background: linear-gradient(90deg, rgba(178, 184, 164, 0.92), rgba(194, 190, 174, 0.84)), #b8bba8;
   border-top: 1px solid rgba(255, 255, 255, 0.28);
   box-shadow: 0 -34px 80px rgba(75, 68, 55, 0.16);
   isolation: isolate;
@@ -53,7 +51,12 @@
   overflow: hidden;
   border-radius: 4px;
   background:
-    linear-gradient(155deg, rgba(114, 158, 194, 0.72), rgba(241, 154, 173, 0.62) 48%, rgba(255, 226, 158, 0.72)),
+    linear-gradient(
+      155deg,
+      rgba(114, 158, 194, 0.72),
+      rgba(241, 154, 173, 0.62) 48%,
+      rgba(255, 226, 158, 0.72)
+    ),
     url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.52' numOctaves='5'/%3E%3C/filter%3E%3Crect width='180' height='180' filter='url(%23n)' opacity='0.8'/%3E%3C/svg%3E");
   background-blend-mode: screen, normal;
   box-shadow: 0 24px 54px rgba(74, 79, 69, 0.14);
@@ -87,7 +90,12 @@
   right: 8%;
   bottom: 9%;
   background:
-    linear-gradient(160deg, rgba(241, 156, 164, 0.74), rgba(255, 236, 205, 0.6) 52%, rgba(91, 85, 91, 0.42)),
+    linear-gradient(
+      160deg,
+      rgba(241, 156, 164, 0.74),
+      rgba(255, 236, 205, 0.6) 52%,
+      rgba(91, 85, 91, 0.42)
+    ),
     url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.58' numOctaves='5'/%3E%3C/filter%3E%3Crect width='180' height='180' filter='url(%23n)' opacity='0.8'/%3E%3C/svg%3E");
   background-blend-mode: screen, normal;
 }
@@ -156,8 +164,12 @@
   background:
     linear-gradient(110deg, transparent 0%, rgba(255, 255, 255, 0.22) 42%, transparent 62%),
     rgba(184, 187, 168, 0.22);
-  background-position: -8rem 0, 0 0;
-  background-size: 8rem 100%, 100% 100%;
+  background-position:
+    -8rem 0,
+    0 0;
+  background-size:
+    8rem 100%,
+    100% 100%;
   color: rgba(255, 255, 255, 0.92);
   font-family: var(--font-jp);
   font-size: 0.9rem;
@@ -186,7 +198,9 @@
 
 .primaryButton:hover {
   background: rgba(184, 187, 168, 0.38);
-  background-position: 8rem 0, 0 0;
+  background-position:
+    8rem 0,
+    0 0;
   border-color: rgba(184, 187, 168, 0.95);
   box-shadow: 0 0.7rem 1.8rem rgba(72, 78, 63, 0.16);
   transform: translateY(-3px);
@@ -228,7 +242,8 @@
 }
 
 @keyframes buttonPulse {
-  0%, 100% {
+  0%,
+  100% {
     box-shadow: 0 0 0 0 rgba(255, 255, 255, 0);
     transform: translateY(0);
   }

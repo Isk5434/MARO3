@@ -208,14 +208,13 @@ export function activityItemListSchema(
     description?: string
     publishedAt?: string
     category?: string
-  }[]
+  }[],
 ) {
   return {
     '@context': 'https://schema.org',
     '@type': 'ItemList',
     name: 'MAROの活動記事一覧',
-    description:
-      '名古屋市博物館サポーター団体MAROの活動、イベント、発信の記録をまとめた一覧です。',
+    description: '名古屋市博物館サポーター団体MAROの活動、イベント、発信の記録をまとめた一覧です。',
     itemListElement: articles.map((article, index) => ({
       '@type': 'ListItem',
       position: index + 1,
@@ -233,9 +232,7 @@ export function activityItemListSchema(
   }
 }
 
-export function faqSchema(
-  items: { question: string; answer: string }[]
-) {
+export function faqSchema(items: { question: string; answer: string }[]) {
   return {
     '@context': 'https://schema.org',
     '@type': 'FAQPage',

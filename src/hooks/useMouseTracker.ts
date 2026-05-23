@@ -7,9 +7,7 @@ export interface MousePos {
   ny: number
 }
 
-export function useMouseTracker(
-  onChange: (pos: MousePos) => void,
-) {
+export function useMouseTracker(onChange: (pos: MousePos) => void) {
   const ref = useRef(onChange)
 
   useEffect(() => {

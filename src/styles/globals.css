@@ -11,11 +11,11 @@
 }
 
 :root {
-  --color-bg: #FFFDF0;
-  --color-bg-dark: #2A1F15;
-  --color-text: #5C4534;
-  --color-text-light: #8B7355;
-  --color-accent: #8B6F4E;
+  --color-bg: #fffdf0;
+  --color-bg-dark: #2a1f15;
+  --color-text: #5c4534;
+  --color-text-light: #8b7355;
+  --color-accent: #8b6f4e;
   --color-overlay: rgba(255, 253, 240, 0.88);
   --color-border: rgba(92, 69, 52, 0.18);
 
@@ -41,10 +41,10 @@
 }
 
 body.dark-bg {
-  --color-bg: #2A1F15;
-  --color-text: #E8D5B7;
-  --color-text-light: #C4A882;
-  --color-accent: #C4A882;
+  --color-bg: #2a1f15;
+  --color-text: #e8d5b7;
+  --color-text-light: #c4a882;
+  --color-accent: #c4a882;
   --color-overlay: rgba(42, 31, 21, 0.88);
   --color-border: rgba(232, 213, 183, 0.15);
 }
@@ -77,7 +77,9 @@ body {
   font-size: clamp(1rem, 2.2vw, 1.2rem);
   line-height: 1.7;
   -webkit-font-smoothing: antialiased;
-  transition: background-color var(--transition-slow), color var(--transition-slow);
+  transition:
+    background-color var(--transition-slow),
+    color var(--transition-slow);
 }
 
 body.is-loading {
@@ -133,7 +135,9 @@ a {
   color: var(--color-text);
   text-decoration: underline;
   text-underline-offset: 3px;
-  transition: color var(--transition-fast), opacity var(--transition-fast);
+  transition:
+    color var(--transition-fast),
+    opacity var(--transition-fast);
 }
 
 a:hover {

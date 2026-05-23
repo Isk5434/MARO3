@@ -24,7 +24,14 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   if (!article) return { title: '記事が見つかりません' }
 
   const ogImages = article.eyecatch
-    ? [{ url: article.eyecatch.url, width: article.eyecatch.width, height: article.eyecatch.height, alt: article.title }]
+    ? [
+        {
+          url: article.eyecatch.url,
+          width: article.eyecatch.width,
+          height: article.eyecatch.height,
+          alt: article.title,
+        },
+      ]
     : undefined
 
   return {
@@ -70,8 +77,14 @@ export default async function ActivityArticlePage({ params }: Props) {
 
   return (
     <>
-      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(article_schema) }} />
-      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumb) }} />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(article_schema) }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumb) }}
+      />
       <ActivityArticleView article={article} />
     </>
   )

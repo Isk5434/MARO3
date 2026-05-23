@@ -30,8 +30,12 @@ export function HeroSection({ mouseRef, onCtaClick, active = true }: Props) {
       </div>
 
       <div className={styles.content}>
-        <h1 className={styles.heading} data-hero-title data-hero-mask>{hero.heading}</h1>
-        <p className={styles.subtitle} data-hero-subtitle data-hero-mask>{hero.subtitle}</p>
+        <h1 className={styles.heading} data-hero-title data-hero-mask>
+          {hero.heading}
+        </h1>
+        <p className={styles.subtitle} data-hero-subtitle data-hero-mask>
+          {hero.subtitle}
+        </p>
         <button className={styles.cta} data-hero-cta type="button" onClick={onCtaClick}>
           {hero.cta} &nbsp;↓
         </button>

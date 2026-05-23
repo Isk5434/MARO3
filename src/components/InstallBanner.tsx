@@ -7,7 +7,9 @@ type InstallState = 'hidden' | 'android' | 'ios'
 
 export default function InstallBanner() {
   const [state, setState] = useState<InstallState>('hidden')
-  const [deferredPrompt, setDeferredPrompt] = useState<Event & { prompt: () => void; userChoice: Promise<{ outcome: string }> } | null>(null)
+  const [deferredPrompt, setDeferredPrompt] = useState<
+    (Event & { prompt: () => void; userChoice: Promise<{ outcome: string }> }) | null
+  >(null)
   const [installing, setInstalling] = useState(false)
 
   useEffect(() => {
@@ -27,7 +29,10 @@ export default function InstallBanner() {
       return
     }
 
-    type BeforeInstallPromptEvent = Event & { prompt: () => void; userChoice: Promise<{ outcome: string }> }
+    type BeforeInstallPromptEvent = Event & {
+      prompt: () => void
+      userChoice: Promise<{ outcome: string }>
+    }
     const handler = (e: Event) => {
       e.preventDefault()
       setDeferredPrompt(e as BeforeInstallPromptEvent)
@@ -57,33 +62,49 @@ export default function InstallBanner() {
   if (state === 'hidden') return null
 
   return (
-    <div style={{
-      position: 'fixed',
-      bottom: 0,
-      left: 0,
-      right: 0,
-      zIndex: 9999,
-      padding: '12px 16px',
-      background: 'var(--color-bg)',
-      borderTop: '1px solid var(--color-border)',
-      boxShadow: '0 -4px 20px rgba(92,69,52,0.10)',
-      display: 'flex',
-      alignItems: 'center',
-      gap: '12px',
-      fontFamily: 'var(--font-jp)',
-      animation: 'slideUp 0.35s cubic-bezier(0.25,0.46,0.45,0.94)',
-    }}>
+    <div
+      style={{
+        position: 'fixed',
+        bottom: 0,
+        left: 0,
+        right: 0,
+        zIndex: 9999,
+        padding: '12px 16px',
+        background: 'var(--color-bg)',
+        borderTop: '1px solid var(--color-border)',
+        boxShadow: '0 -4px 20px rgba(92,69,52,0.10)',
+        display: 'flex',
+        alignItems: 'center',
+        gap: '12px',
+        fontFamily: 'var(--font-jp)',
+        animation: 'slideUp 0.35s cubic-bezier(0.25,0.46,0.45,0.94)',
+      }}
+    >
       <style>{`@keyframes slideUp { from { transform: translateY(100%); opacity: 0; } to { transform: translateY(0); opacity: 1; } }`}</style>
 
-      <Image src="/favicon.jpg" alt="MARO" width={40} height={40} style={{ borderRadius: '10px', flexShrink: 0 }} />
+      <Image
+        src="/favicon.jpg"
+        alt="MARO"
+        width={40}
+        height={40}
+        style={{ borderRadius: '10px', flexShrink: 0 }}
+      />
 
       <div style={{ flex: 1, minWidth: 0 }}>
         <p style={{ margin: 0, fontSize: '13px', fontWeight: 600, color: 'var(--color-text)' }}>
           MAROをホーム画面に追加
         </p>
         {state === 'ios' ? (
-          <p style={{ margin: '2px 0 0', fontSize: '11px', color: 'var(--color-text-light)', lineHeight: 1.4 }}>
-            Safari の <span style={{ display: 'inline-block', fontSize: '14px' }}>􀈂</span> →「ホーム画面に追加」
+          <p
+            style={{
+              margin: '2px 0 0',
+              fontSize: '11px',
+              color: 'var(--color-text-light)',
+              lineHeight: 1.4,
+            }}
+          >
+            Safari の <span style={{ display: 'inline-block', fontSize: '14px' }}>􀈂</span>{' '}
+            →「ホーム画面に追加」
           </p>
         ) : (
           <p style={{ margin: '2px 0 0', fontSize: '11px', color: 'var(--color-text-light)' }}>

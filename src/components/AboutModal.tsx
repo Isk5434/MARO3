@@ -36,17 +36,13 @@ export function AboutModal({ isOpen, onClose }: Props) {
         <button className={styles.closeBtn} type="button" onClick={onClose} aria-label="閉じる">
           ✕
         </button>
-        <h2 id="about-modal-title" className={styles.heading}>{about.heading}</h2>
+        <h2 id="about-modal-title" className={styles.heading}>
+          {about.heading}
+        </h2>
         <p className={styles.body}>{about.body}</p>
         <div className={styles.links}>
           {about.links.map((l) => (
-            <a
-              key={l.label}
-              href={l.href}
-              className={styles.link}
-              target="_blank"
-              rel="noreferrer"
-            >
+            <a key={l.label} href={l.href} className={styles.link} target="_blank" rel="noreferrer">
               {l.label} →
             </a>
           ))}

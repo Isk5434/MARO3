@@ -35,26 +35,24 @@ export function ActivityArticleView({ article }: { article: ActivityArticle }) {
     const mask = { transparent: 100, black: 150 }
     setRevealMask(revealTargets, mask.transparent, mask.black)
 
-    gsap
-      .timeline({ defaults: { ease: 'power3.out' } })
-      .fromTo(
-        mask,
-        { transparent: 100, black: 150 },
-        {
-          duration: 2.2,
-          transparent: -35,
-          black: 0,
-          ease: 'sine.out',
-          onUpdate: () => setRevealMask(revealTargets, mask.transparent, mask.black),
-          onComplete: () => {
-            revealTargets.forEach((el) => {
-              el.style.removeProperty('--article-reveal-mask')
-              el.style.webkitMaskImage = 'none'
-              el.style.maskImage = 'none'
-            })
-          },
+    gsap.timeline({ defaults: { ease: 'power3.out' } }).fromTo(
+      mask,
+      { transparent: 100, black: 150 },
+      {
+        duration: 2.2,
+        transparent: -35,
+        black: 0,
+        ease: 'sine.out',
+        onUpdate: () => setRevealMask(revealTargets, mask.transparent, mask.black),
+        onComplete: () => {
+          revealTargets.forEach((el) => {
+            el.style.removeProperty('--article-reveal-mask')
+            el.style.webkitMaskImage = 'none'
+            el.style.maskImage = 'none'
+          })
         },
-      )
+      },
+    )
   }, [])
 
   return (
@@ -71,7 +69,9 @@ export function ActivityArticleView({ article }: { article: ActivityArticle }) {
         </div>
 
         <article className={styles.content}>
-          <p className={styles.eyebrow} data-article-reveal>ACTIVITY LOG</p>
+          <p className={styles.eyebrow} data-article-reveal>
+            ACTIVITY LOG
+          </p>
           <h1 data-article-reveal>{article.title}</h1>
           {article.publishedAt && (
             <time dateTime={article.publishedAt} data-article-reveal>
@@ -79,15 +79,13 @@ export function ActivityArticleView({ article }: { article: ActivityArticle }) {
             </time>
           )}
           {article.description && (
-            <p className={styles.lead} data-article-reveal>{article.description}</p>
+            <p className={styles.lead} data-article-reveal>
+              {article.description}
+            </p>
           )}
 
           {article.eyecatch?.url && (
-            <img
-              src={article.eyecatch.url}
-              alt=""
-              className={styles.eyecatch}
-            />
+            <img src={article.eyecatch.url} alt="" className={styles.eyecatch} />
           )}
 
           {article.body ? (

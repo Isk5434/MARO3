@@ -41,8 +41,7 @@
   padding: 1.5rem;
   color: #f5f0e8;
   background:
-    radial-gradient(circle at 50% 38%, rgba(190, 146, 84, 0.18), transparent 18rem),
-    #0f0d0a;
+    radial-gradient(circle at 50% 38%, rgba(190, 146, 84, 0.18), transparent 18rem), #0f0d0a;
   pointer-events: auto;
 }
 

@@ -22,19 +22,19 @@ export default function LinkPage() {
     description:
       'MAROのSNS・ブログ・各種リンクをまとめたページ。Facebook、Twitter / X、Instagram の更新情報やMAROブログへのリンクを掲載しています。',
     url: `${siteUrl}/link/`,
-    keywords: [
-      'MARO SNS',
-      'MARO Instagram',
-      'MARO X',
-      'MARO ブログ',
-      '名市大 MARO',
-    ],
+    keywords: ['MARO SNS', 'MARO Instagram', 'MARO X', 'MARO ブログ', '名市大 MARO'],
   })
 
   return (
     <>
-      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumb) }} />
-      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(page) }} />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumb) }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(page) }}
+      />
       <App initialPageId="link" />
     </>
   )

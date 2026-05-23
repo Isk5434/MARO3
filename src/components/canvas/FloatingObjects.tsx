@@ -39,12 +39,7 @@ function FloatingGlb({ cfg }: { cfg: FloatingObjectConfig }) {
   })
 
   return (
-    <group
-      ref={groupRef}
-      position={cfg.position}
-      rotation={cfg.rotation}
-      scale={cfg.scale ?? 1}
-    >
+    <group ref={groupRef} position={cfg.position} rotation={cfg.rotation} scale={cfg.scale ?? 1}>
       <primitive object={normalizedScene} />
     </group>
   )
@@ -69,12 +64,20 @@ function FloatingItem({ cfg }: { cfg: FloatingObjectConfig }) {
 
   const geo = (() => {
     switch (cfg.shape) {
-      case 'torus':     return <torusGeometry args={cfg.args as [number,number,number,number]} />
-      case 'box':       return <boxGeometry args={cfg.args as [number,number,number]} />
-      case 'sphere':    return <sphereGeometry args={cfg.args as [number,number,number]} />
-      case 'cone':      return <coneGeometry args={cfg.args as [number,number,number]} />
-      case 'torusKnot': return <torusKnotGeometry args={cfg.args as [number,number,number,number,number,number]} />
-      default:          return null
+      case 'torus':
+        return <torusGeometry args={cfg.args as [number, number, number, number]} />
+      case 'box':
+        return <boxGeometry args={cfg.args as [number, number, number]} />
+      case 'sphere':
+        return <sphereGeometry args={cfg.args as [number, number, number]} />
+      case 'cone':
+        return <coneGeometry args={cfg.args as [number, number, number]} />
+      case 'torusKnot':
+        return (
+          <torusKnotGeometry args={cfg.args as [number, number, number, number, number, number]} />
+        )
+      default:
+        return null
     }
   })()
 
@@ -94,12 +97,7 @@ function FloatingItem({ cfg }: { cfg: FloatingObjectConfig }) {
   )
 
   return (
-    <mesh
-      ref={meshRef}
-      position={cfg.position}
-      rotation={cfg.rotation}
-      scale={cfg.scale ?? 1}
-    >
+    <mesh ref={meshRef} position={cfg.position} rotation={cfg.rotation} scale={cfg.scale ?? 1}>
       {geo}
       {mat}
     </mesh>
@@ -108,8 +106,12 @@ function FloatingItem({ cfg }: { cfg: FloatingObjectConfig }) {
 
 class GlbErrorBoundary extends Component<{ children: ReactNode }, { failed: boolean }> {
   state = { failed: false }
-  static getDerivedStateFromError() { return { failed: true } }
-  render() { return this.state.failed ? null : this.props.children }
+  static getDerivedStateFromError() {
+    return { failed: true }
+  }
+  render() {
+    return this.state.failed ? null : this.props.children
+  }
 }
 
 // ── Phone emerge: 1モデル分 ──
@@ -126,9 +128,7 @@ export function FloatingObjects({ isMobile }: { isMobile: boolean }) {
 
   return (
     <>
-      {!isMobile && PRIMITIVE_ITEMS.map((cfg) => (
-        <FloatingItem key={cfg.id} cfg={cfg} />
-      ))}
+      {!isMobile && PRIMITIVE_ITEMS.map((cfg) => <FloatingItem key={cfg.id} cfg={cfg} />)}
       {GLB_ITEMS.map((cfg) => {
         const resolved = isMobile
           ? {
