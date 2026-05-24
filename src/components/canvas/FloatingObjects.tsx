@@ -3,13 +3,13 @@ import { useFrame } from '@react-three/fiber'
 import { useGLTF } from '@react-three/drei'
 import * as THREE from 'three'
 import { FLOATING_OBJECTS } from '../../config/floating-objects.config'
-import type { FloatingObjectConfig } from '../../config/floating-objects.config'
+import type { FloatingObjectConfig, GlbFloatingConfig } from '../../config/floating-objects.config'
 
-const GLB_ITEMS = FLOATING_OBJECTS.filter((cfg) => cfg.shape === 'glb')
+const GLB_ITEMS = FLOATING_OBJECTS.filter((cfg): cfg is GlbFloatingConfig => cfg.shape === 'glb')
 const PRIMITIVE_ITEMS = FLOATING_OBJECTS.filter((cfg) => cfg.shape !== 'glb')
 
-function FloatingGlb({ cfg }: { cfg: FloatingObjectConfig }) {
-  const { scene } = useGLTF(cfg.glbPath!)
+function FloatingGlb({ cfg }: { cfg: GlbFloatingConfig }) {
+  const { scene } = useGLTF(cfg.glbPath)
   const groupRef = useRef<THREE.Group>(null)
   const baseY = cfg.position[1]
   const time = useRef(cfg.floatOffset ?? 0)
@@ -65,17 +65,15 @@ function FloatingItem({ cfg }: { cfg: FloatingObjectConfig }) {
   const geo = (() => {
     switch (cfg.shape) {
       case 'torus':
-        return <torusGeometry args={cfg.args as [number, number, number, number]} />
+        return <torusGeometry args={cfg.args} />
       case 'box':
-        return <boxGeometry args={cfg.args as [number, number, number]} />
+        return <boxGeometry args={cfg.args} />
       case 'sphere':
-        return <sphereGeometry args={cfg.args as [number, number, number]} />
+        return <sphereGeometry args={cfg.args} />
       case 'cone':
-        return <coneGeometry args={cfg.args as [number, number, number]} />
+        return <coneGeometry args={cfg.args} />
       case 'torusKnot':
-        return (
-          <torusKnotGeometry args={cfg.args as [number, number, number, number, number, number]} />
-        )
+        return <torusKnotGeometry args={cfg.args} />
       default:
         return null
     }
@@ -122,7 +120,7 @@ export function FloatingObjects({ isMobile }: { isMobile: boolean }) {
   useEffect(() => {
     if (isMobile) return
     GLB_ITEMS.forEach((cfg) => {
-      if (cfg.glbPath) useGLTF.preload(cfg.glbPath)
+      useGLTF.preload(cfg.glbPath)
     })
   }, [isMobile])
 

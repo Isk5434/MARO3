@@ -21,60 +21,82 @@ interface Props {
   activityArticles?: ActivityArticleSummary[]
 }
 
+declare global {
+  interface Window {
+    turnstile?: {
+      render: (el: HTMLElement, options: { sitekey: string }) => string
+      getResponse: (widgetId?: string) => string | undefined
+      reset: (widgetId?: string) => void
+    }
+  }
+}
+
 function ContactForm() {
   const [fields, setFields] = useState({ name: '', email: '', message: '' })
   const [botcheck, setBotcheck] = useState(false)
   const [status, setStatus] = useState<'idle' | 'sending' | 'sent' | 'error'>('idle')
   const [errorCode, setErrorCode] = useState<string | null>(null)
+  const turnstileRef = useRef<HTMLDivElement>(null)
+  const widgetIdRef = useRef<string | null>(null)
+  const sitekey = process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY || '0x4AAAAAADU1q15KDn2AfZYx'
+
+  useEffect(() => {
+    const tryRender = () => {
+      if (window.turnstile && turnstileRef.current && !widgetIdRef.current) {
+        widgetIdRef.current = window.turnstile.render(turnstileRef.current, { sitekey })
+      }
+    }
+    tryRender()
+    const id = setInterval(tryRender, 300)
+    return () => clearInterval(id)
+  }, [sitekey])
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     setFields((prev) => ({ ...prev, [e.target.name]: e.target.value }))
   }
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
-
-    const accessKey = process.env.NEXT_PUBLIC_WEB3FORMS_KEY
-    if (!accessKey) {
-      setErrorCode('missing_web3forms_key')
-      setStatus('error')
-      return
-    }
 
     if (botcheck) {
       setStatus('sent')
       return
     }
 
+    const turnstileToken = window.turnstile?.getResponse(widgetIdRef.current ?? undefined)
+    if (!turnstileToken) {
+      setErrorCode('captcha_required')
+      setStatus('error')
+      return
+    }
+
     setErrorCode(null)
     setStatus('sending')
     try {
-      const res = await fetch('https://api.web3forms.com/submit', {
+      const res = await fetch('/api/contact', {
         method: 'POST',
         headers: {
           Accept: 'application/json',
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          access_key: accessKey,
-          subject: 'お問い合わせがきたまろ',
-          from_name: 'MARO website',
           name: fields.name.trim(),
           email: fields.email.trim(),
-          replyto: fields.email.trim(),
           message: fields.message.trim(),
-          botcheck,
+          turnstileToken,
         }),
       })
       const json = await res.json().catch(() => ({ success: false, error: `http_${res.status}` }))
       if (res.ok && json.success) {
         setStatus('sent')
       } else {
+        window.turnstile?.reset(widgetIdRef.current ?? undefined)
         const providerError = json.message ?? json.error
         setErrorCode(typeof providerError === 'string' ? providerError : `http_${res.status}`)
         setStatus('error')
       }
     } catch {
+      window.turnstile?.reset(widgetIdRef.current ?? undefined)
       setErrorCode('network_error')
       setStatus('error')
     }
@@ -100,6 +122,7 @@ function ContactForm() {
           value={fields.name}
           onChange={handleChange}
           data-internal-action
+          maxLength={50}
         />
       </label>
       <label>
@@ -112,6 +135,7 @@ function ContactForm() {
           value={fields.email}
           onChange={handleChange}
           data-internal-action
+          maxLength={254}
         />
       </label>
       <label>
@@ -123,8 +147,10 @@ function ContactForm() {
           value={fields.message}
           onChange={handleChange}
           data-internal-action
+          maxLength={2000}
         />
       </label>
+      <div ref={turnstileRef} className={styles.turnstile} data-internal-action />
       <input
         type="checkbox"
         name="botcheck"
