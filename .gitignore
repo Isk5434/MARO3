@@ -13,6 +13,8 @@ dist-ssr
 .next
 out
 *.local
+.dev.vars
+.env
 
 # Source 3D model files (copied to public/models/)
 3d-model/
