@@ -74,9 +74,9 @@ export async function onRequestPost({ request, env }) {
     return jsonResponse({ success: false, error: 'invalid_message' }, 400, headers)
   }
 
-  if (!env.WEB3FORMS_KEY || !env.TURNSTILE_SECRET_KEY) {
+  if (!env.RESEND_API_KEY || !env.TURNSTILE_SECRET_KEY) {
     console.error('Missing contact form secret', {
-      hasWeb3FormsKey: Boolean(env.WEB3FORMS_KEY),
+      hasResendApiKey: Boolean(env.RESEND_API_KEY),
       hasTurnstileSecretKey: Boolean(env.TURNSTILE_SECRET_KEY),
     })
     return jsonResponse({ success: false, error: 'server_not_configured' }, 500, headers)
@@ -122,46 +122,43 @@ export async function onRequestPost({ request, env }) {
       return jsonResponse({ success: false, error: 'captcha_failed' }, 403, headers)
     }
 
-    const submit = await fetch('https://api.web3forms.com/submit', {
+    // Resend で送信
+    const fromEmail = env.RESEND_FROM_EMAIL || 'MARO <onboarding@resend.dev>'
+    const toEmail = env.RESEND_TO_EMAIL || 'maro67066@gmail.com'
+    const trimmedName = name.trim()
+    const trimmedEmail = email.trim()
+    const trimmedMessage = message.trim()
+
+    const submit = await fetch('https://api.resend.com/emails', {
       method: 'POST',
-      redirect: 'manual',
       headers: {
         Accept: 'application/json',
         'Content-Type': 'application/json',
+        Authorization: `Bearer ${env.RESEND_API_KEY}`,
       },
       body: JSON.stringify({
-        access_key: env.WEB3FORMS_KEY,
-        subject: 'お問い合わせがきたまろ',
-        from_name: 'MARO website',
-        name: name.trim(),
-        email: email.trim(),
-        replyto: email.trim(),
-        message: message.trim(),
+        from: fromEmail,
+        to: [toEmail],
+        reply_to: trimmedEmail,
+        subject: `お問い合わせ from ${trimmedName}`,
+        text: `お名前: ${trimmedName}\nメール: ${trimmedEmail}\n\n${trimmedMessage}`,
       }),
     })
 
-    if (submit.status === 303) {
-      return jsonResponse({ success: true, message: 'Email accepted by Web3Forms.' }, 200, headers)
-    }
-
     const data = await readJson(submit)
-    if (!submit.ok || !data.success) {
-      const providerError =
-        data.error === 'upstream_challenge' ? 'mail_provider_challenge' : 'mail_provider_failed'
-      const providerDetail = data.body?.message ?? data.message ?? data.error
-      console.error('Web3Forms submission failed', {
+    if (!submit.ok) {
+      console.error('Resend submission failed', {
         status: submit.status,
-        error: data.error,
-        message: data.message ?? data.body?.message,
+        body: data,
       })
       return jsonResponse(
-        { success: false, error: providerError, detail: providerDetail },
+        { success: false, error: 'mail_provider_failed', detail: data.message ?? data.error },
         502,
         headers,
       )
     }
 
-    return jsonResponse(data, submit.status, headers)
+    return jsonResponse({ success: true, id: data.id }, 200, headers)
   } catch (error) {
     console.error('Contact form failed unexpectedly', error)
     return jsonResponse({ success: false, error: 'unexpected_server_error' }, 500, headers)
