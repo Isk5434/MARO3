@@ -91,11 +91,10 @@ export async function onRequestPost({ request, env }) {
       const count = current ? parseInt(current, 10) : 0
 
       if (count >= RATE_LIMIT) {
-        return jsonResponse(
-          { success: false, error: 'rate_limited' },
-          429,
-          { ...headers, 'Retry-After': String(RATE_WINDOW_SECONDS) },
-        )
+        return jsonResponse({ success: false, error: 'rate_limited' }, 429, {
+          ...headers,
+          'Retry-After': String(RATE_WINDOW_SECONDS),
+        })
       }
 
       await env.RATE_LIMIT_KV.put(rateLimitKey, String(count + 1), {
@@ -142,11 +141,7 @@ export async function onRequestPost({ request, env }) {
     })
 
     if (submit.status === 303) {
-      return jsonResponse(
-        { success: true, message: 'Email accepted by Web3Forms.' },
-        200,
-        headers,
-      )
+      return jsonResponse({ success: true, message: 'Email accepted by Web3Forms.' }, 200, headers)
     }
 
     const data = await readJson(submit)
