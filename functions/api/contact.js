@@ -23,7 +23,15 @@ async function readJson(response) {
   try {
     return JSON.parse(text)
   } catch {
-    return { success: false, error: 'invalid_upstream_response', raw: text.slice(0, 200) }
+    const raw = text.slice(0, 500)
+    const isCloudflareChallenge =
+      raw.includes('Just a moment') || raw.includes('_cf_chl_opt') || raw.includes('cf_chl')
+
+    return {
+      success: false,
+      error: isCloudflareChallenge ? 'upstream_challenge' : 'invalid_upstream_response',
+      raw,
+    }
   }
 }
 
@@ -117,7 +125,11 @@ export async function onRequestPost({ request, env }) {
 
     const submit = await fetch('https://api.web3forms.com/submit', {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
+      redirect: 'manual',
+      headers: {
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+      },
       body: JSON.stringify({
         access_key: env.WEB3FORMS_KEY,
         subject: 'お問い合わせがきたまろ',
@@ -129,15 +141,26 @@ export async function onRequestPost({ request, env }) {
       }),
     })
 
+    if (submit.status === 303) {
+      return jsonResponse(
+        { success: true, message: 'Email accepted by Web3Forms.' },
+        200,
+        headers,
+      )
+    }
+
     const data = await readJson(submit)
     if (!submit.ok || !data.success) {
+      const providerError =
+        data.error === 'upstream_challenge' ? 'mail_provider_challenge' : 'mail_provider_failed'
+      const providerDetail = data.body?.message ?? data.message ?? data.error
       console.error('Web3Forms submission failed', {
         status: submit.status,
         error: data.error,
-        message: data.message,
+        message: data.message ?? data.body?.message,
       })
       return jsonResponse(
-        { success: false, error: 'mail_provider_failed', detail: data.message ?? data.error },
+        { success: false, error: providerError, detail: providerDetail },
         502,
         headers,
       )
