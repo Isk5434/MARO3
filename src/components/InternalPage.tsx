@@ -36,6 +36,7 @@ function ContactForm() {
   const [status, setStatus] = useState<'idle' | 'sending' | 'sent' | 'error' | 'captcha_error'>(
     'idle',
   )
+  const [errorCode, setErrorCode] = useState<string | null>(null)
   const turnstileRef = useRef<HTMLDivElement>(null)
   const widgetIdRef = useRef<string | null>(null)
 
@@ -64,6 +65,7 @@ function ContactForm() {
       return
     }
 
+    setErrorCode(null)
     setStatus('sending')
     try {
       const res = await fetch('/api/contact', {
@@ -71,15 +73,17 @@ function ContactForm() {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ ...fields, turnstileToken }),
       })
-      const json = await res.json()
+      const json = await res.json().catch(() => ({ success: false, error: `http_${res.status}` }))
       if (json.success) {
         setStatus('sent')
       } else {
         window.turnstile?.reset()
+        setErrorCode(typeof json.error === 'string' ? json.error : `http_${res.status}`)
         setStatus('error')
       }
     } catch {
       window.turnstile?.reset()
+      setErrorCode('network_error')
       setStatus('error')
     }
   }
@@ -136,7 +140,10 @@ function ContactForm() {
         </p>
       )}
       {status === 'error' && (
-        <p className={styles.formError}>送信に失敗しました。時間をおいて再度お試しください。</p>
+        <p className={styles.formError}>
+          送信に失敗しました。時間をおいて再度お試しください。
+          {errorCode ? ` (${errorCode})` : ''}
+        </p>
       )}
       <button type="submit" disabled={status === 'sending'} data-internal-action>
         {status === 'sending' ? '送信中…' : '送信する'}
