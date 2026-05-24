@@ -4,40 +4,37 @@ import { assetPath } from './base-path'
 
 // For a custom GLB: shape: 'glb' + glbPath: '/models/xxx.glb'
 
-export type FloatingShape = 'torus' | 'box' | 'sphere' | 'cone' | 'torusKnot' | 'glb'
-
-export interface FloatingObjectConfig {
+interface FloatingObjectBase {
   id: string
-  shape: FloatingShape
-  // geometry constructor args — match the shape:
-  //   torus:     [radius, tube, radialSeg, tubularSeg]
-  //   box:       [w, h, d]
-  //   sphere:    [radius, widthSeg, heightSeg]
-  //   torusKnot: [radius, tube, tubularSeg, radialSeg, p, q]
-  //   glb:       [] (unused, set glbPath instead)
-  args: number[]
-  glbPath?: string
   position: [number, number, number]
   rotation: [number, number, number]
   scale?: number
-  // material
   color: string
   roughness: number
   metalness: number
-  // glass / transmission (MeshPhysicalMaterial)
   transmission?: number
   ior?: number
   thickness?: number
-  // per-object animation
-  floatOffset?: number // sine phase offset (seconds)
+  floatOffset?: number
   floatAmplitude?: number
   floatSpeed?: number
-  rotateAxis?: [number, number, number] // rotation added per frame on each axis
-  // mobile overrides
+  rotateAxis?: [number, number, number]
   mobilePosition?: [number, number, number]
   mobileRotation?: [number, number, number]
   mobileScale?: number
 }
+
+export type GlbFloatingConfig = FloatingObjectBase & { shape: 'glb'; args: []; glbPath: string }
+
+export type FloatingObjectConfig =
+  | (FloatingObjectBase & { shape: 'torus';     args: [number, number, number, number] })
+  | (FloatingObjectBase & { shape: 'box';       args: [number, number, number] })
+  | (FloatingObjectBase & { shape: 'sphere';    args: [number, number, number] })
+  | (FloatingObjectBase & { shape: 'cone';      args: [number, number, number] })
+  | (FloatingObjectBase & { shape: 'torusKnot'; args: [number, number, number, number, number, number] })
+  | GlbFloatingConfig
+
+export type FloatingShape = FloatingObjectConfig['shape']
 
 export const FLOATING_OBJECTS: FloatingObjectConfig[] = [
   // ── Glass rings ──────────────────────────────────────
