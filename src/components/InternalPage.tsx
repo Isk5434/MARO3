@@ -26,17 +26,17 @@ function ContactForm() {
   const [botcheck, setBotcheck] = useState(false)
   const [status, setStatus] = useState<'idle' | 'sending' | 'sent' | 'error'>('idle')
   const [errorCode, setErrorCode] = useState<string | null>(null)
+  const turnstileSiteKey = process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     setFields((prev) => ({ ...prev, [e.target.name]: e.target.value }))
   }
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
 
-    const accessKey = process.env.NEXT_PUBLIC_WEB3FORMS_KEY
-    if (!accessKey) {
-      setErrorCode('missing_web3forms_key')
+    if (!turnstileSiteKey) {
+      setErrorCode('contact_form_not_configured')
       setStatus('error')
       return
     }
@@ -49,21 +49,26 @@ function ContactForm() {
     setErrorCode(null)
     setStatus('sending')
     try {
-      const res = await fetch('https://api.web3forms.com/submit', {
+      const formData = new FormData(e.currentTarget)
+      const turnstileToken = formData.get('cf-turnstile-response')
+
+      if (typeof turnstileToken !== 'string' || !turnstileToken) {
+        setErrorCode('captcha_required')
+        setStatus('error')
+        return
+      }
+
+      const res = await fetch('/api/contact', {
         method: 'POST',
         headers: {
           Accept: 'application/json',
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          access_key: accessKey,
-          subject: 'お問い合わせがきたまろ',
-          from_name: 'MARO website',
           name: fields.name.trim(),
           email: fields.email.trim(),
-          replyto: fields.email.trim(),
           message: fields.message.trim(),
-          botcheck,
+          turnstileToken,
         }),
       })
       const json = await res.json().catch(() => ({ success: false, error: `http_${res.status}` }))
@@ -100,6 +105,7 @@ function ContactForm() {
           value={fields.name}
           onChange={handleChange}
           data-internal-action
+          maxLength={50}
         />
       </label>
       <label>
@@ -112,6 +118,7 @@ function ContactForm() {
           value={fields.email}
           onChange={handleChange}
           data-internal-action
+          maxLength={254}
         />
       </label>
       <label>
@@ -123,8 +130,18 @@ function ContactForm() {
           value={fields.message}
           onChange={handleChange}
           data-internal-action
+          maxLength={2000}
         />
       </label>
+      {turnstileSiteKey && (
+        <div
+          className={`cf-turnstile ${styles.turnstile}`}
+          data-sitekey={turnstileSiteKey}
+          data-theme="dark"
+          data-appearance="always"
+          data-internal-action
+        />
+      )}
       <input
         type="checkbox"
         name="botcheck"
