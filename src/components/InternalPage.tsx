@@ -21,36 +21,11 @@ interface Props {
   activityArticles?: ActivityArticleSummary[]
 }
 
-declare global {
-  interface Window {
-    turnstile?: {
-      render: (el: HTMLElement, options: { sitekey: string }) => string
-      getResponse: (widgetId?: string) => string | undefined
-      reset: (widgetId?: string) => void
-    }
-  }
-}
-
 function ContactForm() {
   const [fields, setFields] = useState({ name: '', email: '', message: '' })
-  const [status, setStatus] = useState<'idle' | 'sending' | 'sent' | 'error' | 'captcha_error'>(
-    'idle',
-  )
+  const [botcheck, setBotcheck] = useState(false)
+  const [status, setStatus] = useState<'idle' | 'sending' | 'sent' | 'error'>('idle')
   const [errorCode, setErrorCode] = useState<string | null>(null)
-  const turnstileRef = useRef<HTMLDivElement>(null)
-  const widgetIdRef = useRef<string | null>(null)
-
-  useEffect(() => {
-    const sitekey = process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY || '0x4AAAAAADU1q15KDn2AfZYx'
-    const tryRender = () => {
-      if (window.turnstile && turnstileRef.current && !widgetIdRef.current) {
-        widgetIdRef.current = window.turnstile.render(turnstileRef.current, { sitekey })
-      }
-    }
-    tryRender()
-    const id = setInterval(tryRender, 300)
-    return () => clearInterval(id)
-  }, [])
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     setFields((prev) => ({ ...prev, [e.target.name]: e.target.value }))
@@ -59,30 +34,47 @@ function ContactForm() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
 
-    const turnstileToken = window.turnstile?.getResponse()
-    if (!turnstileToken) {
-      setStatus('captcha_error')
+    const accessKey = process.env.NEXT_PUBLIC_WEB3FORMS_KEY
+    if (!accessKey) {
+      setErrorCode('missing_web3forms_key')
+      setStatus('error')
+      return
+    }
+
+    if (botcheck) {
+      setStatus('sent')
       return
     }
 
     setErrorCode(null)
     setStatus('sending')
     try {
-      const res = await fetch('/api/contact', {
+      const res = await fetch('https://api.web3forms.com/submit', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ ...fields, turnstileToken }),
+        headers: {
+          Accept: 'application/json',
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          access_key: accessKey,
+          subject: 'お問い合わせがきたまろ',
+          from_name: 'MARO website',
+          name: fields.name.trim(),
+          email: fields.email.trim(),
+          replyto: fields.email.trim(),
+          message: fields.message.trim(),
+          botcheck,
+        }),
       })
       const json = await res.json().catch(() => ({ success: false, error: `http_${res.status}` }))
-      if (json.success) {
+      if (res.ok && json.success) {
         setStatus('sent')
       } else {
-        window.turnstile?.reset()
-        setErrorCode(typeof json.error === 'string' ? json.error : `http_${res.status}`)
+        const providerError = json.message ?? json.error
+        setErrorCode(typeof providerError === 'string' ? providerError : `http_${res.status}`)
         setStatus('error')
       }
     } catch {
-      window.turnstile?.reset()
       setErrorCode('network_error')
       setStatus('error')
     }
@@ -133,12 +125,16 @@ function ContactForm() {
           data-internal-action
         />
       </label>
-      <div ref={turnstileRef} data-internal-action />
-      {status === 'captcha_error' && (
-        <p className={styles.formError}>
-          確認が完了していません。チェックボックスにチェックを入れてください。
-        </p>
-      )}
+      <input
+        type="checkbox"
+        name="botcheck"
+        tabIndex={-1}
+        autoComplete="off"
+        checked={botcheck}
+        onChange={(event) => setBotcheck(event.target.checked)}
+        style={{ display: 'none' }}
+        aria-hidden="true"
+      />
       {status === 'error' && (
         <p className={styles.formError}>
           送信に失敗しました。時間をおいて再度お試しください。
