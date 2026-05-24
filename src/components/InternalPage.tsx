@@ -21,12 +21,35 @@ interface Props {
   activityArticles?: ActivityArticleSummary[]
 }
 
+declare global {
+  interface Window {
+    turnstile?: {
+      render: (el: HTMLElement, options: { sitekey: string }) => string
+      getResponse: (widgetId?: string) => string | undefined
+      reset: (widgetId?: string) => void
+    }
+  }
+}
+
 function ContactForm() {
   const [fields, setFields] = useState({ name: '', email: '', message: '' })
   const [botcheck, setBotcheck] = useState(false)
   const [status, setStatus] = useState<'idle' | 'sending' | 'sent' | 'error'>('idle')
   const [errorCode, setErrorCode] = useState<string | null>(null)
-  const turnstileSiteKey = process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY
+  const turnstileRef = useRef<HTMLDivElement>(null)
+  const widgetIdRef = useRef<string | null>(null)
+  const sitekey = process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY || '0x4AAAAAADU1q15KDn2AfZYx'
+
+  useEffect(() => {
+    const tryRender = () => {
+      if (window.turnstile && turnstileRef.current && !widgetIdRef.current) {
+        widgetIdRef.current = window.turnstile.render(turnstileRef.current, { sitekey })
+      }
+    }
+    tryRender()
+    const id = setInterval(tryRender, 300)
+    return () => clearInterval(id)
+  }, [sitekey])
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     setFields((prev) => ({ ...prev, [e.target.name]: e.target.value }))
@@ -35,29 +58,21 @@ function ContactForm() {
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
 
-    if (!turnstileSiteKey) {
-      setErrorCode('contact_form_not_configured')
-      setStatus('error')
+    if (botcheck) {
+      setStatus('sent')
       return
     }
 
-    if (botcheck) {
-      setStatus('sent')
+    const turnstileToken = window.turnstile?.getResponse(widgetIdRef.current ?? undefined)
+    if (!turnstileToken) {
+      setErrorCode('captcha_required')
+      setStatus('error')
       return
     }
 
     setErrorCode(null)
     setStatus('sending')
     try {
-      const formData = new FormData(e.currentTarget)
-      const turnstileToken = formData.get('cf-turnstile-response')
-
-      if (typeof turnstileToken !== 'string' || !turnstileToken) {
-        setErrorCode('captcha_required')
-        setStatus('error')
-        return
-      }
-
       const res = await fetch('/api/contact', {
         method: 'POST',
         headers: {
@@ -75,11 +90,13 @@ function ContactForm() {
       if (res.ok && json.success) {
         setStatus('sent')
       } else {
+        window.turnstile?.reset(widgetIdRef.current ?? undefined)
         const providerError = json.message ?? json.error
         setErrorCode(typeof providerError === 'string' ? providerError : `http_${res.status}`)
         setStatus('error')
       }
     } catch {
+      window.turnstile?.reset(widgetIdRef.current ?? undefined)
       setErrorCode('network_error')
       setStatus('error')
     }
@@ -133,15 +150,7 @@ function ContactForm() {
           maxLength={2000}
         />
       </label>
-      {turnstileSiteKey && (
-        <div
-          className={`cf-turnstile ${styles.turnstile}`}
-          data-sitekey={turnstileSiteKey}
-          data-theme="dark"
-          data-appearance="always"
-          data-internal-action
-        />
-      )}
+      <div ref={turnstileRef} className={styles.turnstile} data-internal-action />
       <input
         type="checkbox"
         name="botcheck"
