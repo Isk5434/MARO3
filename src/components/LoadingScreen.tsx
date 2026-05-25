@@ -288,8 +288,8 @@ export function LoadingScreen({ onLoaded }: Props) {
             transformOrigin: `${shard.originX}% ${shard.originY}%`,
             pointerEvents: 'none',
             transform: triggered
-              ? `translate(${shard.tx}vw, ${shard.ty}vh) rotate(${shard.rotate}deg) scale(0.5)`
-              : 'none',
+              ? `translate3d(${shard.tx}vw, ${shard.ty}vh, 0) rotate(${shard.rotate}deg) scale(0.5)`
+              : 'translate3d(0, 0, 0) rotate(0deg) scale(1)',
             opacity: triggered ? 0 : 1,
             transition: triggered
               ? `transform ${GLASS_DURATION_MS}ms cubic-bezier(0.55, 0, 1, 0.45) ${shard.delay}ms, opacity ${GLASS_FADE_MS}ms ease ${shard.delay}ms`
