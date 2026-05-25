@@ -7,6 +7,7 @@ import styles from '../styles/LoadingScreen.module.css'
 const MIN_LOADING_MS = 1800
 const FAKE_LOADING_MS = 1400
 const READY_REVEAL_DELAY_MS = 300
+const MAX_LOADING_MS = 6000
 const GLASS_EFFECT_SPEED = 0.5
 const GLASS_DURATION_MS = 750 / GLASS_EFFECT_SPEED
 const GLASS_FADE_MS = 600 / GLASS_EFFECT_SPEED
@@ -130,25 +131,36 @@ export function LoadingScreen({ onLoaded }: Props) {
   const completedRef = useRef(false)
   const readyTimeoutRef = useRef<number | null>(null)
 
+  const enterReadyPhase = useCallback(() => {
+    gsap.set('[data-hero-visual]', { scale: 1.06, opacity: 0 })
+    gsap.set('[data-hero-backdrop]', { scale: 1.04, opacity: 0 })
+    gsap.set('[data-hero-title]', { opacity: 1 })
+    gsap.set('[data-hero-subtitle]', { opacity: 1 })
+    gsap.set('[data-hero-cta]', { y: 18, opacity: 0 })
+    gsap.set('[data-hero-hint]', { opacity: 0 })
+    setHeroMask('linear-gradient(-15deg, transparent 100%, black 150%)')
+    onLoaded()
+    setPhase('ready')
+    document.body.classList.add('webgl-ready')
+  }, [onLoaded, setHeroMask])
+
   useEffect(() => {
     if (visibleProgress < 100 || completedRef.current) return
 
     completedRef.current = true
     const elapsed = performance.now() - loadStartRef.current
     const readyDelay = Math.max(READY_REVEAL_DELAY_MS, MIN_LOADING_MS - elapsed)
-    readyTimeoutRef.current = window.setTimeout(() => {
-      gsap.set('[data-hero-visual]', { scale: 1.06, opacity: 0 })
-      gsap.set('[data-hero-backdrop]', { scale: 1.04, opacity: 0 })
-      gsap.set('[data-hero-title]', { opacity: 1 })
-      gsap.set('[data-hero-subtitle]', { opacity: 1 })
-      gsap.set('[data-hero-cta]', { y: 18, opacity: 0 })
-      gsap.set('[data-hero-hint]', { opacity: 0 })
-      setHeroMask('linear-gradient(-15deg, transparent 100%, black 150%)')
-      onLoaded()
-      setPhase('ready')
-      document.body.classList.add('webgl-ready')
-    }, readyDelay)
-  }, [visibleProgress, onLoaded, setHeroMask])
+    readyTimeoutRef.current = window.setTimeout(enterReadyPhase, readyDelay)
+  }, [visibleProgress, enterReadyPhase])
+
+  useEffect(() => {
+    const safetyId = window.setTimeout(() => {
+      if (completedRef.current) return
+      completedRef.current = true
+      enterReadyPhase()
+    }, MAX_LOADING_MS)
+    return () => window.clearTimeout(safetyId)
+  }, [enterReadyPhase])
 
   useEffect(() => {
     return () => {
@@ -168,6 +180,7 @@ export function LoadingScreen({ onLoaded }: Props) {
 
     const rafId = requestAnimationFrame(() => {
       setTriggered(true)
+      document.body.classList.remove('is-loading')
 
       const mask = { transparent: 100, black: 150 }
       const heroMaskTargets = document.querySelectorAll<HTMLElement>('[data-hero-mask]')
@@ -176,7 +189,7 @@ export function LoadingScreen({ onLoaded }: Props) {
         delay: 0.15,
         defaults: { duration: 1.2, ease: 'expo.out' },
         onComplete: () => {
-          document.body.classList.remove('is-loading', 'webgl-ready')
+          document.body.classList.remove('webgl-ready')
           setPhase('done')
         },
       })

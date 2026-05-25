@@ -45,6 +45,8 @@
   opacity: 0.92;
 }
 
+.loopRingRotor,
+.contactRoundelRotor,
 .loopRing picture,
 .contactRoundel picture {
   display: block;
@@ -52,22 +54,31 @@
   height: 100%;
 }
 
+.loopRingRotor,
+.contactRoundelRotor {
+  animation: loopRingSpin 34s linear infinite;
+  transform: translate3d(0, 0, 0) rotate(0deg);
+  transform-origin: center;
+  transform-style: preserve-3d;
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+  will-change: transform;
+}
+
 .loopRing img {
   width: 100%;
   height: 100%;
   display: block;
   object-fit: contain;
-  animation: loopRingSpin 34s linear infinite;
-  will-change: transform;
 }
 
 @keyframes loopRingSpin {
   from {
-    transform: rotate(0deg);
+    transform: translate3d(0, 0, 0) rotate(0deg);
   }
 
   to {
-    transform: rotate(360deg);
+    transform: translate3d(0, 0, 0) rotate(360deg);
   }
 }
 
@@ -91,6 +102,9 @@
   width: max-content;
   height: 100%;
   animation: contactSashFlow 24s linear infinite;
+  transform: translate3d(0, 0, 0);
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
   will-change: transform;
 }
 
@@ -115,11 +129,11 @@
 
 @keyframes contactSashFlow {
   from {
-    transform: translateX(0);
+    transform: translate3d(0, 0, 0);
   }
 
   to {
-    transform: translateX(-23rem);
+    transform: translate3d(-23rem, 0, 0);
   }
 }
 
@@ -141,17 +155,19 @@
   height: 100%;
   display: block;
   object-fit: contain;
+}
+
+.contactRoundelRotor {
   animation: contactRoundelSpin 38s linear infinite reverse;
-  will-change: transform;
 }
 
 @keyframes contactRoundelSpin {
   from {
-    transform: rotate(0deg);
+    transform: translate3d(0, 0, 0) rotate(0deg);
   }
 
   to {
-    transform: rotate(360deg);
+    transform: translate3d(0, 0, 0) rotate(360deg);
   }
 }
 
@@ -192,6 +208,9 @@
   align-items: center;
   gap: 0;
   animation: flowBanner 26s linear infinite;
+  transform: translate3d(0, 0, 0);
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
   will-change: transform;
 }
 
@@ -216,11 +235,11 @@
 
 @keyframes flowBanner {
   from {
-    transform: translateX(0);
+    transform: translate3d(0, 0, 0);
   }
 
   to {
-    transform: translateX(-22rem);
+    transform: translate3d(-22rem, 0, 0);
   }
 }
 

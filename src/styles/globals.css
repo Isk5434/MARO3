@@ -83,12 +83,8 @@ body {
 }
 
 body.is-loading {
-  position: fixed;
-  inset: 0;
   width: 100%;
   overflow: hidden;
-  overscroll-behavior: none;
-  touch-action: none;
 }
 
 #root {

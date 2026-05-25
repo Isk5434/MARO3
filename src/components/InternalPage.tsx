@@ -223,10 +223,17 @@ export function InternalPage({ pageId, activityArticles = [] }: Props) {
       duration: 0.38,
       ease: 'power2.in',
       onComplete: () => {
+        document.body.style.overflow = ''
         window.location.href = href
       },
     })
   }
+
+  useEffect(() => {
+    return () => {
+      document.body.style.overflow = ''
+    }
+  }, [])
 
   useEffect(() => {
     const section = sectionRef.current
@@ -274,14 +281,16 @@ export function InternalPage({ pageId, activityArticles = [] }: Props) {
       <section ref={sectionRef} className={`${styles.section} ${sectionClassName}`}>
         {pageId === 'activity' && (
           <div className={styles.loopRing} aria-hidden="true">
-            <picture>
-              <source
-                media="(max-width: 720px)"
-                srcSet={LOOP_RING_MOBILE_IMAGE}
-                type="image/webp"
-              />
-              <img src={LOOP_RING_IMAGE} alt="" loading="lazy" decoding="async" />
-            </picture>
+            <div className={styles.loopRingRotor}>
+              <picture>
+                <source
+                  media="(max-width: 720px)"
+                  srcSet={LOOP_RING_MOBILE_IMAGE}
+                  type="image/webp"
+                />
+                <img src={LOOP_RING_IMAGE} alt="" loading="lazy" decoding="async" />
+              </picture>
+            </div>
           </div>
         )}
 
@@ -308,14 +317,16 @@ export function InternalPage({ pageId, activityArticles = [] }: Props) {
               </div>
             </div>
             <div className={styles.contactRoundel} aria-hidden="true">
-              <picture>
-                <source
-                  media="(max-width: 720px)"
-                  srcSet={CONTACT_ROUNDEL_MOBILE_IMAGE}
-                  type="image/webp"
-                />
-                <img src={CONTACT_ROUNDEL_IMAGE} alt="" loading="lazy" decoding="async" />
-              </picture>
+              <div className={styles.contactRoundelRotor}>
+                <picture>
+                  <source
+                    media="(max-width: 720px)"
+                    srcSet={CONTACT_ROUNDEL_MOBILE_IMAGE}
+                    type="image/webp"
+                  />
+                  <img src={CONTACT_ROUNDEL_IMAGE} alt="" loading="lazy" decoding="async" />
+                </picture>
+              </div>
             </div>
           </>
         )}
