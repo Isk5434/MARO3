@@ -27,11 +27,14 @@ interface FloatingObjectBase {
 export type GlbFloatingConfig = FloatingObjectBase & { shape: 'glb'; args: []; glbPath: string }
 
 export type FloatingObjectConfig =
-  | (FloatingObjectBase & { shape: 'torus';     args: [number, number, number, number] })
-  | (FloatingObjectBase & { shape: 'box';       args: [number, number, number] })
-  | (FloatingObjectBase & { shape: 'sphere';    args: [number, number, number] })
-  | (FloatingObjectBase & { shape: 'cone';      args: [number, number, number] })
-  | (FloatingObjectBase & { shape: 'torusKnot'; args: [number, number, number, number, number, number] })
+  | (FloatingObjectBase & { shape: 'torus'; args: [number, number, number, number] })
+  | (FloatingObjectBase & { shape: 'box'; args: [number, number, number] })
+  | (FloatingObjectBase & { shape: 'sphere'; args: [number, number, number] })
+  | (FloatingObjectBase & { shape: 'cone'; args: [number, number, number] })
+  | (FloatingObjectBase & {
+      shape: 'torusKnot'
+      args: [number, number, number, number, number, number]
+    })
   | GlbFloatingConfig
 
 export type FloatingShape = FloatingObjectConfig['shape']
