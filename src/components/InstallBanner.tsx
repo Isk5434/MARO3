@@ -103,8 +103,7 @@ export default function InstallBanner() {
               lineHeight: 1.4,
             }}
           >
-            Safari の <span style={{ display: 'inline-block', fontSize: '14px' }}>􀈂</span>{' '}
-            →「ホーム画面に追加」
+            Safariの共有ボタンから「ホーム画面に追加」
           </p>
         ) : (
           <p style={{ margin: '2px 0 0', fontSize: '11px', color: 'var(--color-text-light)' }}>
