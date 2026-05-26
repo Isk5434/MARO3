@@ -98,12 +98,7 @@
 .loopRingRotor,
 .contactRoundelRotor {
   animation: loopRingSpin 34s linear infinite;
-  transform: translate3d(0, 0, 0) rotate(0deg);
   transform-origin: center;
-  transform-style: preserve-3d;
-  backface-visibility: hidden;
-  -webkit-backface-visibility: hidden;
-  will-change: transform;
 }
 
 .loopRing img {
@@ -143,10 +138,6 @@
   width: max-content;
   height: 100%;
   animation: contactSashFlow 24s linear infinite;
-  transform: translate3d(0, 0, 0);
-  backface-visibility: hidden;
-  -webkit-backface-visibility: hidden;
-  will-change: transform;
 }
 
 .contactSashPicture {
@@ -250,10 +241,6 @@
   align-items: center;
   gap: 0;
   animation: flowBanner 26s linear infinite;
-  transform: translate3d(0, 0, 0);
-  backface-visibility: hidden;
-  -webkit-backface-visibility: hidden;
-  will-change: transform;
 }
 
 .bottom .flowTrack {
