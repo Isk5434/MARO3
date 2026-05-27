@@ -16,6 +16,17 @@ function FloatingGlb({ cfg }: { cfg: GlbFloatingConfig }) {
 
   const normalizedScene = useMemo(() => {
     const clone = scene.clone()
+    clone.traverse((obj) => {
+      const mesh = obj as THREE.Mesh
+      if (!mesh.isMesh) return
+      const materials = Array.isArray(mesh.material) ? mesh.material : [mesh.material]
+      materials.forEach((mat) => {
+        const standard = mat as THREE.MeshStandardMaterial
+        if (standard.map) standard.map.colorSpace = THREE.SRGBColorSpace
+        if (standard.emissiveMap) standard.emissiveMap.colorSpace = THREE.SRGBColorSpace
+        standard.needsUpdate = true
+      })
+    })
     const box = new THREE.Box3().setFromObject(clone)
     const size = new THREE.Vector3()
     box.getSize(size)
