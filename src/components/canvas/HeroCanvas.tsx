@@ -47,10 +47,10 @@ export function HeroCanvas({ mouseRef, active = true }: Props) {
       }}
     >
       <Suspense fallback={null}>
-        <ambientLight intensity={1.4} color="#f8f0e0" />
-        <directionalLight position={[5, 8, 5]} intensity={2.0} color="#fff8e8" />
-        <directionalLight position={[-4, 2, -3]} intensity={0.6} color="#c8d8f0" />
-        <pointLight position={[0, 3, 2]} intensity={0.4} color="#ffe0c0" />
+        <ambientLight intensity={0.6} color="#f8f0e0" />
+        <directionalLight position={[5, 8, 5]} intensity={1.0} color="#fff8e8" />
+        <directionalLight position={[-4, 2, -3]} intensity={0.4} color="#c8d8f0" />
+        <pointLight position={[0, 3, 2]} intensity={0.3} color="#ffe0c0" />
         <FloatingObjects isMobile={isMobile} />
         <CameraRig mouseRef={mouseRef} isMobile={isMobile} />
       </Suspense>

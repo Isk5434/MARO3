@@ -164,21 +164,6 @@ export const FLOATING_OBJECTS: FloatingObjectConfig[] = [
     floatSpeed: 0.8,
     rotateAxis: [-0.0015, 0.002, 0.0008],
   },
-  // ── Warm-tone torus knot ─────────────────────────────
-  {
-    id: 'knot-warm-1',
-    shape: 'torusKnot',
-    args: [0.28, 0.085, 80, 16, 2, 3],
-    position: [0.5, -1.8, -0.3],
-    rotation: [0.0, 0.5, 0.3],
-    color: '#8b6f4e',
-    roughness: 0.6,
-    metalness: 0.15,
-    floatOffset: 3.5,
-    floatAmplitude: 0.22,
-    floatSpeed: 0.9,
-    rotateAxis: [0.002, 0.003, 0.001],
-  },
   // ── GLB models ────────────────────────────────────────
   {
     id: 'glb-bunny',
