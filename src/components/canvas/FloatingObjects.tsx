@@ -8,6 +8,23 @@ import type { FloatingObjectConfig, GlbFloatingConfig } from '../../config/float
 const GLB_ITEMS = FLOATING_OBJECTS.filter((cfg): cfg is GlbFloatingConfig => cfg.shape === 'glb')
 const PRIMITIVE_ITEMS = FLOATING_OBJECTS.filter((cfg) => cfg.shape !== 'glb')
 
+function prepareGlbMaterial(material: THREE.Material, cfg: GlbFloatingConfig) {
+  const tint = new THREE.Color(cfg.color)
+
+  if ('map' in material && material.map instanceof THREE.Texture) {
+    material.map.colorSpace = THREE.SRGBColorSpace
+    material.map.anisotropy = 4
+    material.map.needsUpdate = true
+  }
+
+  if (material instanceof THREE.MeshStandardMaterial) {
+    material.color.copy(tint)
+    material.roughness = cfg.roughness
+    material.metalness = cfg.metalness
+    material.needsUpdate = true
+  }
+}
+
 function FloatingGlb({ cfg }: { cfg: GlbFloatingConfig }) {
   const { scene } = useGLTF(cfg.glbPath)
   const groupRef = useRef<THREE.Group>(null)
@@ -16,6 +33,22 @@ function FloatingGlb({ cfg }: { cfg: GlbFloatingConfig }) {
 
   const normalizedScene = useMemo(() => {
     const clone = scene.clone()
+    clone.traverse((object) => {
+      if (!(object instanceof THREE.Mesh)) return
+
+      object.material = Array.isArray(object.material)
+        ? object.material.map((material) => {
+            const nextMaterial = material.clone()
+            prepareGlbMaterial(nextMaterial, cfg)
+            return nextMaterial
+          })
+        : (() => {
+            const nextMaterial = object.material.clone()
+            prepareGlbMaterial(nextMaterial, cfg)
+            return nextMaterial
+          })()
+    })
+
     const box = new THREE.Box3().setFromObject(clone)
     const size = new THREE.Vector3()
     box.getSize(size)
@@ -26,7 +59,7 @@ function FloatingGlb({ cfg }: { cfg: GlbFloatingConfig }) {
     new THREE.Box3().setFromObject(clone).getCenter(center)
     clone.position.sub(center)
     return clone
-  }, [scene])
+  }, [cfg, scene])
 
   useFrame((_, delta) => {
     if (!groupRef.current) return

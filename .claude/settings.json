@@ -4,7 +4,30 @@
       "PowerShell(\\(Invoke-WebRequest -Uri \"https://isk5434.github.io/MARO3/activity/asdjiyubxx/\" -UseBasicParsing\\).Content | Select-String -Pattern \"tile|visual|section_\" | Select-Object -First 10)",
       "PowerShell(\\(Invoke-WebRequest -Uri \"https://isk5434.github.io/MARO3/_next/static/chunks/01xla15s2s787.css\" -UseBasicParsing\\).Content | Select-String -Pattern \"tileOne|tileTwo|visualTile\" | Select-Object -First 5)",
       "Bash(Get-ChildItem \"c:\\\\Users\\\\tryss\\\\maro-hp3\\\\app\" -Recurse -Filter \"*.tsx\")",
-      "Bash(git commit -m ' *)"
+      "Bash(git commit -m ' *)",
+      "Bash(git reset *)",
+      "Bash(git merge *)",
+      "Bash(npx next *)",
+      "Bash(git stash *)",
+      "Bash(gh pr create --base master --head fix/safari-marquee-scroll-pause --title 'fix: keep marquee animations running on iOS Safari after scroll' --body ' *)",
+      "Bash(gh api *)",
+      "Bash(npx playwright *)",
+      "Bash(node -e ' *)",
+      "Read(//c/Users/tryss/AppData/Local/Temp/**)",
+      "Bash(rm maro-banzai-texture.jpg maro-inu-hand-texture.jpg bunny-texture.jpg 2>&1)",
+      "Bash(git fetch *)",
+      "Bash(git worktree *)",
+      "Read(//c/Users/tryss/maro-hp3-scene/src/config/**)",
+      "Read(//c/Users/tryss/maro-hp3-scene/src/components/canvas/**)",
+      "Bash(gh pr *)",
+      "Read(//c/Users/tryss/maro-hp3-scene/src/components/**)",
+      "Read(//c/Users/tryss/maro-hp3-scene/**)",
+      "Bash(npm ci *)"
+    ],
+    "additionalDirectories": [
+      "C:\\Users\\tryss\\maro-hp3",
+      "C:\\Users\\tryss\\maro-hp3-scene\\src\\config",
+      "C:\\Users\\tryss\\maro-hp3-scene\\src\\components\\canvas"
     ]
   }
 }
