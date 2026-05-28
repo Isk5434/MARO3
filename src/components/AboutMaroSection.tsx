@@ -59,6 +59,13 @@ export const AboutMaroSection = forwardRef<HTMLElement>(function AboutMaroSectio
               black: 0,
               ease: 'sine.out',
               onUpdate: () => setRevealMask(revealTargets, mask.transparent, mask.black),
+              onComplete: () => {
+                revealTargets.forEach((el) => {
+                  el.style.removeProperty('--about-reveal-mask')
+                  el.style.webkitMaskImage = 'none'
+                  el.style.maskImage = 'none'
+                })
+              },
             },
           )
           .to('[data-about-button]', { y: 0, opacity: 1, duration: 0.42 }, '<45%')
@@ -88,6 +95,13 @@ export const AboutMaroSection = forwardRef<HTMLElement>(function AboutMaroSectio
       black: 0,
       ease: 'sine.out',
       onUpdate: () => setRevealMask(revealTargets, mask.transparent, mask.black),
+      onComplete: () => {
+        revealTargets.forEach((el) => {
+          el.style.removeProperty('--about-reveal-mask')
+          el.style.webkitMaskImage = 'none'
+          el.style.maskImage = 'none'
+        })
+      },
     })
   }, [isOpen])
 
