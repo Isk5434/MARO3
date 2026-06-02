@@ -65,23 +65,30 @@ export async function getActivityArticleIds() {
     limit: '100',
   })
 
-  return data?.contents.map((article) => article.id) ?? ['preview']
+  // 記事が 0 件でも output: export 用に静的パスを 1 つ残す（preview ルート）
+  const ids = data?.contents.map((article) => article.id) ?? []
+  return ids.length > 0 ? ids : ['preview']
+}
+
+const PREVIEW_ARTICLE: ActivityArticle = {
+  id: 'preview',
+  title: '記事詳細プレビュー',
+  description: 'microCMSを接続すると、ここに活動記事の本文が表示されます。',
+  publishedAt: new Date('2026-05-21T00:00:00.000Z').toISOString(),
+  body: '<p>microCMSのサービスドメイン、APIキー、activities APIを設定すると、記事一覧と記事詳細が自動で生成されます。</p>',
 }
 
 export async function getActivityArticle(id: string): Promise<ActivityArticle | null> {
   if (!isConfigured()) {
-    if (id !== 'preview') return null
-
-    return {
-      id: 'preview',
-      title: '記事詳細プレビュー',
-      description: 'microCMSを接続すると、ここに活動記事の本文が表示されます。',
-      publishedAt: new Date('2026-05-21T00:00:00.000Z').toISOString(),
-      body: '<p>microCMSのサービスドメイン、APIキー、activities APIを設定すると、記事一覧と記事詳細が自動で生成されます。</p>',
-    }
+    return id === 'preview' ? PREVIEW_ARTICLE : null
   }
 
-  return requestMicroCms<ActivityArticle>(`/${id}`, {
+  const article = await requestMicroCms<ActivityArticle>(`/${id}`, {
     fields: 'id,title,description,body,publishedAt,eyecatch',
   })
+
+  // 記事 0 件のとき getActivityArticleIds が返す preview ルート用フォールバック
+  if (!article && id === 'preview') return PREVIEW_ARTICLE
+
+  return article
 }
