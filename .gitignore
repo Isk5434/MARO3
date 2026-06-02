@@ -22,6 +22,10 @@ out
 tsconfig.tsbuildinfo
 lighthouse-*.json
 
+# Playwright
+test-results
+playwright-report
+
 # Editor directories and files
 .vscode/*
 !.vscode/extensions.json

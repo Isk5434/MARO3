@@ -458,13 +458,13 @@ export function InternalPage({ pageId, activityArticles = [] }: Props) {
                     </div>
                   ) : (
                     <p className={styles.emptyArticles} data-internal-action>
-                      条件に合う記事はありません。キーワードを変えて検索してください。
+                      条件に合う記事がないまろ～　キーワードを変えてみてまろ～
                     </p>
                   )}
                 </>
               ) : (
                 <p className={styles.emptyArticles} data-internal-action>
-                  記事はまだありません。microCMSを接続すると、ここに活動記事が表示されます。
+                  まだ記事がないまろ～
                 </p>
               )}
             </section>
