@@ -22,15 +22,13 @@ export default function ContactPage() {
     description:
       'MAROへの活動見学・入部希望・取材・お問い合わせはこちらから。活動に興味がある方、協働のご相談をしたい方はお気軽にどうぞ。',
     url: `${siteUrl}/contact/`,
-    type: 'ContactPage',
-    keywords: ['MARO 問い合わせ', 'MARO 入部', 'MARO 見学', '名市大 MARO', '博物館サポーター 参加'],
   })
 
   const faq = faqSchema([
     {
       question: 'MAROとはどんな団体ですか？',
       answer:
-        'MAROは名古屋市博物館のサポーター団体です。名古屋市立大学（名市大）から始まった学生主体の活動として、若い世代と博物館をつなぐ企画・運営・発信を行っています。',
+        'MAROは名古屋市博物館のサポーター団体です。名古屋市立大学から始まった学生主体の活動として、若い世代と博物館をつなぐ企画・運営・発信を行っています。',
     },
     {
       question: 'MAROの活動に参加・見学するにはどうすればいいですか？',
@@ -39,7 +37,8 @@ export default function ContactPage() {
     },
     {
       question: 'MAROはどこで活動していますか？',
-      answer: '主に名古屋市博物館と大学で活動しています。毎週木曜日に定例活動を行っています。',
+      answer:
+        '主に名古屋市博物館と大学で活動しています。毎週決まった曜日に定例活動を行っています。',
     },
     {
       question: 'MAROに入部するための条件はありますか？',
@@ -50,18 +49,9 @@ export default function ContactPage() {
 
   return (
     <>
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumb) }}
-      />
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(page) }}
-      />
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(faq) }}
-      />
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumb) }} />
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(page) }} />
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faq) }} />
       <App initialPageId="contact" />
     </>
   )
