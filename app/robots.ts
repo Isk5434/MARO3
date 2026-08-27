@@ -4,25 +4,36 @@ export const dynamic = 'force-static'
 
 const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://maroinu.pages.dev'
 
+// AI answer and discovery engines explicitly allowed for AEO/LLMO/GEO.
+const ALLOWED_USER_AGENTS = [
+  'Googlebot',
+  'Google-Extended',
+  'Bingbot',
+  'GPTBot',
+  'OAI-SearchBot',
+  'ChatGPT-User',
+  'PerplexityBot',
+  'ClaudeBot',
+  'anthropic-ai',
+  'Claude-Web',
+  'cohere-ai',
+  'Applebot-Extended',
+  'YouBot',
+  'CCBot',
+]
+
+// 管理用ページはクロール対象外にする
+const DISALLOWED_PATHS = ['/stats/']
+
 export default function robots(): MetadataRoute.Robots {
   return {
     rules: [
-      { userAgent: '*', allow: '/' },
-      // AI answer and discovery engines explicitly allowed for AEO/LLMO/GEO.
-      { userAgent: 'Googlebot', allow: '/' },
-      { userAgent: 'Google-Extended', allow: '/' },
-      { userAgent: 'Bingbot', allow: '/' },
-      { userAgent: 'GPTBot', allow: '/' },
-      { userAgent: 'OAI-SearchBot', allow: '/' },
-      { userAgent: 'ChatGPT-User', allow: '/' },
-      { userAgent: 'PerplexityBot', allow: '/' },
-      { userAgent: 'ClaudeBot', allow: '/' },
-      { userAgent: 'anthropic-ai', allow: '/' },
-      { userAgent: 'Claude-Web', allow: '/' },
-      { userAgent: 'cohere-ai', allow: '/' },
-      { userAgent: 'Applebot-Extended', allow: '/' },
-      { userAgent: 'YouBot', allow: '/' },
-      { userAgent: 'CCBot', allow: '/' },
+      { userAgent: '*', allow: '/', disallow: DISALLOWED_PATHS },
+      ...ALLOWED_USER_AGENTS.map((userAgent) => ({
+        userAgent,
+        allow: '/',
+        disallow: DISALLOWED_PATHS,
+      })),
     ],
     sitemap: `${siteUrl}/sitemap.xml`,
     host: siteUrl,

@@ -596,6 +596,15 @@
   opacity: 0.54;
 }
 
+.articleCardViews {
+  margin-left: auto;
+  font-family: var(--font-serif);
+  font-size: 0.68rem;
+  letter-spacing: 0.08em;
+  opacity: 0.46;
+  white-space: nowrap;
+}
+
 .articleCard strong {
   font-family: var(--font-jp);
   font-size: 1rem;
