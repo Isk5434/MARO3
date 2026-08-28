@@ -73,7 +73,14 @@ Cloudflare ダッシュボード → **Workers & Pages → maroinu → Settings 
 | Variable name | `DB`             |
 | D1 database   | `maro-analytics` |
 
-**Production と Preview の両方**に設定してください。変数名は必ず `DB` です（コードがこの名前を見ています）。
+設定するのは **Production のみ**です。変数名は必ず `DB` です（コードがこの名前を見ています）。
+
+本番は `maroinu.pages.dev`（master ブランチのデプロイ）です。Preview にも同じ D1 を割り当てると、
+動作確認やブランチのプレビューで開いたぶんが本番の数字に混ざってしまうため、割り当てません。
+Preview 側は D1 が無い状態になり、記録がスキップされるだけでページは通常どおり動きます。
+
+プレビューでも計測を試したい場合は、`maro-analytics-preview` のような別の D1 を作って
+Preview にだけ割り当ててください。
 
 ### 4. 統計ページのパスワードを設定する
 
@@ -84,7 +91,7 @@ Cloudflare ダッシュボード → **Workers & Pages → maroinu → Settings 
 | Variable name | `STATS_PASSWORD` |
 | Value         | 任意のパスワード |
 
-これも Production と Preview の両方に設定します。
+これも **Production** に設定します（Preview で `/stats/` を開きたい場合は Preview にも）。
 このパスワードを知っている人だけが `/stats/` の数字を見られます。総当たり対策として、
 同じ IP からの認証失敗が5分間に10回を超えると一時的に拒否します。
 
