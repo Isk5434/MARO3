@@ -1,7 +1,7 @@
 # アクセス解析のセットアップ
 
 サイト内でアクセス数と滞在時間を確認できる仕組みです。Cloudflare D1（データベース）に自前で記録し、
-管理者用ページ `/stats/` で集計を見られます。記事ごとの閲覧数は記事一覧と記事ページに公開表示されます。
+管理者用ページ `/maroinudayo/` で集計を見られます。記事ごとの閲覧数は記事一覧と記事ページに公開表示されます。
 
 Cloudflare のダッシュボードを開かなくても、サイト上で数字が確認できます。
 
@@ -14,7 +14,7 @@ Cloudflare のダッシュボードを開かなくても、サイト上で数字
 | `functions/api/article-views.js`         | 記事ごとの累計を返す（公開・GET）                      |
 | `functions/api/stats.js`                 | 管理者向けの集計を返す（パスワード必須・GET）          |
 | `src/components/ViewTracker.tsx`         | 全ページで表示を記録するクライアント側の処理           |
-| `src/components/StatsDashboard.tsx`      | `/stats/` の画面                                       |
+| `src/components/StatsDashboard.tsx`      | `/maroinudayo/` の画面                                 |
 | `db/schema.sql`                          | D1 のテーブル定義                                      |
 | `db/migrations/001-add-duration.sql`     | 滞在時間の列を後から足す場合の差分                     |
 | `db/migrations/002-add-visit-events.sql` | 流入元・デバイス・時間帯のテーブルを足す差分           |
@@ -128,8 +128,8 @@ Preview にだけ割り当ててください。
 | Variable name | `STATS_PASSWORD` |
 | Value         | 任意のパスワード |
 
-これも **Production** に設定します（Preview で `/stats/` を開きたい場合は Preview にも）。
-このパスワードを知っている人だけが `/stats/` の数字を見られます。総当たり対策として、
+これも **Production** に設定します（Preview で `/maroinudayo/` を開きたい場合は Preview にも）。
+このパスワードを知っている人だけが `/maroinudayo/` の数字を見られます。総当たり対策として、
 同じ IP からの認証失敗が5分間に10回を超えると一時的に拒否します。
 
 ### 5. 反映する
@@ -143,7 +143,7 @@ gh workflow run cloudflare-pages.yml --ref master
 ### 6. 動作確認
 
 1. サイトのページをいくつか開く
-2. `https://maroinu.pages.dev/stats/` を開き、設定したパスワードを入力
+2. `https://maroinu.pages.dev/maroinudayo/` を開き、設定したパスワードを入力
 3. 表示回数が入っていれば成功
 
 滞在時間は、ページを数十秒開いてから**別のページに移動するかタブを閉じる**と記録されます。
@@ -181,7 +181,7 @@ D1 の無料枠は 1日あたり読み取り500万行・書き込み10万行で�
 
 `DB` バインドが無い状態でもサイトは通常どおり表示されます。
 その場合は記録がスキップされ、閲覧数の表示が出ないだけです。
-`/stats/` はデータベース未設定である旨のメッセージを表示します。
+`/maroinudayo/` はデータベース未設定である旨のメッセージを表示します。
 
 ## ローカルで試す場合
 
