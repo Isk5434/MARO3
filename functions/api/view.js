@@ -44,6 +44,42 @@ function normalizeSource(raw) {
   return SOURCE_PATTERN.test(source) ? source : 'other'
 }
 
+async function ensureDailyVisitsTable(env) {
+  await env.DB.prepare(
+    `CREATE TABLE IF NOT EXISTS daily_visits (
+      day      TEXT    NOT NULL PRIMARY KEY,
+      visitors INTEGER NOT NULL DEFAULT 0,
+      sessions INTEGER NOT NULL DEFAULT 0
+    )`,
+  ).run()
+}
+
+async function recordDailyVisit(env, day, newVisitor, newSession) {
+  const insertDailyVisit = () =>
+    env.DB.prepare(
+      `INSERT INTO daily_visits (day, visitors, sessions)
+       VALUES (?1, ?2, ?3)
+       ON CONFLICT(day) DO UPDATE SET
+         visitors = visitors + ?2,
+         sessions = sessions + ?3`,
+    )
+      .bind(day, newVisitor, newSession)
+      .run()
+
+  try {
+    await insertDailyVisit()
+  } catch (error) {
+    console.warn('Failed to record daily visit; ensuring table before retry', error)
+
+    try {
+      await ensureDailyVisitsTable(env)
+      await insertDailyVisit()
+    } catch (retryError) {
+      console.warn('Failed to record daily visit after ensuring table', retryError)
+    }
+  }
+}
+
 export function onRequestOptions({ request }) {
   const origin = request.headers.get('Origin') ?? ''
   if (!isAllowedOrigin(origin)) return new Response(null, { status: 403 })
@@ -108,20 +144,8 @@ export async function onRequestPost({ request, env }) {
   const newSession = body?.newSession === true ? 1 : 0
 
   if (newVisitor || newSession) {
-    // daily_visits は後から追加したテーブルなので、未作成でも表示回数の記録は成立させる
-    try {
-      await env.DB.prepare(
-        `INSERT INTO daily_visits (day, visitors, sessions)
-         VALUES (?1, ?2, ?3)
-         ON CONFLICT(day) DO UPDATE SET
-           visitors = visitors + ?2,
-           sessions = sessions + ?3`,
-      )
-        .bind(day, newVisitor, newSession)
-        .run()
-    } catch (error) {
-      console.warn('Failed to record daily visit (migration 003 may not be applied)', error)
-    }
+    // daily_visits は後から追加したテーブルなので、未作成なら作ってから再試行する
+    await recordDailyVisit(env, day, newVisitor, newSession)
   }
 
   // visit_events は後から追加したテーブルなので、未作成でも表示回数の記録は成立させる
