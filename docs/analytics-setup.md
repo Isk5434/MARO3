@@ -7,16 +7,18 @@ Cloudflare のダッシュボードを開かなくても、サイト上で数字
 
 ## 構成
 
-| ファイル                             | 役割                                          |
-| ------------------------------------ | --------------------------------------------- |
-| `functions/api/view.js`              | ページ表示を1件記録する（POST）               |
-| `functions/api/duration.js`          | ページの滞在秒数を加算する（POST）            |
-| `functions/api/article-views.js`     | 記事ごとの累計を返す（公開・GET）             |
-| `functions/api/stats.js`             | 管理者向けの集計を返す（パスワード必須・GET） |
-| `src/components/ViewTracker.tsx`     | 全ページで表示を記録するクライアント側の処理  |
-| `src/components/StatsDashboard.tsx`  | `/stats/` の画面                              |
-| `db/schema.sql`                      | D1 のテーブル定義                             |
-| `db/migrations/001-add-duration.sql` | 滞在時間の列を後から足す場合の差分            |
+| ファイル                                 | 役割                                              |
+| ---------------------------------------- | ------------------------------------------------- |
+| `functions/api/view.js`                  | ページ表示を1件記録する（POST）                   |
+| `functions/api/duration.js`              | ページの滞在秒数を加算する（POST）                |
+| `functions/api/article-views.js`         | 記事ごとの累計を返す（公開・GET）                 |
+| `functions/api/stats.js`                 | 管理者向けの集計を返す（パスワード必須・GET）     |
+| `src/components/ViewTracker.tsx`         | 全ページで表示を記録するクライアント側の処理      |
+| `src/components/StatsDashboard.tsx`      | `/stats/` の画面                                  |
+| `db/schema.sql`                          | D1 のテーブル定義                                 |
+| `db/migrations/001-add-duration.sql`     | 滞在時間の列を後から足す場合の差分                |
+| `db/migrations/002-add-visit-events.sql` | 流入元・デバイス・時間帯のテーブルを足す差分      |
+| `src/components/stats/`                  | グラフ部品（外部ライブラリ不使用のインラインSVG） |
 
 ## 保存するもの・しないもの
 
@@ -27,6 +29,12 @@ IP アドレス・ユーザーエージェント・Cookie など、個人を特�
 - `visitors` … その日はじめてそのページを見た人の数（localStorage で判定）
 - `total_seconds` … 滞在秒数の合計
 - `duration_samples` … 滞在時間を測れた回数。平均はこの数で割ります
+
+`visit_events` テーブルには、日 × 時間帯 × デバイス × 流入元 ごとの表示回数を記録します。
+
+- 時間帯 … サーバ側で日本時間に換算した 0〜23 時
+- デバイス … 画面幅から desktop / tablet / mobile を判定（UA文字列は解析しません）
+- 流入元 … リファラの**ホスト名まで**。URL全体は個人の閲覧履歴に近づくため保存しません
 
 ブラウザを変えたり、ストレージを消したりすると別人として数えられます。厳密な実人数ではなく目安です。
 
@@ -53,8 +61,14 @@ Cloudflare ダッシュボード → **Storage & Databases → D1** → **Create
 
 作成した D1 の **Console** タブを開き、`db/schema.sql` の中身をそのまま貼り付けて実行します。
 
-すでに滞在時間なしの版でテーブルを作ってしまっている場合は、代わりに
-`db/migrations/001-add-duration.sql` の2行を実行してください。
+すでにテーブルを作ってある場合は、足りないぶんだけ差分を実行してください。
+
+- 滞在時間の列が無い → `db/migrations/001-add-duration.sql`
+- `visit_events` テーブルが無い → `db/migrations/002-add-visit-events.sql`
+
+`visit_events` が無くても表示回数・訪問者数・滞在時間は記録され続けます。
+統計ページの「流入元」「デバイス」「時間帯」「曜日 × 時間帯」の4パネルだけが、
+差分を実行するまで案内文に置き換わります。
 
 wrangler を使う場合は次のコマンドでも同じことができます。
 
@@ -73,7 +87,14 @@ Cloudflare ダッシュボード → **Workers & Pages → maroinu → Settings 
 | Variable name | `DB`             |
 | D1 database   | `maro-analytics` |
 
-**Production と Preview の両方**に設定してください。変数名は必ず `DB` です（コードがこの名前を見ています）。
+設定するのは **Production のみ**です。変数名は必ず `DB` です（コードがこの名前を見ています）。
+
+本番は `maroinu.pages.dev`（master ブランチのデプロイ）です。Preview にも同じ D1 を割り当てると、
+動作確認やブランチのプレビューで開いたぶんが本番の数字に混ざってしまうため、割り当てません。
+Preview 側は D1 が無い状態になり、記録がスキップされるだけでページは通常どおり動きます。
+
+プレビューでも計測を試したい場合は、`maro-analytics-preview` のような別の D1 を作って
+Preview にだけ割り当ててください。
 
 ### 4. 統計ページのパスワードを設定する
 
@@ -84,7 +105,7 @@ Cloudflare ダッシュボード → **Workers & Pages → maroinu → Settings 
 | Variable name | `STATS_PASSWORD` |
 | Value         | 任意のパスワード |
 
-これも Production と Preview の両方に設定します。
+これも **Production** に設定します（Preview で `/stats/` を開きたい場合は Preview にも）。
 このパスワードを知っている人だけが `/stats/` の数字を見られます。総当たり対策として、
 同じ IP からの認証失敗が5分間に10回を超えると一時的に拒否します。
 
@@ -107,6 +128,24 @@ gh workflow run cloudflare-pages.yml --ref master
 
 記事ごとの閲覧数は `/api/article-views` を60秒キャッシュしているため、
 記事一覧に反映されるまで最大1分ほどかかります。
+
+## 統計ページで見られるもの
+
+| パネル                 | 内容                                                                                 |
+| ---------------------- | ------------------------------------------------------------------------------------ |
+| 累計表示回数           | 公開してからの合計                                                                   |
+| 統計タイル4枚          | 表示回数 / 訪問者数 / 平均滞在時間 / 1人あたり表示回数。前期間比とスパークライン付き |
+| 推移                   | 日別の表示回数と訪問者数。カーソルを合わせるとその日の数字が出ます                   |
+| よく見られたページ     | 期間内の表示回数上位10件                                                             |
+| じっくり読まれたページ | 平均滞在時間が長い順。表示回数の多さとは別の観点                                     |
+| 曜日ごとの平均表示回数 | 期間内の各曜日の平均                                                                 |
+| 流入元                 | どこ経由で来たか                                                                     |
+| デバイス               | パソコン / スマートフォン / タブレット                                               |
+| 時間帯                 | 日本時間の時間帯別                                                                   |
+| 曜日 × 時間帯          | 濃いところがよく見られている時間。告知を出す時間帯の目安                             |
+
+期間は 7日 / 30日 / 90日 を切り替えられます。
+「数値の表も見る」を押すとグラフと同じ内容を表で確認できます。
 
 ## 無料枠について
 

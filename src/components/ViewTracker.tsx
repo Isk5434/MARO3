@@ -61,6 +61,46 @@ function pruneVisitorKeys(storage: Storage | null, today: string) {
   }
 }
 
+// 画面幅で判定する。UA文字列の解析はブラウザ差が大きく、当てにならないため。
+function detectDevice() {
+  const width = window.innerWidth
+  if (width < 768) return 'mobile'
+  if (width < 1024) return 'tablet'
+  return 'desktop'
+}
+
+// 流入元は「どこ経由で来たか」だけが分かればよいので、ホスト名までに丸める。
+// URL全体は個人の閲覧履歴に近づくため保存しない。
+const KNOWN_SOURCES: [RegExp, string][] = [
+  [/(^|\.)google\./, 'google'],
+  [/(^|\.)(x\.com|twitter\.com|t\.co)$/, 'x'],
+  [/(^|\.)instagram\.com$/, 'instagram'],
+  [/(^|\.)facebook\.com$/, 'facebook'],
+  [/(^|\.)(yahoo\.co\.jp|yahoo\.com)$/, 'yahoo'],
+  [/(^|\.)bing\.com$/, 'bing'],
+  [/(^|\.)line\.me$/, 'line'],
+]
+
+function detectSource() {
+  const referrer = document.referrer
+  if (!referrer) return 'direct'
+
+  let host: string
+  try {
+    host = new URL(referrer).hostname.toLowerCase()
+  } catch {
+    return 'other'
+  }
+
+  if (host === window.location.hostname) return 'internal'
+
+  for (const [pattern, name] of KNOWN_SOURCES) {
+    if (pattern.test(host)) return name
+  }
+
+  return host.replace(/^www\./, '')
+}
+
 // 離脱直前でも届くよう sendBeacon を優先する。text/plain ならプリフライトが起きない。
 function sendPayload(url: string, payload: unknown) {
   const json = JSON.stringify(payload)
@@ -102,7 +142,12 @@ export function ViewTracker() {
     const isUniqueVisit = !safeGet(localStore, visitorKey)
     if (isUniqueVisit) safeSet(localStore, visitorKey, '1')
 
-    sendPayload('/api/view', { path, unique: isUniqueVisit })
+    sendPayload('/api/view', {
+      path,
+      unique: isUniqueVisit,
+      device: detectDevice(),
+      source: detectSource(),
+    })
 
     // ここから滞在時間の計測。タブが裏に回っている間は加算しない。
     let visibleSince = document.visibilityState === 'visible' ? performance.now() : null
