@@ -5,3 +5,7 @@ node_modules
 .next
 out
 dist
+.claude
+
+# Next.js が毎ビルド生成する。編集禁止のファイルなので整形の対象にしない。
+next-env.d.ts

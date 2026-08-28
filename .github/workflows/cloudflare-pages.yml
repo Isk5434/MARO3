@@ -40,7 +40,7 @@ jobs:
         uses: cloudflare/wrangler-action@v4
         env:
           # 2026-06-16 以降 Actions は Node.js 24 を強制するため明示的にオプトイン
-          FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: "true"
+          FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: 'true'
         with:
           apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
