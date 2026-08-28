@@ -62,6 +62,6 @@ jobs:
           name: build-out
           path: out/
       - name: Install Playwright browsers
-        run: npx playwright install chromium --with-deps
+        run: npx playwright install chromium webkit --with-deps
       - name: E2E tests
         run: npm run test:e2e
