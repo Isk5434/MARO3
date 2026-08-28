@@ -16,6 +16,12 @@ export interface SeriesPoint {
   visitors: number
 }
 
+interface Props {
+  days: SeriesPoint[]
+  /** 訪問者数のテーブルが未作成のときは表示回数だけを描く */
+  showVisitors?: boolean
+}
+
 const HEIGHT = 268
 const PAD_TOP = 18
 const PAD_RIGHT = 18
@@ -24,7 +30,7 @@ const PAD_LEFT = 46
 // 端点ラベルがこれより近づくと重なって読めないので、両方とも出さずに凡例とツールチップに任せる
 const LABEL_COLLISION_GAP = 18
 
-export function TimeSeriesChart({ days }: { days: SeriesPoint[] }) {
+export function TimeSeriesChart({ days, showVisitors = true }: Props) {
   const containerRef = useRef<HTMLDivElement>(null)
   const width = useChartWidth(containerRef)
   const [hoverIndex, setHoverIndex] = useState<number | null>(null)
@@ -33,7 +39,11 @@ export function TimeSeriesChart({ days }: { days: SeriesPoint[] }) {
 
   const plotWidth = Math.max(width - PAD_LEFT - PAD_RIGHT, 10)
   const plotHeight = HEIGHT - PAD_TOP - PAD_BOTTOM
-  const scale = niceScale(Math.max(...days.map((day) => Math.max(day.views, day.visitors)), 1))
+  const peak = Math.max(
+    ...days.map((day) => (showVisitors ? Math.max(day.views, day.visitors) : day.views)),
+    1,
+  )
+  const scale = niceScale(peak)
 
   const xAt = (index: number) =>
     PAD_LEFT + (days.length === 1 ? plotWidth / 2 : (plotWidth * index) / (days.length - 1))
@@ -52,8 +62,9 @@ export function TimeSeriesChart({ days }: { days: SeriesPoint[] }) {
   const labelStep = Math.max(1, Math.ceil(days.length / 6))
   const lastIndex = days.length - 1
   const lastPoint = days[lastIndex]
+  // 系列が1本なら衝突しようがないので常にラベルを出す
   const canLabelEnds =
-    Math.abs(yAt(lastPoint.views) - yAt(lastPoint.visitors)) >= LABEL_COLLISION_GAP
+    !showVisitors || Math.abs(yAt(lastPoint.views) - yAt(lastPoint.visitors)) >= LABEL_COLLISION_GAP
 
   const handleMove = (clientX: number) => {
     const bounds = containerRef.current?.getBoundingClientRect()
@@ -69,16 +80,18 @@ export function TimeSeriesChart({ days }: { days: SeriesPoint[] }) {
 
   return (
     <div className={styles.chartFrame}>
-      <div className={styles.legend}>
-        <span className={styles.legendItem}>
-          <span className={`${styles.legendSwatch} ${styles.swatchOne}`} aria-hidden="true" />
-          表示回数
-        </span>
-        <span className={styles.legendItem}>
-          <span className={`${styles.legendSwatch} ${styles.swatchTwo}`} aria-hidden="true" />
-          訪問者数
-        </span>
-      </div>
+      {showVisitors && (
+        <div className={styles.legend}>
+          <span className={styles.legendItem}>
+            <span className={`${styles.legendSwatch} ${styles.swatchOne}`} aria-hidden="true" />
+            表示回数
+          </span>
+          <span className={styles.legendItem}>
+            <span className={`${styles.legendSwatch} ${styles.swatchTwo}`} aria-hidden="true" />
+            訪問者数
+          </span>
+        </div>
+      )}
 
       <div
         ref={containerRef}
@@ -127,7 +140,9 @@ export function TimeSeriesChart({ days }: { days: SeriesPoint[] }) {
 
             <path className={styles.areaOne} d={areaPath} />
             <path className={styles.lineOne} d={linePath((point) => point.views)} />
-            <path className={styles.lineTwo} d={linePath((point) => point.visitors)} />
+            {showVisitors && (
+              <path className={styles.lineTwo} d={linePath((point) => point.visitors)} />
+            )}
 
             {hoverIndex !== null && hovered && (
               <>
@@ -144,12 +159,14 @@ export function TimeSeriesChart({ days }: { days: SeriesPoint[] }) {
                   cy={yAt(hovered.views)}
                   r={5}
                 />
-                <circle
-                  className={styles.markerTwo}
-                  cx={xAt(hoverIndex)}
-                  cy={yAt(hovered.visitors)}
-                  r={5}
-                />
+                {showVisitors && (
+                  <circle
+                    className={styles.markerTwo}
+                    cx={xAt(hoverIndex)}
+                    cy={yAt(hovered.visitors)}
+                    r={5}
+                  />
+                )}
               </>
             )}
 
@@ -163,14 +180,16 @@ export function TimeSeriesChart({ days }: { days: SeriesPoint[] }) {
                 >
                   {formatNumber(lastPoint.views)}
                 </text>
-                <text
-                  className={styles.endLabel}
-                  x={xAt(lastIndex)}
-                  y={yAt(lastPoint.visitors) - 10}
-                  textAnchor="end"
-                >
-                  {formatNumber(lastPoint.visitors)}
-                </text>
+                {showVisitors && (
+                  <text
+                    className={styles.endLabel}
+                    x={xAt(lastIndex)}
+                    y={yAt(lastPoint.visitors) - 10}
+                    textAnchor="end"
+                  >
+                    {formatNumber(lastPoint.visitors)}
+                  </text>
+                )}
               </>
             )}
           </svg>
@@ -190,10 +209,12 @@ export function TimeSeriesChart({ days }: { days: SeriesPoint[] }) {
               <span className={`${styles.legendSwatch} ${styles.swatchOne}`} aria-hidden="true" />
               表示回数 <strong>{formatNumber(hovered.views)}</strong>
             </p>
-            <p>
-              <span className={`${styles.legendSwatch} ${styles.swatchTwo}`} aria-hidden="true" />
-              訪問者数 <strong>{formatNumber(hovered.visitors)}</strong>
-            </p>
+            {showVisitors && (
+              <p>
+                <span className={`${styles.legendSwatch} ${styles.swatchTwo}`} aria-hidden="true" />
+                訪問者数 <strong>{formatNumber(hovered.visitors)}</strong>
+              </p>
+            )}
           </div>
         )}
       </div>

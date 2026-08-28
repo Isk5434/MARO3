@@ -84,7 +84,9 @@ export async function onRequestPost({ request, env }) {
   }
 
   const { day, hour } = jstNow()
-  const isUniqueVisit = body?.unique === true ? 1 : 0
+  // page_views.visitors は「そのページを見た人数」。サイト全体の訪問者数とは別物で、
+  // 合計しても全体の人数にはならない（1人が3ページ見ると3になる）。
+  const isPageFirstToday = body?.pageFirstToday === true ? 1 : 0
 
   try {
     await env.DB.prepare(
@@ -94,11 +96,32 @@ export async function onRequestPost({ request, env }) {
          views = views + 1,
          visitors = visitors + ?3`,
     )
-      .bind(path, day, isUniqueVisit)
+      .bind(path, day, isPageFirstToday)
       .run()
   } catch (error) {
     console.error('Failed to record page view', error)
     return new Response(null, { status: 500 })
+  }
+
+  // サイト全体の訪問者数とセッション数。どちらも該当したときだけ加算する。
+  const newVisitor = body?.newVisitor === true ? 1 : 0
+  const newSession = body?.newSession === true ? 1 : 0
+
+  if (newVisitor || newSession) {
+    // daily_visits は後から追加したテーブルなので、未作成でも表示回数の記録は成立させる
+    try {
+      await env.DB.prepare(
+        `INSERT INTO daily_visits (day, visitors, sessions)
+         VALUES (?1, ?2, ?3)
+         ON CONFLICT(day) DO UPDATE SET
+           visitors = visitors + ?2,
+           sessions = sessions + ?3`,
+      )
+        .bind(day, newVisitor, newSession)
+        .run()
+    } catch (error) {
+      console.warn('Failed to record daily visit (migration 003 may not be applied)', error)
+    }
   }
 
   // visit_events は後から追加したテーブルなので、未作成でも表示回数の記録は成立させる

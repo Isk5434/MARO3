@@ -22,35 +22,44 @@ const RANGE_OPTIONS = [7, 30, 90] as const
 
 type Range = (typeof RANGE_OPTIONS)[number]
 
-interface Summary {
+interface ViewSummary {
   views: number
-  visitors: number
   avgSeconds: number
 }
 
-interface DayCount extends Summary {
-  day: string
-}
-
-interface PageCount extends Summary {
-  path: string
+interface VisitSummary {
+  visitors: number
+  sessions: number
 }
 
 interface StatsResponse {
   today: string
   range: number
   rangeStart: string
-  totals: Summary
-  period: Summary
-  previous: Summary
-  days: DayCount[]
-  pages: PageCount[]
+  totals: ViewSummary
+  period: ViewSummary
+  previous: ViewSummary
+  days: { day: string; views: number; avgSeconds: number }[]
+  pages: { path: string; views: number; viewers: number; avgSeconds: number }[]
+  visits: {
+    totals: VisitSummary
+    period: VisitSummary
+    previous: VisitSummary
+    days: { day: string; visitors: number; sessions: number }[]
+  } | null
   context: {
     hourly: { hour: number; views: number }[]
     devices: { device: string; views: number }[]
     sources: { source: string; views: number }[]
     heatmap: { day: string; hour: number; views: number }[]
   } | null
+}
+
+interface DayRow {
+  day: string
+  views: number
+  visitors: number
+  avgSeconds: number
 }
 
 type LoadOutcome =
@@ -154,15 +163,22 @@ async function fetchStats(password: string, range: Range): Promise<LoadOutcome> 
 }
 
 // 記録が無かった日も0として並べる。抜けたまま線を引くと推移を読み違えるため。
-function fillMissingDays(days: DayCount[], rangeStart: string, today: string): DayCount[] {
-  const byDay = new Map(days.map((day) => [day.day, day]))
-  const filled: DayCount[] = []
+function buildDayRows(stats: StatsResponse): DayRow[] {
+  const viewsByDay = new Map(stats.days.map((day) => [day.day, day]))
+  const visitorsByDay = new Map((stats.visits?.days ?? []).map((day) => [day.day, day.visitors]))
+  const rows: DayRow[] = []
 
-  for (let cursor = rangeStart; cursor <= today; cursor = shiftDay(cursor, 1)) {
-    filled.push(byDay.get(cursor) ?? { day: cursor, views: 0, visitors: 0, avgSeconds: 0 })
+  for (let cursor = stats.rangeStart; cursor <= stats.today; cursor = shiftDay(cursor, 1)) {
+    const view = viewsByDay.get(cursor)
+    rows.push({
+      day: cursor,
+      views: view?.views ?? 0,
+      visitors: visitorsByDay.get(cursor) ?? 0,
+      avgSeconds: view?.avgSeconds ?? 0,
+    })
   }
 
-  return filled
+  return rows
 }
 
 function DeltaBadge({ current, previous }: { current: number; previous: number }) {
@@ -234,10 +250,7 @@ export function StatsDashboard() {
     }
   }, [applyOutcome, range])
 
-  const days = useMemo(
-    () => (stats ? fillMissingDays(stats.days, stats.rangeStart, stats.today) : []),
-    [stats],
-  )
+  const days = useMemo(() => (stats ? buildDayRows(stats) : []), [stats])
 
   const weekdayColumns = useMemo(() => {
     if (days.length === 0) return []
@@ -264,7 +277,7 @@ export function StatsDashboard() {
         sublabel: page.path,
         value: page.views,
         details: [
-          { label: '訪問者数', value: formatNumber(page.visitors) },
+          { label: '閲覧者数', value: formatNumber(page.viewers) },
           { label: '平均滞在時間', value: formatDuration(page.avgSeconds) },
         ],
       })),
@@ -304,8 +317,8 @@ export function StatsDashboard() {
     setErrorMessage('')
   }
 
-  const viewsPerVisitor = (summary: Summary) =>
-    summary.visitors > 0 ? summary.views / summary.visitors : 0
+  const visits = stats?.visits ?? null
+  const perVisitor = (views: number, visitors: number) => (visitors > 0 ? views / visitors : 0)
 
   return (
     <main className={styles.page}>
@@ -345,10 +358,22 @@ export function StatsDashboard() {
             <p className={styles.cardLabel}>公開してからの累計表示回数</p>
             <p className={styles.heroValue}>{formatNumber(stats.totals.views)}</p>
             <p className={styles.heroNote}>
-              累計訪問者数 {formatNumber(stats.totals.visitors)} ・ 平均滞在時間{' '}
-              {formatDuration(stats.totals.avgSeconds)}
+              {visits &&
+                `累計訪問者数 ${formatNumber(visits.totals.visitors)} ・ 累計セッション数 ${formatNumber(visits.totals.sessions)} ・ `}
+              平均滞在時間 {formatDuration(stats.totals.avgSeconds)}
             </p>
           </section>
+
+          {!visits && (
+            <section className={styles.panel}>
+              <h2>訪問者数がまだ集計できません</h2>
+              <p className={styles.panelNote}>
+                サイト全体の訪問者数とセッション数を出すには、D1 の Console で
+                <code>db/migrations/003-add-daily-visits.sql</code>
+                を実行してください。実行後に記録された分から集計されます。
+              </p>
+            </section>
+          )}
 
           <div className={styles.controls}>
             <div className={styles.rangeGroup} role="group" aria-label="表示する期間">
@@ -385,13 +410,15 @@ export function StatsDashboard() {
               previous={stats.previous.views}
               trend={days.map((day) => day.views)}
             />
-            <StatTile
-              label="訪問者数"
-              value={formatCompact(stats.period.visitors)}
-              current={stats.period.visitors}
-              previous={stats.previous.visitors}
-              trend={days.map((day) => day.visitors)}
-            />
+            {visits && (
+              <StatTile
+                label="訪問者数"
+                value={formatCompact(visits.period.visitors)}
+                current={visits.period.visitors}
+                previous={visits.previous.visitors}
+                trend={days.map((day) => day.visitors)}
+              />
+            )}
             <StatTile
               label="平均滞在時間"
               value={formatDuration(stats.period.avgSeconds)}
@@ -399,23 +426,28 @@ export function StatsDashboard() {
               previous={stats.previous.avgSeconds}
               trend={days.map((day) => day.avgSeconds)}
             />
-            <StatTile
-              label="1人あたりの表示回数"
-              value={
-                viewsPerVisitor(stats.period) > 0 ? viewsPerVisitor(stats.period).toFixed(1) : '—'
-              }
-              current={viewsPerVisitor(stats.period)}
-              previous={viewsPerVisitor(stats.previous)}
-              trend={days.map((day) => (day.visitors > 0 ? day.views / day.visitors : 0))}
-            />
+            {visits && (
+              <StatTile
+                label="1人あたりの表示回数"
+                value={
+                  visits.period.visitors > 0
+                    ? perVisitor(stats.period.views, visits.period.visitors).toFixed(1)
+                    : '—'
+                }
+                current={perVisitor(stats.period.views, visits.period.visitors)}
+                previous={perVisitor(stats.previous.views, visits.previous.visitors)}
+                trend={days.map((day) => perVisitor(day.views, day.visitors))}
+              />
+            )}
           </section>
 
           <section className={styles.panel}>
             <h2>推移</h2>
             <p className={styles.panelNote}>
-              日ごとの表示回数と訪問者数。線の上にカーソルを合わせるとその日の数字が出ます。
+              日ごとの表示回数{visits && 'と訪問者数'}。
+              線の上にカーソルを合わせるとその日の数字が出ます。
             </p>
-            <TimeSeriesChart days={days} />
+            <TimeSeriesChart days={days} showVisitors={Boolean(visits)} />
           </section>
 
           <div className={styles.panelGrid}>
@@ -524,7 +556,7 @@ export function StatsDashboard() {
                     <tr>
                       <th scope="col">ページ</th>
                       <th scope="col">表示回数</th>
-                      <th scope="col">訪問者数</th>
+                      <th scope="col">閲覧者数</th>
                       <th scope="col">平均滞在</th>
                     </tr>
                   </thead>
@@ -536,13 +568,18 @@ export function StatsDashboard() {
                           <span className={styles.pagePath}>{page.path}</span>
                         </td>
                         <td className={styles.numberCell}>{formatNumber(page.views)}</td>
-                        <td className={styles.numberCell}>{formatNumber(page.visitors)}</td>
+                        <td className={styles.numberCell}>{formatNumber(page.viewers)}</td>
                         <td className={styles.numberCell}>{formatDuration(page.avgSeconds)}</td>
                       </tr>
                     ))}
                   </tbody>
                 </table>
               </div>
+              <p className={styles.panelNote}>
+                閲覧者数は「その日はじめてそのページを見た人」の合計です。
+                1人が複数ページを見ると各ページで1ずつ数えるため、
+                合計してもサイト全体の訪問者数にはなりません。
+              </p>
 
               <h3 className={styles.tableHeading}>日別</h3>
               <div className={styles.tableWrap}>
@@ -551,7 +588,7 @@ export function StatsDashboard() {
                     <tr>
                       <th scope="col">日付</th>
                       <th scope="col">表示回数</th>
-                      <th scope="col">訪問者数</th>
+                      {visits && <th scope="col">訪問者数</th>}
                       <th scope="col">平均滞在</th>
                     </tr>
                   </thead>
@@ -565,7 +602,9 @@ export function StatsDashboard() {
                             {formatDayLabel(day.day)}（{WEEKDAY_LABELS[weekdayOf(day.day)]}）
                           </td>
                           <td className={styles.numberCell}>{formatNumber(day.views)}</td>
-                          <td className={styles.numberCell}>{formatNumber(day.visitors)}</td>
+                          {visits && (
+                            <td className={styles.numberCell}>{formatNumber(day.visitors)}</td>
+                          )}
                           <td className={styles.numberCell}>{formatDuration(day.avgSeconds)}</td>
                         </tr>
                       ))}
