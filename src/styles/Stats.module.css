@@ -1,176 +1,666 @@
+/*
+ * 管理用ダッシュボード。サイト本体の温かい配色とは別に、
+ * データが読みやすいことを優先した中立面と検証済みの系列色を使う。
+ */
 .page {
+  --surface-1: #fcfcfb;
+  --page-plane: #f9f9f7;
+  --text-primary: #0b0b0b;
+  --text-secondary: #52514e;
+  --text-muted: #898781;
+  --gridline: #e1e0d9;
+  --axis: #c3c2b7;
+  --border: rgba(11, 11, 11, 0.1);
+  --series-1: #2a78d6;
+  --series-2: #eb6834;
+  --series-1-wash: rgba(42, 120, 214, 0.1);
+  --sparkline: #9ec5f4;
+  --delta-up: #006300;
+  --delta-down: #d03b3b;
+  --seq-0: #f0efec;
+  --seq-1: #cde2fb;
+  --seq-2: #86b6ef;
+  --seq-3: #3987e5;
+  --seq-4: #256abf;
+  --seq-5: #184f95;
+
   min-height: 100svh;
-  padding: clamp(2rem, 6vw, 4rem) clamp(1.2rem, 5vw, 3.5rem) 5rem;
-  background: var(--color-bg);
-  color: var(--color-text);
-  font-family: var(--font-jp);
+  padding: clamp(1.6rem, 4vw, 3rem) clamp(1rem, 4vw, 3rem) 5rem;
+  background: var(--page-plane);
+  color: var(--text-primary);
+  font-family:
+    system-ui,
+    -apple-system,
+    'Segoe UI',
+    sans-serif;
+  font-size: 15px;
+  line-height: 1.6;
 }
+
+@media (prefers-color-scheme: dark) {
+  .page {
+    --surface-1: #1a1a19;
+    --page-plane: #0d0d0d;
+    --text-primary: #ffffff;
+    --text-secondary: #c3c2b7;
+    --text-muted: #898781;
+    --gridline: #2c2c2a;
+    --axis: #383835;
+    --border: rgba(255, 255, 255, 0.1);
+    --series-1: #3987e5;
+    --series-2: #d95926;
+    --series-1-wash: rgba(57, 135, 229, 0.14);
+    --sparkline: #256abf;
+    --delta-up: #0ca30c;
+    --delta-down: #d03b3b;
+    /* 暗い面では「少ない」が面に沈む向きになるよう、低い側をより暗く取る */
+    --seq-0: #383835;
+    --seq-1: #0d366b;
+    --seq-2: #184f95;
+    --seq-3: #256abf;
+    --seq-4: #3987e5;
+    --seq-5: #6da7ec;
+  }
+}
+
+/* ---------- ヘッダー ---------- */
 
 .header {
   display: flex;
-  align-items: baseline;
-  flex-wrap: wrap;
-  gap: 0.8rem 1.2rem;
-  margin-bottom: 2.4rem;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 1rem;
+  max-width: 1140px;
+  margin: 0 auto 1.8rem;
 }
 
 .eyebrow {
-  width: 100%;
-  font-family: var(--font-serif);
-  font-size: 0.74rem;
-  letter-spacing: 0.22em;
-  color: var(--color-text-light);
+  font-size: 0.7rem;
+  letter-spacing: 0.18em;
+  color: var(--text-muted);
 }
 
 .header h1 {
-  font-size: clamp(1.6rem, 4vw, 2.4rem);
-  font-weight: 500;
-  letter-spacing: 0.1em;
+  font-size: 1.5rem;
+  font-weight: 600;
+  letter-spacing: 0.02em;
 }
 
 .signOut {
-  margin-left: auto;
-  padding: 0.4rem 0.9rem;
-  border: 1px solid var(--color-border);
-  border-radius: 999px;
-  background: transparent;
-  color: var(--color-text-light);
-  font-family: var(--font-jp);
-  font-size: 0.78rem;
+  padding: 0.42rem 0.9rem;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  background: var(--surface-1);
+  color: var(--text-secondary);
+  font: inherit;
+  font-size: 0.8rem;
   cursor: pointer;
 }
+
+.signOut:hover {
+  color: var(--text-primary);
+}
+
+/* ---------- ログイン ---------- */
 
 .loginForm {
   display: grid;
   gap: 0.6rem;
   max-width: 22rem;
-  margin-bottom: 1.5rem;
+  margin: 0 auto;
+  padding: 1.4rem;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  background: var(--surface-1);
 }
 
 .loginForm label {
   font-size: 0.82rem;
-  letter-spacing: 0.08em;
-  color: var(--color-text-light);
+  color: var(--text-secondary);
 }
 
 .loginForm input {
-  padding: 0.7rem 0.9rem;
-  border: 1px solid var(--color-border);
+  padding: 0.65rem 0.8rem;
+  border: 1px solid var(--border);
   border-radius: 6px;
-  background: var(--color-overlay);
-  color: var(--color-text);
-  font-family: var(--font-jp);
-  font-size: 1rem;
+  background: var(--page-plane);
+  color: var(--text-primary);
+  font: inherit;
 }
 
 .loginForm button {
-  padding: 0.7rem 1rem;
+  padding: 0.65rem 1rem;
   border: none;
   border-radius: 6px;
-  background: var(--color-accent);
-  color: var(--color-bg);
-  font-family: var(--font-jp);
-  font-size: 0.92rem;
-  letter-spacing: 0.08em;
+  background: var(--series-1);
+  color: #ffffff;
+  font: inherit;
+  font-weight: 600;
   cursor: pointer;
 }
 
 .loginForm button:disabled {
-  opacity: 0.5;
+  opacity: 0.45;
   cursor: default;
 }
 
 .error {
-  margin-bottom: 1.5rem;
+  max-width: 22rem;
+  margin: 1rem auto 0;
   font-size: 0.86rem;
-  color: #b3452f;
+  color: var(--delta-down);
 }
+
+/* ---------- ヒーロー数値 ---------- */
+
+.hero {
+  max-width: 1140px;
+  margin: 0 auto 1.4rem;
+  padding: 1.4rem 1.5rem;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  background: var(--surface-1);
+}
+
+.heroValue {
+  margin: 0.2rem 0;
+  font-size: clamp(2.6rem, 7vw, 3.4rem);
+  font-weight: 650;
+  line-height: 1.05;
+  letter-spacing: -0.02em;
+}
+
+.heroNote {
+  font-size: 0.84rem;
+  color: var(--text-secondary);
+}
+
+/* ---------- 期間コントロール ---------- */
+
+.controls {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.7rem 1rem;
+  max-width: 1140px;
+  margin: 0 auto 1.2rem;
+}
+
+.rangeGroup {
+  display: inline-flex;
+  padding: 3px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: var(--surface-1);
+}
+
+.rangeButton,
+.rangeActive {
+  padding: 0.34rem 0.85rem;
+  border: none;
+  border-radius: 6px;
+  background: transparent;
+  color: var(--text-secondary);
+  font: inherit;
+  font-size: 0.84rem;
+  cursor: pointer;
+}
+
+.rangeActive {
+  background: var(--series-1);
+  color: #ffffff;
+  font-weight: 600;
+}
+
+.rangeNote {
+  font-size: 0.8rem;
+  color: var(--text-muted);
+  font-variant-numeric: tabular-nums;
+}
+
+.tableToggle {
+  margin-left: auto;
+  padding: 0.34rem 0.8rem;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  background: var(--surface-1);
+  color: var(--text-secondary);
+  font: inherit;
+  font-size: 0.8rem;
+  cursor: pointer;
+}
+
+/* ---------- 統計タイル ---------- */
 
 .summary {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(11rem, 1fr));
-  gap: 1rem;
-  margin-bottom: 3rem;
+  grid-template-columns: repeat(auto-fit, minmax(13rem, 1fr));
+  gap: 0.9rem;
+  max-width: 1140px;
+  margin: 0 auto 1.4rem;
 }
 
 .card {
-  padding: 1.1rem 1.2rem;
-  border: 1px solid var(--color-border);
-  border-radius: 10px;
-  background: var(--color-overlay);
+  display: grid;
+  gap: 0.28rem;
+  padding: 1rem 1.1rem;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  background: var(--surface-1);
 }
 
 .cardLabel {
-  margin-bottom: 0.5rem;
-  font-size: 0.76rem;
-  letter-spacing: 0.08em;
-  color: var(--color-text-light);
+  font-size: 0.78rem;
+  color: var(--text-secondary);
 }
 
-.card strong {
-  font-family: var(--font-serif);
+.cardValue {
   font-size: 1.9rem;
+  font-weight: 650;
+  line-height: 1.15;
+  letter-spacing: -0.01em;
+}
+
+.deltaUp,
+.deltaDown,
+.deltaNeutral {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 0.3rem;
+  font-size: 0.78rem;
   font-weight: 600;
-  line-height: 1.1;
 }
 
-.section {
-  margin-bottom: 3rem;
+.deltaUp {
+  color: var(--delta-up);
 }
 
-.section h2 {
-  margin-bottom: 1rem;
-  font-size: 1rem;
-  font-weight: 500;
-  letter-spacing: 0.1em;
+.deltaDown {
+  color: var(--delta-down);
+}
+
+.deltaNeutral {
+  color: var(--text-muted);
+  font-weight: 400;
+}
+
+.deltaNote {
+  color: var(--text-muted);
+  font-weight: 400;
+}
+
+.sparkline {
+  width: 100%;
+  height: 32px;
+  margin-top: 0.2rem;
+}
+
+.sparklinePath {
+  fill: none;
+  stroke: var(--sparkline);
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.sparklineTip {
+  fill: var(--series-1);
+}
+
+/* ---------- パネル ---------- */
+
+.panel {
+  max-width: 1140px;
+  margin: 0 auto 1.2rem;
+  padding: 1.2rem 1.3rem 1.4rem;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  background: var(--surface-1);
+}
+
+.panel h2 {
+  font-size: 0.98rem;
+  font-weight: 600;
+}
+
+.panelNote {
+  margin-bottom: 0.9rem;
+  font-size: 0.8rem;
+  color: var(--text-secondary);
+}
+
+.panelNote code {
+  padding: 0.1rem 0.35rem;
+  border-radius: 4px;
+  background: var(--page-plane);
+  font-size: 0.76rem;
+}
+
+.panelGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(20rem, 1fr));
+  gap: 1.2rem;
+  max-width: 1140px;
+  margin: 0 auto;
+}
+
+.panelGrid .panel {
+  margin-left: 0;
+  margin-right: 0;
+}
+
+.tableHeading {
+  margin: 1.4rem 0 0.6rem;
+  font-size: 0.84rem;
+  font-weight: 600;
+  color: var(--text-secondary);
 }
 
 .empty {
-  font-size: 0.86rem;
-  color: var(--color-text-light);
+  padding: 1.2rem 0;
+  font-size: 0.84rem;
+  color: var(--text-muted);
 }
 
-/* 横に長くなるので、ページ全体ではなくグラフの中だけを横スクロールさせる */
-.chart {
-  display: flex;
-  align-items: flex-end;
-  gap: 0.35rem;
-  min-height: 13rem;
-  padding: 0.5rem 0.2rem 0;
-  overflow-x: auto;
-  border-bottom: 1px solid var(--color-border);
+/* ---------- チャート共通 ---------- */
+
+/* minmax(0,1fr) と min-width:0 が無いと、SVGの幅がトラック幅を押し上げてしまう */
+.chartFrame {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 0.5rem;
 }
 
-.chartColumn {
-  display: flex;
-  flex: 1 0 1.6rem;
-  flex-direction: column;
-  align-items: center;
-  justify-content: flex-end;
-  gap: 0.3rem;
-  min-height: 12rem;
-}
-
-.chartValue {
-  font-family: var(--font-serif);
-  font-size: 0.68rem;
-  color: var(--color-text-light);
-}
-
-.chartBar {
+.chartSurface {
+  position: relative;
   width: 100%;
-  min-height: 2px;
-  border-radius: 3px 3px 0 0;
-  background: var(--color-accent);
+  min-width: 0;
 }
 
-.chartLabel {
-  font-family: var(--font-serif);
-  font-size: 0.62rem;
-  letter-spacing: 0.04em;
-  color: var(--color-text-light);
+.chartSurface svg {
+  display: block;
+  overflow: visible;
+}
+
+.legend {
+  display: flex;
+  gap: 1rem;
+  font-size: 0.78rem;
+  color: var(--text-secondary);
+}
+
+.legendItem {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+}
+
+.legendSwatch {
+  display: inline-block;
+  width: 10px;
+  height: 10px;
+  border-radius: 2px;
+}
+
+.swatchOne {
+  background: var(--series-1);
+}
+
+.swatchTwo {
+  background: var(--series-2);
+}
+
+.gridline {
+  stroke: var(--gridline);
+  stroke-width: 1;
+}
+
+.axisText {
+  fill: var(--text-muted);
+  font-size: 10.5px;
+  font-variant-numeric: tabular-nums;
+}
+
+.axisTextInline {
+  font-size: 0.72rem;
+  color: var(--text-muted);
+}
+
+.endLabel {
+  fill: var(--text-secondary);
+  font-size: 11px;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+}
+
+.areaOne {
+  fill: var(--series-1-wash);
+}
+
+.lineOne,
+.lineTwo {
+  fill: none;
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.lineOne {
+  stroke: var(--series-1);
+}
+
+.lineTwo {
+  stroke: var(--series-2);
+}
+
+.crosshair {
+  stroke: var(--axis);
+  stroke-width: 1;
+}
+
+/* 重なっても見えるよう、地の色で2pxのリングを回す */
+.markerOne,
+.markerTwo {
+  stroke: var(--surface-1);
+  stroke-width: 2;
+}
+
+.markerOne {
+  fill: var(--series-1);
+}
+
+.markerTwo {
+  fill: var(--series-2);
+}
+
+.column {
+  fill: var(--series-1);
+}
+
+.columnActive {
+  fill: var(--series-1);
+  opacity: 0.75;
+}
+
+.hitArea {
+  fill: transparent;
+}
+
+/* ---------- ツールチップ ---------- */
+
+.tooltip,
+.barTooltip {
+  position: absolute;
+  z-index: 2;
+  min-width: 9rem;
+  padding: 0.55rem 0.7rem;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: var(--surface-1);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.14);
+  font-size: 0.78rem;
+  color: var(--text-secondary);
+  pointer-events: none;
+}
+
+.tooltip {
+  top: 0;
+  transform: translateX(-50%);
+}
+
+/* 行の下に出す。上に出すと先頭行でパネルの外へ抜けるため。 */
+.barTooltip {
+  top: calc(100% - 0.2rem);
+  left: 0;
+}
+
+.tooltip strong,
+.barTooltip strong {
+  color: var(--text-primary);
+  font-variant-numeric: tabular-nums;
+}
+
+.tooltipTitle {
+  margin-bottom: 0.25rem;
+  color: var(--text-primary);
+  font-weight: 600;
+}
+
+/* ---------- 横棒リスト ---------- */
+
+.barList {
+  display: grid;
+  gap: 0.85rem;
+  list-style: none;
+}
+
+.barRow {
+  position: relative;
+}
+
+.barHeader {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 0.8rem;
+  margin-bottom: 0.3rem;
+}
+
+.barLabel {
+  min-width: 0;
+  overflow: hidden;
+  font-size: 0.84rem;
+  text-overflow: ellipsis;
   white-space: nowrap;
 }
+
+.barSublabel {
+  margin-left: 0.45rem;
+  font-size: 0.72rem;
+  color: var(--text-muted);
+}
+
+.barValue {
+  flex-shrink: 0;
+  font-size: 0.84rem;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+}
+
+.barTrack {
+  height: 8px;
+  border-radius: 2px;
+  background: var(--gridline);
+}
+
+/* データ端だけ丸め、起点は角のままにする */
+.barFill {
+  display: block;
+  height: 100%;
+  border-radius: 2px 4px 4px 2px;
+  background: var(--series-1);
+}
+
+/* ---------- ヒートマップ ---------- */
+
+.heatmapWrap {
+  display: grid;
+  gap: 0.7rem;
+  overflow-x: auto;
+}
+
+.heatmap {
+  display: grid;
+  grid-template-columns: 1.6rem repeat(24, minmax(11px, 1fr));
+  gap: 2px;
+  min-width: 22rem;
+}
+
+.heatmapHourLabel,
+.heatmapDayLabel {
+  font-size: 0.66rem;
+  color: var(--text-muted);
+  font-variant-numeric: tabular-nums;
+  text-align: center;
+}
+
+.heatmapDayLabel {
+  text-align: left;
+  line-height: 16px;
+}
+
+.heatmapCell {
+  height: 16px;
+  border-radius: 2px;
+  background: var(--seq-0);
+}
+
+.heatmapCell[data-step='1'] {
+  background: var(--seq-1);
+}
+.heatmapCell[data-step='2'] {
+  background: var(--seq-2);
+}
+.heatmapCell[data-step='3'] {
+  background: var(--seq-3);
+}
+.heatmapCell[data-step='4'] {
+  background: var(--seq-4);
+}
+.heatmapCell[data-step='5'] {
+  background: var(--seq-5);
+}
+
+.heatmapFooter {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.5rem 1rem;
+}
+
+.heatmapScale {
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+}
+
+.heatmapScale .heatmapCell {
+  width: 16px;
+}
+
+.heatmapReadout {
+  display: inline-flex;
+  gap: 0.35rem;
+  font-size: 0.78rem;
+  color: var(--text-secondary);
+}
+
+.heatmapReadout strong {
+  color: var(--text-primary);
+  font-variant-numeric: tabular-nums;
+}
+
+/* ---------- 表 ---------- */
 
 .tableWrap {
   overflow-x: auto;
@@ -178,23 +668,22 @@
 
 .table {
   width: 100%;
-  min-width: 26rem;
+  min-width: 28rem;
   border-collapse: collapse;
 }
 
 .table th,
 .table td {
-  padding: 0.7rem 0.6rem;
-  border-bottom: 1px solid var(--color-border);
+  padding: 0.6rem 0.55rem;
+  border-bottom: 1px solid var(--gridline);
   text-align: left;
-  font-size: 0.88rem;
+  font-size: 0.84rem;
 }
 
 .table th {
-  font-weight: 500;
-  font-size: 0.76rem;
-  letter-spacing: 0.08em;
-  color: var(--color-text-light);
+  font-size: 0.74rem;
+  font-weight: 600;
+  color: var(--text-muted);
 }
 
 .pageName {
@@ -203,14 +692,23 @@
 
 .pagePath {
   display: block;
-  font-family: var(--font-serif);
   font-size: 0.72rem;
-  color: var(--color-text-light);
+  color: var(--text-muted);
 }
 
 .numberCell {
-  font-family: var(--font-serif);
-  font-size: 1rem;
   text-align: right;
+  font-variant-numeric: tabular-nums;
   white-space: nowrap;
+}
+
+@media (max-width: 640px) {
+  .controls {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .tableToggle {
+    margin-left: 0;
+  }
 }

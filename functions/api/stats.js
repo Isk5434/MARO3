@@ -1,6 +1,8 @@
 // 管理者向けの集計エンドポイント。STATS_PASSWORD を知っている人だけが読める。
-const DAY_RANGE = 30
+const ALLOWED_RANGES = [7, 30, 90]
+const DEFAULT_RANGE = 30
 const TOP_PAGES_LIMIT = 50
+const TOP_SOURCES_LIMIT = 12
 const MAX_FAILED_ATTEMPTS = 10
 const FAILED_WINDOW_SECONDS = 300
 
@@ -45,6 +47,66 @@ function averageSeconds(totalSeconds, samples) {
   return count > 0 ? Math.round(toNumber(totalSeconds) / count) : 0
 }
 
+function summaryRow(row = {}) {
+  return {
+    views: toNumber(row.views),
+    visitors: toNumber(row.visitors),
+    avgSeconds: averageSeconds(row.total_seconds, row.duration_samples),
+  }
+}
+
+const SUMMARY_COLUMNS = `COALESCE(SUM(views), 0)            AS views,
+          COALESCE(SUM(visitors), 0)         AS visitors,
+          COALESCE(SUM(total_seconds), 0)    AS total_seconds,
+          COALESCE(SUM(duration_samples), 0) AS duration_samples`
+
+// visit_events は後から追加したテーブルなので、未作成なら null を返して該当パネルを隠す
+async function loadVisitContext(env, rangeStart) {
+  try {
+    const [hourly, devices, sources, heatmap] = await env.DB.batch([
+      env.DB.prepare(
+        `SELECT hour, SUM(views) AS views FROM visit_events
+          WHERE day >= ?1 GROUP BY hour ORDER BY hour`,
+      ).bind(rangeStart),
+      env.DB.prepare(
+        `SELECT device, SUM(views) AS views FROM visit_events
+          WHERE day >= ?1 GROUP BY device ORDER BY views DESC`,
+      ).bind(rangeStart),
+      env.DB.prepare(
+        `SELECT source, SUM(views) AS views FROM visit_events
+          WHERE day >= ?1 GROUP BY source ORDER BY views DESC LIMIT ?2`,
+      ).bind(rangeStart, TOP_SOURCES_LIMIT),
+      env.DB.prepare(
+        `SELECT day, hour, SUM(views) AS views FROM visit_events
+          WHERE day >= ?1 GROUP BY day, hour`,
+      ).bind(rangeStart),
+    ])
+
+    return {
+      hourly: (hourly.results ?? []).map((row) => ({
+        hour: toNumber(row.hour),
+        views: toNumber(row.views),
+      })),
+      devices: (devices.results ?? []).map((row) => ({
+        device: row.device,
+        views: toNumber(row.views),
+      })),
+      sources: (sources.results ?? []).map((row) => ({
+        source: row.source,
+        views: toNumber(row.views),
+      })),
+      heatmap: (heatmap.results ?? []).map((row) => ({
+        day: row.day,
+        hour: toNumber(row.hour),
+        views: toNumber(row.views),
+      })),
+    }
+  } catch (error) {
+    console.warn('visit_events is unavailable (migration 002 may not be applied)', error)
+    return null
+  }
+}
+
 export async function onRequestGet({ request, env }) {
   if (!env.STATS_PASSWORD) {
     console.error('STATS_PASSWORD is not configured')
@@ -78,41 +140,47 @@ export async function onRequestGet({ request, env }) {
     return jsonResponse({ error: 'database_not_configured' }, 500)
   }
 
+  const requestedRange = Number(new URL(request.url).searchParams.get('range'))
+  const range = ALLOWED_RANGES.includes(requestedRange) ? requestedRange : DEFAULT_RANGE
+
   const today = jstDay()
-  const rangeStart = daysAgo(DAY_RANGE - 1)
+  const rangeStart = daysAgo(range - 1)
+  const previousStart = daysAgo(range * 2 - 1)
 
   try {
-    const [totalsResult, daysResult, pagesResult] = await env.DB.batch([
-      env.DB.prepare(
-        `SELECT COALESCE(SUM(views), 0)            AS views,
-                COALESCE(SUM(visitors), 0)         AS visitors,
-                COALESCE(SUM(total_seconds), 0)    AS total_seconds,
-                COALESCE(SUM(duration_samples), 0) AS duration_samples
-           FROM page_views`,
-      ),
-      env.DB.prepare(
-        `SELECT day,
-                SUM(views)            AS views,
-                SUM(visitors)         AS visitors,
-                SUM(total_seconds)    AS total_seconds,
-                SUM(duration_samples) AS duration_samples
-           FROM page_views
-          WHERE day >= ?1
-          GROUP BY day
-          ORDER BY day`,
-      ).bind(rangeStart),
-      env.DB.prepare(
-        `SELECT path,
-                SUM(views)            AS views,
-                SUM(visitors)         AS visitors,
-                SUM(total_seconds)    AS total_seconds,
-                SUM(duration_samples) AS duration_samples
-           FROM page_views
-          GROUP BY path
-          ORDER BY views DESC
-          LIMIT ?1`,
-      ).bind(TOP_PAGES_LIMIT),
-    ])
+    const [totalsResult, periodResult, previousResult, daysResult, pagesResult] =
+      await env.DB.batch([
+        env.DB.prepare(`SELECT ${SUMMARY_COLUMNS} FROM page_views`),
+        env.DB.prepare(`SELECT ${SUMMARY_COLUMNS} FROM page_views WHERE day >= ?1`).bind(
+          rangeStart,
+        ),
+        env.DB.prepare(
+          `SELECT ${SUMMARY_COLUMNS} FROM page_views WHERE day >= ?1 AND day < ?2`,
+        ).bind(previousStart, rangeStart),
+        env.DB.prepare(
+          `SELECT day,
+                  SUM(views)            AS views,
+                  SUM(visitors)         AS visitors,
+                  SUM(total_seconds)    AS total_seconds,
+                  SUM(duration_samples) AS duration_samples
+             FROM page_views
+            WHERE day >= ?1
+            GROUP BY day
+            ORDER BY day`,
+        ).bind(rangeStart),
+        env.DB.prepare(
+          `SELECT path,
+                  SUM(views)            AS views,
+                  SUM(visitors)         AS visitors,
+                  SUM(total_seconds)    AS total_seconds,
+                  SUM(duration_samples) AS duration_samples
+             FROM page_views
+            WHERE day >= ?1
+            GROUP BY path
+            ORDER BY views DESC
+            LIMIT ?2`,
+        ).bind(rangeStart, TOP_PAGES_LIMIT),
+      ])
 
     const days = (daysResult.results ?? []).map((row) => ({
       day: row.day,
@@ -121,21 +189,13 @@ export async function onRequestGet({ request, env }) {
       avgSeconds: averageSeconds(row.total_seconds, row.duration_samples),
     }))
 
-    const totalsRow = totalsResult.results?.[0] ?? {}
-    const todayRow = days.find((row) => row.day === today)
-
     return jsonResponse({
       today,
-      totals: {
-        views: toNumber(totalsRow.views),
-        visitors: toNumber(totalsRow.visitors),
-        avgSeconds: averageSeconds(totalsRow.total_seconds, totalsRow.duration_samples),
-      },
-      todayCount: {
-        views: todayRow?.views ?? 0,
-        visitors: todayRow?.visitors ?? 0,
-        avgSeconds: todayRow?.avgSeconds ?? 0,
-      },
+      range,
+      rangeStart,
+      totals: summaryRow(totalsResult.results?.[0]),
+      period: summaryRow(periodResult.results?.[0]),
+      previous: summaryRow(previousResult.results?.[0]),
       days,
       pages: (pagesResult.results ?? []).map((row) => ({
         path: row.path,
@@ -143,6 +203,7 @@ export async function onRequestGet({ request, env }) {
         visitors: toNumber(row.visitors),
         avgSeconds: averageSeconds(row.total_seconds, row.duration_samples),
       })),
+      context: await loadVisitContext(env, rangeStart),
     })
   } catch (error) {
     console.error('Failed to load stats', error)

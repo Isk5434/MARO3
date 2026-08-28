@@ -5,6 +5,8 @@ const BOT_UA_PATTERN =
   /bot|crawler|spider|crawl|slurp|bingpreview|headlesschrome|lighthouse|pingdom|monitor|curl|wget|python-requests|axios|go-http-client|node-fetch/i
 const MAX_PATH_LENGTH = 200
 const PATH_PATTERN = /^\/[a-zA-Z0-9\-_/]*$/
+const ALLOWED_DEVICES = ['desktop', 'tablet', 'mobile']
+const SOURCE_PATTERN = /^[a-z0-9.-]{1,60}$/
 
 function isAllowedOrigin(origin) {
   // sendBeacon は Origin を付けない場合があるため、空は許容し、食い違う場合だけ拒否する
@@ -12,9 +14,10 @@ function isAllowedOrigin(origin) {
   return ORIGIN_PATTERN.test(origin) || LOCAL_ORIGIN_PATTERN.test(origin)
 }
 
-// 日付の区切りを日本時間に合わせる（UTCのままだと朝9時で日付が変わってしまう）
-function jstDay(date = new Date()) {
-  return new Date(date.getTime() + 9 * 60 * 60 * 1000).toISOString().slice(0, 10)
+// 日付と時刻の区切りを日本時間に合わせる（UTCのままだと朝9時で日付が変わってしまう）
+function jstNow() {
+  const shifted = new Date(Date.now() + 9 * 60 * 60 * 1000)
+  return { day: shifted.toISOString().slice(0, 10), hour: shifted.getUTCHours() }
 }
 
 // 末尾スラッシュを落として表記ゆれを吸収する。想定外の文字が入っていたら弾く。
@@ -26,6 +29,19 @@ function normalizePath(raw) {
   if (path === '/') return '/'
 
   return path.replace(/\/+$/, '') || '/'
+}
+
+function normalizeDevice(raw) {
+  return ALLOWED_DEVICES.includes(raw) ? raw : 'unknown'
+}
+
+// クライアントから来た値をそのまま信じず、想定の形以外は other にまとめる
+function normalizeSource(raw) {
+  if (raw === 'direct' || raw === 'internal') return raw
+  if (typeof raw !== 'string') return 'other'
+
+  const source = raw.toLowerCase()
+  return SOURCE_PATTERN.test(source) ? source : 'other'
 }
 
 export function onRequestOptions({ request }) {
@@ -67,6 +83,7 @@ export async function onRequestPost({ request, env }) {
     return new Response(null, { status: 204 })
   }
 
+  const { day, hour } = jstNow()
   const isUniqueVisit = body?.unique === true ? 1 : 0
 
   try {
@@ -77,11 +94,25 @@ export async function onRequestPost({ request, env }) {
          views = views + 1,
          visitors = visitors + ?3`,
     )
-      .bind(path, jstDay(), isUniqueVisit)
+      .bind(path, day, isUniqueVisit)
       .run()
   } catch (error) {
     console.error('Failed to record page view', error)
     return new Response(null, { status: 500 })
+  }
+
+  // visit_events は後から追加したテーブルなので、未作成でも表示回数の記録は成立させる
+  try {
+    await env.DB.prepare(
+      `INSERT INTO visit_events (day, hour, device, source, views)
+       VALUES (?1, ?2, ?3, ?4, 1)
+       ON CONFLICT(day, hour, device, source) DO UPDATE SET
+         views = views + 1`,
+    )
+      .bind(day, hour, normalizeDevice(body?.device), normalizeSource(body?.source))
+      .run()
+  } catch (error) {
+    console.warn('Failed to record visit context (migration 002 may not be applied)', error)
   }
 
   return new Response(null, { status: 204 })
