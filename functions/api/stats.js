@@ -1,4 +1,10 @@
 // 管理者向けの集計エンドポイント。STATS_PASSWORD を知っている人だけが読める。
+//
+// 指標の定義:
+//   表示回数   … ページを開いた回数。再読み込みも1回として数える（page_views.views）
+//   訪問者数   … その日はじめてサイトに来た人の数。サイト全体で1人1回（daily_visits）
+//   セッション … タブのセッション数（daily_visits）
+//   閲覧者数   … そのページを見た人数。ページ単位なので合計しても訪問者数にはならない
 const ALLOWED_RANGES = [7, 30, 90]
 const DEFAULT_RANGE = 30
 const TOP_PAGES_LIMIT = 50
@@ -47,20 +53,61 @@ function averageSeconds(totalSeconds, samples) {
   return count > 0 ? Math.round(toNumber(totalSeconds) / count) : 0
 }
 
-function summaryRow(row = {}) {
+function viewSummary(row = {}) {
   return {
     views: toNumber(row.views),
-    visitors: toNumber(row.visitors),
     avgSeconds: averageSeconds(row.total_seconds, row.duration_samples),
   }
 }
 
-const SUMMARY_COLUMNS = `COALESCE(SUM(views), 0)            AS views,
-          COALESCE(SUM(visitors), 0)         AS visitors,
+const VIEW_COLUMNS = `COALESCE(SUM(views), 0)            AS views,
           COALESCE(SUM(total_seconds), 0)    AS total_seconds,
           COALESCE(SUM(duration_samples), 0) AS duration_samples`
 
-// visit_events は後から追加したテーブルなので、未作成なら null を返して該当パネルを隠す
+// daily_visits は後から追加したテーブルなので、未作成なら null を返して
+// 訪問者数まわりの表示を隠す
+async function loadDailyVisits(env, rangeStart, previousStart) {
+  const summarize = (row = {}) => ({
+    visitors: toNumber(row.visitors),
+    sessions: toNumber(row.sessions),
+  })
+
+  try {
+    const [totals, period, previous, days] = await env.DB.batch([
+      env.DB.prepare(
+        `SELECT COALESCE(SUM(visitors), 0) AS visitors, COALESCE(SUM(sessions), 0) AS sessions
+           FROM daily_visits`,
+      ),
+      env.DB.prepare(
+        `SELECT COALESCE(SUM(visitors), 0) AS visitors, COALESCE(SUM(sessions), 0) AS sessions
+           FROM daily_visits WHERE day >= ?1`,
+      ).bind(rangeStart),
+      env.DB.prepare(
+        `SELECT COALESCE(SUM(visitors), 0) AS visitors, COALESCE(SUM(sessions), 0) AS sessions
+           FROM daily_visits WHERE day >= ?1 AND day < ?2`,
+      ).bind(previousStart, rangeStart),
+      env.DB.prepare(
+        `SELECT day, visitors, sessions FROM daily_visits WHERE day >= ?1 ORDER BY day`,
+      ).bind(rangeStart),
+    ])
+
+    return {
+      totals: summarize(totals.results?.[0]),
+      period: summarize(period.results?.[0]),
+      previous: summarize(previous.results?.[0]),
+      days: (days.results ?? []).map((row) => ({
+        day: row.day,
+        visitors: toNumber(row.visitors),
+        sessions: toNumber(row.sessions),
+      })),
+    }
+  } catch (error) {
+    console.warn('daily_visits is unavailable (migration 003 may not be applied)', error)
+    return null
+  }
+}
+
+// visit_events も同様に、未作成なら null を返して該当パネルを隠す
 async function loadVisitContext(env, rangeStart) {
   try {
     const [hourly, devices, sources, heatmap] = await env.DB.batch([
@@ -150,17 +197,15 @@ export async function onRequestGet({ request, env }) {
   try {
     const [totalsResult, periodResult, previousResult, daysResult, pagesResult] =
       await env.DB.batch([
-        env.DB.prepare(`SELECT ${SUMMARY_COLUMNS} FROM page_views`),
-        env.DB.prepare(`SELECT ${SUMMARY_COLUMNS} FROM page_views WHERE day >= ?1`).bind(
+        env.DB.prepare(`SELECT ${VIEW_COLUMNS} FROM page_views`),
+        env.DB.prepare(`SELECT ${VIEW_COLUMNS} FROM page_views WHERE day >= ?1`).bind(rangeStart),
+        env.DB.prepare(`SELECT ${VIEW_COLUMNS} FROM page_views WHERE day >= ?1 AND day < ?2`).bind(
+          previousStart,
           rangeStart,
         ),
         env.DB.prepare(
-          `SELECT ${SUMMARY_COLUMNS} FROM page_views WHERE day >= ?1 AND day < ?2`,
-        ).bind(previousStart, rangeStart),
-        env.DB.prepare(
           `SELECT day,
                   SUM(views)            AS views,
-                  SUM(visitors)         AS visitors,
                   SUM(total_seconds)    AS total_seconds,
                   SUM(duration_samples) AS duration_samples
              FROM page_views
@@ -171,7 +216,7 @@ export async function onRequestGet({ request, env }) {
         env.DB.prepare(
           `SELECT path,
                   SUM(views)            AS views,
-                  SUM(visitors)         AS visitors,
+                  SUM(visitors)         AS viewers,
                   SUM(total_seconds)    AS total_seconds,
                   SUM(duration_samples) AS duration_samples
              FROM page_views
@@ -182,27 +227,25 @@ export async function onRequestGet({ request, env }) {
         ).bind(rangeStart, TOP_PAGES_LIMIT),
       ])
 
-    const days = (daysResult.results ?? []).map((row) => ({
-      day: row.day,
-      views: toNumber(row.views),
-      visitors: toNumber(row.visitors),
-      avgSeconds: averageSeconds(row.total_seconds, row.duration_samples),
-    }))
-
     return jsonResponse({
       today,
       range,
       rangeStart,
-      totals: summaryRow(totalsResult.results?.[0]),
-      period: summaryRow(periodResult.results?.[0]),
-      previous: summaryRow(previousResult.results?.[0]),
-      days,
+      totals: viewSummary(totalsResult.results?.[0]),
+      period: viewSummary(periodResult.results?.[0]),
+      previous: viewSummary(previousResult.results?.[0]),
+      days: (daysResult.results ?? []).map((row) => ({
+        day: row.day,
+        views: toNumber(row.views),
+        avgSeconds: averageSeconds(row.total_seconds, row.duration_samples),
+      })),
       pages: (pagesResult.results ?? []).map((row) => ({
         path: row.path,
         views: toNumber(row.views),
-        visitors: toNumber(row.visitors),
+        viewers: toNumber(row.viewers),
         avgSeconds: averageSeconds(row.total_seconds, row.duration_samples),
       })),
+      visits: await loadDailyVisits(env, rangeStart, previousStart),
       context: await loadVisitContext(env, rangeStart),
     })
   } catch (error) {

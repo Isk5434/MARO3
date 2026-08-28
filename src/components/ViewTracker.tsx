@@ -1,8 +1,14 @@
 'use client'
 import { useEffect } from 'react'
 
-const SESSION_PREFIX = '_maroViewed:'
+// サイト全体で「その日はじめて来た人」を判定するフラグ。パスに紐づけない。
 const VISITOR_PREFIX = '_maroVisitor:'
+// ページ別に「その日はじめてそのページを見た人」を判定するフラグ。
+const PAGE_PREFIX = '_maroPage:'
+// タブのセッションを1回だけ数えるためのフラグ。
+const SESSION_KEY = '_maroSession'
+// 旧仕様で残っている可能性のあるキー。見つけたら掃除する。
+const LEGACY_PREFIXES = ['_maroViewed:']
 // 統計ページ自体は集計対象から外す
 const IGNORED_PREFIXES = ['/stats']
 // これ未満は「開いた瞬間に閉じた」扱いにして送らない
@@ -33,6 +39,13 @@ function safeSet(storage: Storage | null, key: string, value: string) {
   }
 }
 
+/** キーが無ければ立てて true を返す。すでにあれば false。 */
+function claimFlag(storage: Storage | null, key: string) {
+  if (safeGet(storage, key)) return false
+  safeSet(storage, key, '1')
+  return true
+}
+
 // サーバ側と同じくJST基準で日付を出す
 function jstDay() {
   return new Date(Date.now() + 9 * 60 * 60 * 1000).toISOString().slice(0, 10)
@@ -43,17 +56,19 @@ function normalizePath(raw: string) {
   return raw.replace(/\/+$/, '') || '/'
 }
 
-// 前日以前の訪問フラグを消す。放置するとパス×日数ぶん溜まり続けるため。
-function pruneVisitorKeys(storage: Storage | null, today: string) {
+// 前日以前のフラグと旧仕様のキーを消す。放置するとパス×日数ぶん溜まり続けるため。
+function pruneStaleKeys(storage: Storage | null, today: string) {
   if (!storage) return
 
   try {
     const staleKeys: string[] = []
     for (let i = 0; i < storage.length; i += 1) {
       const key = storage.key(i)
-      if (key?.startsWith(VISITOR_PREFIX) && !key.endsWith(`:${today}`)) {
-        staleKeys.push(key)
-      }
+      if (!key) continue
+
+      const isDatedFlag = key.startsWith(PAGE_PREFIX) || key.startsWith(VISITOR_PREFIX)
+      if (isDatedFlag && !key.endsWith(`:${today}`)) staleKeys.push(key)
+      if (LEGACY_PREFIXES.some((prefix) => key.startsWith(prefix))) staleKeys.push(key)
     }
     staleKeys.forEach((key) => storage.removeItem(key))
   } catch {
@@ -128,23 +143,18 @@ export function ViewTracker() {
     const path = normalizePath(window.location.pathname)
     if (IGNORED_PREFIXES.some((prefix) => path.startsWith(prefix))) return
 
-    const sessionStore = safeStorage('session')
-    const sessionKey = `${SESSION_PREFIX}${path}`
-    // 同じタブでの再読み込みは二重に数えない
-    if (safeGet(sessionStore, sessionKey)) return
-    safeSet(sessionStore, sessionKey, '1')
-
     const today = jstDay()
     const localStore = safeStorage('local')
-    pruneVisitorKeys(localStore, today)
+    const sessionStore = safeStorage('session')
+    pruneStaleKeys(localStore, today)
 
-    const visitorKey = `${VISITOR_PREFIX}${path}:${today}`
-    const isUniqueVisit = !safeGet(localStore, visitorKey)
-    if (isUniqueVisit) safeSet(localStore, visitorKey, '1')
-
+    // 表示回数はページを開くたびに数える。再読み込みも1回として扱う。
+    // 訪問者数・セッション数はそれぞれ別のフラグで重複を防ぐ。
     sendPayload('/api/view', {
       path,
-      unique: isUniqueVisit,
+      pageFirstToday: claimFlag(localStore, `${PAGE_PREFIX}${path}:${today}`),
+      newVisitor: claimFlag(localStore, `${VISITOR_PREFIX}${today}`),
+      newSession: claimFlag(sessionStore, SESSION_KEY),
       device: detectDevice(),
       source: detectSource(),
     })
