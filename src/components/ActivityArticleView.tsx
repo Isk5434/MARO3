@@ -2,6 +2,7 @@
 import gsap from 'gsap'
 import { useEffect, useRef } from 'react'
 import { getAppPath } from '../config/internal-pages'
+import { formatViewCount, useArticleViews } from '../hooks/useArticleViews'
 import styles from '../styles/ActivityArticle.module.css'
 import type { ActivityArticle } from '../types/activity'
 
@@ -26,6 +27,8 @@ function setRevealMask(elements: NodeListOf<HTMLElement>, transparent: number, b
 
 export function ActivityArticleView({ article }: { article: ActivityArticle }) {
   const sectionRef = useRef<HTMLElement>(null)
+  const articleViews = useArticleViews()
+  const viewCount = articleViews?.[`/activity/${article.id}`] ?? 0
 
   useEffect(() => {
     const section = sectionRef.current
@@ -78,6 +81,7 @@ export function ActivityArticleView({ article }: { article: ActivityArticle }) {
               {formatDate(article.publishedAt)}
             </time>
           )}
+          {viewCount > 0 && <p className={styles.viewCount}>{formatViewCount(viewCount)}</p>}
           {article.description && (
             <p className={styles.lead} data-article-reveal>
               {article.description}

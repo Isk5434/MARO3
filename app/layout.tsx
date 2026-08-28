@@ -1,6 +1,7 @@
 import type { Metadata, Viewport } from 'next'
 import '../src/styles/globals.css'
 import '../src/styles/filters.css'
+import { ViewTracker } from '../src/components/ViewTracker'
 import { organizationSchema, websiteSchema } from '../src/lib/structured-data'
 
 const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://maroinu.pages.dev'
@@ -119,6 +120,7 @@ export default function RootLayout({
       </head>
       <body>
         {children}
+        <ViewTracker />
       </body>
     </html>
   )

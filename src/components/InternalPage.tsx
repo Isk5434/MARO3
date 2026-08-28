@@ -12,6 +12,7 @@ import {
   LOOP_RING_MOBILE_IMAGE,
 } from '../config/assets'
 import { INTERNAL_PAGES, getAppPath, type InternalPageId } from '../config/internal-pages'
+import { formatViewCount, useArticleViews } from '../hooks/useArticleViews'
 import { formatDate } from '../lib/format'
 import styles from '../styles/InternalPage.module.css'
 import type { ActivityArticleSummary } from '../types/activity'
@@ -190,6 +191,7 @@ function setRevealMask(elements: NodeListOf<HTMLElement>, transparent: number, b
 export function InternalPage({ pageId, activityArticles = [] }: Props) {
   const page = INTERNAL_PAGES[pageId]
   const [articleQuery, setArticleQuery] = useState('')
+  const articleViews = useArticleViews()
   const mainRef = useRef<HTMLElement>(null)
   const sectionRef = useRef<HTMLElement>(null)
   const pageClassName = styles[`${pageId}Page`] ?? ''
@@ -446,6 +448,11 @@ export function InternalPage({ pageId, activityArticles = [] }: Props) {
                                 <span className={styles.articleMeta}>
                                   {formatDate(article.publishedAt)}
                                 </span>
+                                {articleViews?.[`/activity/${article.id}`] ? (
+                                  <span className={styles.articleCardViews}>
+                                    {formatViewCount(articleViews[`/activity/${article.id}`])}
+                                  </span>
+                                ) : null}
                               </div>
                               <strong>{article.title}</strong>
                               {article.description && (
@@ -458,7 +465,7 @@ export function InternalPage({ pageId, activityArticles = [] }: Props) {
                     </div>
                   ) : (
                     <p className={styles.emptyArticles} data-internal-action>
-                      条件に合う記事がないまろ～　キーワードを変えてみてまろ～
+                      条件に合う記事がないまろ～&#12288;キーワードを変えてみてまろ～
                     </p>
                   )}
                 </>
