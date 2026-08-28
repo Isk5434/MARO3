@@ -23,7 +23,7 @@ const ALLOWED_USER_AGENTS = [
 ]
 
 // 管理用ページはクロール対象外にする
-const DISALLOWED_PATHS = ['/stats/']
+const DISALLOWED_PATHS = ['/maroinudayo/']
 
 export default function robots(): MetadataRoute.Robots {
   return {

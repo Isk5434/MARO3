@@ -10,7 +10,7 @@ const SESSION_KEY = '_maroSession'
 // 旧仕様で残っている可能性のあるキー。見つけたら掃除する。
 const LEGACY_PREFIXES = ['_maroViewed:']
 // 統計ページ自体は集計対象から外す
-const IGNORED_PREFIXES = ['/stats']
+const IGNORED_PREFIXES = ['/maroinudayo']
 // これ未満は「開いた瞬間に閉じた」扱いにして送らない
 const MIN_REPORTABLE_MS = 1000
 
