@@ -46,7 +46,12 @@ test.describe('Safari 回帰チェック: 入場・演出', () => {
       const targets = [...document.querySelectorAll<HTMLElement>('[data-hero-mask]')]
       return targets
         .map((el) => el.style.getPropertyValue('--hero-reveal-mask'))
-        .filter((v) => v && /black\s+([0-9]|[1-9][0-9])%/.test(v) === false && /transparent\s+(100|[5-9][0-9])%/.test(v))
+        .filter(
+          (v) =>
+            v &&
+            /black\s+([0-9]|[1-9][0-9])%/.test(v) === false &&
+            /transparent\s+(100|[5-9][0-9])%/.test(v),
+        )
     })
     expect(leftover, `覆ったままのマスク: ${JSON.stringify(leftover)}`).toHaveLength(0)
   })
@@ -81,7 +86,10 @@ test.describe('Safari 回帰チェック: 入場・演出', () => {
       .toBe(0)
   })
 
-  test('WebGL: デスクトップ Safari でヒーローキャンバスが描画される @L4', async ({ page, isMobile }) => {
+  test('WebGL: デスクトップ Safari でヒーローキャンバスが描画される @L4', async ({
+    page,
+    isMobile,
+  }) => {
     // モバイルは HeroCanvas が null を返す設計 (HeroCanvas.tsx:32) のためスキップ。
     test.skip(isMobile, 'モバイルはWebGLキャンバス非搭載')
     await page.goto('/')

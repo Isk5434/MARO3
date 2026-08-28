@@ -6,7 +6,8 @@ import prettier from 'eslint-config-prettier'
 import { defineConfig, globalIgnores } from 'eslint/config'
 
 export default defineConfig([
-  globalIgnores(['dist', 'out', '.next', 'scripts']),
+  // .claude はClaude Codeの作業用ディレクトリ。古い設定ファイルを拾ってしまうため除外する。
+  globalIgnores(['dist', 'out', '.next', 'scripts', '.claude']),
   {
     files: ['**/*.{ts,tsx}'],
     extends: [
